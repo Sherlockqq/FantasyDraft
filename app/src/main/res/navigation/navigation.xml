@@ -10,5 +10,10 @@
         android:name="com.example.fantasydraft.FixturesFragment"
         android:label="@string/fixtures_label"
         tools:layout="@layout/fragment_fixtures" />
+    <fragment
+        android:id="@+id/draftFragment"
+        android:name="com.example.fantasydraft.DraftFragment"
+        android:label="fragment_draft"
+        tools:layout="@layout/fragment_draft" />
 
 </navigation>
