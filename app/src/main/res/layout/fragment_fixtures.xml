@@ -6,35 +6,78 @@
     <data>
         <variable
             name="viewModel"
-            type="com.example.fantasydraft.FixturesViewModel" />
+            type="com.example.fantasydraft.fixtures.FixturesViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".FixturesFragment">
+        tools:context=".fixtures.FixturesFragment">
 
         <TextView
             android:id="@+id/fixture_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/allerta_stencil"
             android:gravity="center"
-            android:text = "@{viewModel.title}"
-            app:layout_constraintTop_toTopOf="parent"
+            android:text="@string/text_label_1"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toTopOf="parent">
 
         </TextView>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/sleep_list"
+            android:id="@+id/fixtures_list"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBaseline_toBottomOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/fixture_text" />
+            app:layout_constraintTop_toBottomOf="@id/fixture_text"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/fixtures_list"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/fixture_text" />
+
+        <ImageView
+            android:id="@+id/ConnectionErrorView"
+            android:layout_width="156dp"
+            android:layout_height="157dp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5"
+            app:srcCompat="@drawable/connection_error" />
+
+        <TextView
+            android:id="@+id/nonSuccessText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/allerta_stencil"
+            android:textSize="20sp"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/ConnectionErrorView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fixture_text"
+            app:layout_constraintVertical_bias="0.9"
+            tools:text="Loading.. "
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
