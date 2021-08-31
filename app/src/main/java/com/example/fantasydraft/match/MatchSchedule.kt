@@ -1,7 +1,8 @@
 package com.example.fantasydraft.match
 
 data class MatchSchedule(
-    var tour : String,
+    var id : Int,
+    var tour : Int,
     var homeTeam : String,
     var guestTeam : String,
     var date : String,

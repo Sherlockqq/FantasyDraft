@@ -15,15 +15,17 @@
         tools:context=".fixtures.FixturesFragment">
 
         <TextView
-            android:id="@+id/fixture_text"
-            android:layout_width="match_parent"
+            android:id="@+id/gameweek_text"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/allerta_stencil"
             android:gravity="center"
-            android:text="@string/text_label_1"
+            android:text = ""
+            tools:text="GameWeek 1 "
+            tools:visibility="visible"
             android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/next_arrow"
+            app:layout_constraintStart_toEndOf="@+id/back_arrow"
             app:layout_constraintTop_toTopOf="parent">
 
         </TextView>
@@ -37,7 +39,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/fixture_text"
+            app:layout_constraintTop_toBottomOf="@id/gameweek_text"
             app:layout_constraintVertical_bias="0.0" />
 
         <ProgressBar
@@ -49,7 +51,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/fixtures_list"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/fixture_text" />
+            app:layout_constraintTop_toTopOf="@+id/gameweek_text" />
 
         <ImageView
             android:id="@+id/ConnectionErrorView"
@@ -74,10 +76,28 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fixture_text"
+            app:layout_constraintTop_toBottomOf="@+id/gameweek_text"
             app:layout_constraintVertical_bias="0.9"
             tools:text="Loading.. "
             tools:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/back_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:rotationY="-180"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/lb_ic_nav_arrow" />
+
+        <ImageView
+            android:id="@+id/next_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/lb_ic_nav_arrow" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

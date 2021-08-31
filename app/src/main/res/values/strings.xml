@@ -10,4 +10,7 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="fixtures">Fixtures</string>
+    <string name="show_all">Show all</string>
+    <string name="first_tour">First Tour</string>
+    <string name="second_tour">Second tour</string>
 </resources>
