@@ -13,4 +13,8 @@
     <string name="show_all">Show all</string>
     <string name="first_tour">First Tour</string>
     <string name="second_tour">Second tour</string>
+    <string name="connection_error">Connection Error</string>
+    <string name="loading">Loading..</string>
+    <string name="schedule">Schedule</string>
+    <string name="gameweek">GameWeek $d</string>
 </resources>

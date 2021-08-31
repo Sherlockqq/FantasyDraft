@@ -33,7 +33,7 @@ class FixturesViewModel: ViewModel() {
         SHOW_ALL
     }
 
-    private var matchesList : MutableList<MatchSchedule> = mutableListOf()
+    private var matchesMap : MutableMap<Int,List<MatchSchedule>> = mutableMapOf()
 
     private val _tours = MutableLiveData<Int>()
     val tours : LiveData<Int>
@@ -69,7 +69,8 @@ class FixturesViewModel: ViewModel() {
                 if(homeList.isEmpty() || guestList.isEmpty() || dateList.isEmpty() || scoreList.isEmpty()){
                     _events.postValue(UiEvent.Error)
                 }else{
-                    matchesList = getListMatch(homeList, guestList, dateList, scoreList)
+                    val matchesList = getListMatch(homeList, guestList, dateList, scoreList)
+                    getMapMatch(matchesList)
                     Log.i("FixturesViewModel","Check")
                     _events.postValue(UiEvent.Success(matchesList))
                 }
@@ -157,26 +158,34 @@ class FixturesViewModel: ViewModel() {
         return matchesList
     }
 
-
-    private fun showList(filter: TourFilter){
-
-        when(filter){
-            TourFilter.SHOW_FIRST -> {
-                _tours.value = 1
-                _events.value = UiEvent.Success(getOneTourList(_tours.value))
-            }
-            TourFilter.SHOW_SECOND -> {
-                _tours.value = 2
-                _events.value = UiEvent.Success(getOneTourList(_tours.value))
-            }
-            else -> {
-                _tours.value = 0
-                _events.value = UiEvent.Success(matchesList)
+    private fun getMapMatch(matchesList : MutableList<MatchSchedule>) {
+        for(index in 0 .. 30){
+            if(index == 0){
+                matchesMap[index] = matchesList
+            }else{
+                matchesMap[index] = getOneTourList(index,matchesList)
             }
         }
     }
 
-    private fun getOneTourList(tour: Int?) : MutableList<MatchSchedule>{
+    private fun showList(filter: TourFilter){
+        when(filter){
+            TourFilter.SHOW_FIRST -> {
+                _tours.value = 1
+                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }
+            }
+            TourFilter.SHOW_SECOND -> {
+                _tours.value = 2
+                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }
+            }
+            else -> {
+                _tours.value = 0
+                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }
+            }
+        }
+    }
+
+    private fun getOneTourList(tour: Int?, matchesList : MutableList<MatchSchedule>) : MutableList<MatchSchedule>{
         var index = 0
         val tourList : MutableList<MatchSchedule> = mutableListOf()
         for(i in 0 until matchesList.size){
@@ -189,6 +198,7 @@ class FixturesViewModel: ViewModel() {
                 index++
             }
         }
+
         return tourList
     }
 
@@ -199,16 +209,18 @@ class FixturesViewModel: ViewModel() {
 
     fun backArrowClicked(){
         _tours.value = _tours.value?.minus(1)
-        if(_tours.value!! > 0){
-            _events.value = UiEvent.Success(getOneTourList(_tours.value))
-        }else{
-            _events.value = UiEvent.Success(matchesList)
+        _tours.value?.let {
+            if(it > 0){
+                _events.value = matchesMap[it]?.let { mapList -> UiEvent.Success(mapList) }
+            }else{
+                _events.value = matchesMap[0]?.let { mapList -> UiEvent.Success(mapList) }
+            }
         }
     }
 
     fun nextArrowClicked(){
         _tours.value = _tours.value?.plus(1)
-        _events.value = UiEvent.Success(getOneTourList(_tours.value))
+        _events.value = matchesMap[_tours.value]?.let {mapList -> UiEvent.Success(mapList) }
     }
 
 }
