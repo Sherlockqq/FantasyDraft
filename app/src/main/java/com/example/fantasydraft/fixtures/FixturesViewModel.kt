@@ -12,18 +12,23 @@ import kotlinx.coroutines.launch
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 //TODO parse gif when match is going
-//TODO add empty state
 //TODO TourHeaders in RecyclerView
+//TODO выбрал что-то из optionsMenu -> DraftFragment ->
 
-
-private  const val BASE_URL = "https://sport.ua/football/results/ukraine/1/calendar"
-private  const val HOME_TEAM_HTML = "div.play__cell.play__team-1"
-private  const val GUEST_TEAM_HTML = "div.play__cell.play__team-2"
-private  const val DATE_HTML = "div.play__cell.play__time"
-private  const val SCORE_HTML = "div.play__cell.play__result"
+private const val BASE_URL = "https://sport.ua/football/results/ukraine/1/calendar"
+private const val HOME_TEAM_HTML = "div.play__cell.play__team-1"
+private const val GUEST_TEAM_HTML = "div.play__cell.play__team-2"
+private const val DATE_HTML = "div.play__cell.play__time"
+private const val SCORE_HTML = "div.play__cell.play__result"
+private const val DATE_PATTERN = "dd.MM.yyyy HH:mm"
+private const val TOUR_SIZE = 30
 
 class FixturesViewModel: ViewModel() {
 
@@ -34,6 +39,9 @@ class FixturesViewModel: ViewModel() {
     }
 
     private var matchesMap : MutableMap<Int,List<MatchSchedule>> = mutableMapOf()
+    private var dateMap : MutableMap<Int,Pair<LocalDateTime,LocalDateTime>> = mutableMapOf()
+
+    private val sdf by lazy { SimpleDateFormat(DATE_PATTERN) }
 
     private val _tours = MutableLiveData<Int>()
     val tours : LiveData<Int>
@@ -67,12 +75,13 @@ class FixturesViewModel: ViewModel() {
                 val scoreList = getListScore(doc)
 
                 if(homeList.isEmpty() || guestList.isEmpty() || dateList.isEmpty() || scoreList.isEmpty()){
-                    _events.postValue(UiEvent.Error)
+                    _events.postValue(UiEvent.EmptyState)
                 }else{
                     val matchesList = getListMatch(homeList, guestList, dateList, scoreList)
                     getMapMatch(matchesList)
                     Log.i("FixturesViewModel","Check")
-                    _events.postValue(UiEvent.Success(matchesList))
+                    _tours.postValue(getTourByDate())
+                    _events.postValue(matchesMap[_tours.value]?.let { UiEvent.Success(it) })
                 }
 
             } catch (e: IOException) {
@@ -110,8 +119,17 @@ class FixturesViewModel: ViewModel() {
         val src = img.attr("src")
         Log.i("DFDs","FSDFDS")
         val matchDate : MutableList<String> = mutableListOf()
+        var matchCount = 0
+        var tourCount = 1
         for (index in 0 until classes.size){
             matchDate.add(index,classes[index].attr("title"))
+            matchCount++
+            if(matchCount == 8){
+                dateMap[tourCount] = getLocaleDateTimePair(classes[index].attr("title"),
+                    classes[index-7].attr("title"))
+                matchCount = 0
+                tourCount++
+            }
         }
         return matchDate
     }
@@ -159,7 +177,7 @@ class FixturesViewModel: ViewModel() {
     }
 
     private fun getMapMatch(matchesList : MutableList<MatchSchedule>) {
-        for(index in 0 .. 30){
+        for(index in 0 .. TOUR_SIZE){
             if(index == 0){
                 matchesMap[index] = matchesList
             }else{
@@ -198,7 +216,6 @@ class FixturesViewModel: ViewModel() {
                 index++
             }
         }
-
         return tourList
     }
 
@@ -223,10 +240,49 @@ class FixturesViewModel: ViewModel() {
         _events.value = matchesMap[_tours.value]?.let {mapList -> UiEvent.Success(mapList) }
     }
 
+    private fun getLocaleDateTimePair(first: String, last:String) :
+            Pair<LocalDateTime,LocalDateTime>{
+
+        val localFirst = LocalDateTime.parse(
+            first,
+            DateTimeFormatter.ofPattern(DATE_PATTERN))
+
+        val localLast = LocalDateTime.parse(
+            last,
+            DateTimeFormatter.ofPattern(DATE_PATTERN))
+
+        return Pair(localFirst,localLast)
+    }
+
+    private fun getTourByDate() : Int{
+        val currentDate = sdf.format(Date())
+        val date = LocalDateTime.parse(
+            currentDate,
+            DateTimeFormatter.ofPattern(DATE_PATTERN))
+
+        var tourCount = 1
+        for(index in 1 ..TOUR_SIZE){
+            if(date.isAfter(dateMap[index]?.second)){
+                tourCount = index
+            }else{
+                if (date.isAfter(dateMap[index]?.first) && date.isBefore(dateMap[index]?.second)){
+                    return index
+                }
+            }
+        }
+
+        return if(tourCount == TOUR_SIZE){
+            tourCount
+        }else{
+            tourCount + 1
+        }
+
+    }
 }
 
 sealed class UiEvent {
     class Success(val matches: List<MatchSchedule>) : UiEvent()
     object Error : UiEvent()
     object Loading : UiEvent()
+    object EmptyState : UiEvent()
 }

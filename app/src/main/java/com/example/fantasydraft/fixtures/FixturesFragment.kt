@@ -71,6 +71,7 @@ class FixturesFragment : Fragment() {
             is UiEvent.Success -> onSuccess(event.matches)
             is UiEvent.Error -> onError()
             is UiEvent.Loading -> onLoading()
+            is UiEvent.EmptyState -> onEmptyState()
         }
     }
 
@@ -109,6 +110,15 @@ class FixturesFragment : Fragment() {
         binding.nonSuccessText.setText(R.string.loading)
         binding.nonSuccessText.isVisible = true
         binding.progressBar.isVisible = true
+    }
+
+    private fun onEmptyState(){
+        binding.nonSuccessText.setText(R.string.empty_state)
+        binding.progressBar.isVisible = false
+        binding.nextArrow.isVisible = false
+        binding.backArrow.isVisible = false
+        binding.gameweekText.isVisible = false
+        binding.nonSuccessText.isVisible = true
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
