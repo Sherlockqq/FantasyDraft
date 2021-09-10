@@ -3,8 +3,10 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        jcenter() // Warning: this repository is going to shut down soon
     }
 }
 rootProject.name = "FantasyDraft"
 include ':app'
+include ':matches-data'
+include ':matches-domain'
+include ':matches-ui'

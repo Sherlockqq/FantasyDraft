@@ -1,29 +1,23 @@
-package com.example.fantasydraft.fixtures
+package com.midina.matches_ui
 
 import android.os.Bundle
 import android.view.*
-import androidx.core.view.isInvisible
 import androidx.fragment.app.Fragment
-import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.fantasydraft.match.MatchAdapter
-import com.example.fantasydraft.match.MatchSchedule
-import com.example.fantasydraft.R
-import com.example.fantasydraft.databinding.FragmentFixturesBinding
+import javax.inject.Inject
 
 
 //material sizes/ dimensions
 
-//view pager
 class FixturesFragment : Fragment() {
 
     private lateinit var binding: FragmentFixturesBinding
     private val adapter = MatchAdapter()
-    private val viewModel: FixturesViewModel by lazy {
-        ViewModelProvider(this).get(FixturesViewModel::class.java)
-    }
+
+    @Inject
+    lateinit var viewModel: FixturesViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,14 +37,6 @@ class FixturesFragment : Fragment() {
         binding.fixturesList.layoutManager = LinearLayoutManager(this.context)
 
         setHasOptionsMenu(true)
-
-        viewModel.tours.observe(viewLifecycleOwner,{
-            if(it != 0 ){
-                binding.gameweekText.text = "GameWeek $it"
-            }else{
-                binding.gameweekText.setText(R.string.schedule)
-            }
-        })
 
         viewModel.events.observe(viewLifecycleOwner, {handleEvents(it)})
         binding.fixturesList.adapter = adapter
@@ -76,24 +62,32 @@ class FixturesFragment : Fragment() {
     }
 
     private fun onSuccess(event: List<MatchSchedule>) {
-        binding.progressBar.isVisible = false
-        binding.nonSuccessText.isVisible = false
-        binding.gameweekText.isVisible = true
-        when(viewModel.tours.value){
-            0 -> {
-                binding.backArrow.isInvisible = true
-                binding.nextArrow.isVisible = true
+        if(event.isNotEmpty()){
+            if(viewModel.tours.value != 0 ){
+                binding.gameweekText.text = "GameWeek ${viewModel.tours.value}"
+            }else{
+                binding.gameweekText.setText(R.string.schedule)
             }
-            30 ->{
-                binding.nextArrow.isInvisible = true
-                binding.backArrow.isVisible = true
+
+            binding.progressBar.isVisible = false
+            binding.nonSuccessText.isVisible = false
+            binding.gameweekText.isVisible = true
+            when(viewModel.tours.value){
+                0 -> {
+                    binding.backArrow.isInvisible = true
+                    binding.nextArrow.isVisible = true
+                }
+                30 ->{
+                    binding.nextArrow.isInvisible = true
+                    binding.backArrow.isVisible = true
+                }
+                else -> {
+                    binding.backArrow.isVisible = true
+                    binding.nextArrow.isVisible = true
+                }
             }
-            else -> {
-                binding.backArrow.isVisible = true
-                binding.nextArrow.isVisible = true
-            }
+            adapter.updateMatches(event)
         }
-        adapter.updateMatches(event)
     }
 
     private fun onError() {

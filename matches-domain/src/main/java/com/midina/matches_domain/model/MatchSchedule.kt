@@ -1,4 +1,4 @@
-package com.example.fantasydraft.match
+package com.midina.matches_domain.model
 
 data class MatchSchedule(
     var id : Int,
@@ -8,4 +8,3 @@ data class MatchSchedule(
     var date : String,
     var score : String
 )
-

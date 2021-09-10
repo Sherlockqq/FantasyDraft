@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
 }
@@ -8,13 +8,13 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.example.fantasydraft"
         minSdk 21
         targetSdk 31
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
@@ -30,10 +30,6 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-    buildFeatures {
-        dataBinding true
-        viewBinding true
-    }
 }
 
 dependencies {
@@ -41,15 +37,6 @@ dependencies {
     implementation "androidx.core:core-ktx:$version_core"
     implementation "androidx.appcompat:appcompat:$version_appcompat"
     implementation "com.google.android.material:material:$version_material"
-    implementation "androidx.constraintlayout:constraintlayout:$version_constaint"
-
-    //Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$version_navigation"
-    implementation "androidx.navigation:navigation-ui-ktx:$version_navigation"
-
-    //Lifecycle
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$version_lifecycle"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_lifecycle"
 
     //JSoup
     implementation "org.jsoup:jsoup:$version_jsoup"
@@ -59,6 +46,5 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$version_dagger"
 
     //Modules
-    implementation project(path: ':matches-data')
-
+    implementation project(path: ':matches-domain')
 }
