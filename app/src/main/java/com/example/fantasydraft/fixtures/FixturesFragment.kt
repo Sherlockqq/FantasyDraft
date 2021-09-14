@@ -19,7 +19,7 @@ import com.example.fantasydraft.databinding.FragmentFixturesBinding
 //view pager
 class FixturesFragment : Fragment() {
 
-    lateinit var binding: FragmentFixturesBinding
+    private lateinit var binding: FragmentFixturesBinding
     private val adapter = MatchAdapter()
     private val viewModel: FixturesViewModel by lazy {
         ViewModelProvider(this).get(FixturesViewModel::class.java)
@@ -30,9 +30,9 @@ class FixturesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-         binding = DataBindingUtil.inflate(
+        binding = DataBindingUtil.inflate(
             inflater,
-             R.layout.fragment_fixtures,
+            R.layout.fragment_fixtures,
             container,
             false)
 
@@ -44,14 +44,6 @@ class FixturesFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
-        viewModel.tours.observe(viewLifecycleOwner,{
-            if(it != 0 ){
-                binding.gameweekText.text = "GameWeek $it"
-            }else{
-                binding.gameweekText.text = "Schedule"
-            }
-        })
-
         viewModel.events.observe(viewLifecycleOwner, {handleEvents(it)})
         binding.fixturesList.adapter = adapter
 
@@ -60,7 +52,7 @@ class FixturesFragment : Fragment() {
         }
 
         binding.nextArrow.setOnClickListener {
-           viewModel.nextArrowClicked()
+            viewModel.nextArrowClicked()
         }
 
         return binding.root
@@ -71,22 +63,27 @@ class FixturesFragment : Fragment() {
             is UiEvent.Success -> onSuccess(event.matches)
             is UiEvent.Error -> onError()
             is UiEvent.Loading -> onLoading()
+            is UiEvent.EmptyState -> onEmptyState()
         }
     }
 
     private fun onSuccess(event: List<MatchSchedule>) {
         binding.progressBar.isVisible = false
         binding.nonSuccessText.isVisible = false
+        binding.gameweekText.isVisible = true
         when(viewModel.tours.value){
             0 -> {
                 binding.backArrow.isInvisible = true
                 binding.nextArrow.isVisible = true
+                binding.gameweekText.setText(R.string.schedule)
             }
             30 ->{
                 binding.nextArrow.isInvisible = true
                 binding.backArrow.isVisible = true
+                binding.gameweekText.text = "GameWeek ${viewModel.tours.value}"
             }
             else -> {
+                binding.gameweekText.text = "GameWeek ${viewModel.tours.value}"
                 binding.backArrow.isVisible = true
                 binding.nextArrow.isVisible = true
             }
@@ -95,16 +92,28 @@ class FixturesFragment : Fragment() {
     }
 
     private fun onError() {
-        binding.nonSuccessText.text = "Connection Error"
+        binding.nonSuccessText.setText(R.string.connection_error)
         binding.progressBar.isVisible = false
+        binding.nextArrow.isVisible = false
+        binding.backArrow.isVisible = false
+        binding.gameweekText.isVisible = false
         binding.nonSuccessText.isVisible = true
         binding.ConnectionErrorView.isVisible = true
     }
 
     private fun onLoading(){
-        binding.nonSuccessText.text = "Loading.."
+        binding.nonSuccessText.setText(R.string.loading)
         binding.nonSuccessText.isVisible = true
         binding.progressBar.isVisible = true
+    }
+
+    private fun onEmptyState(){
+        binding.nonSuccessText.setText(R.string.empty_state)
+        binding.progressBar.isVisible = false
+        binding.nextArrow.isVisible = false
+        binding.backArrow.isVisible = false
+        binding.gameweekText.isVisible = false
+        binding.nonSuccessText.isVisible = true
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
