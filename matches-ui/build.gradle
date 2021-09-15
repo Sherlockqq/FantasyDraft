@@ -48,9 +48,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_lifecycle"
 
     //Dagger
-    implementation "com.google.dagger:dagger:$version_dagger"
     kapt "com.google.dagger:dagger-compiler:$version_dagger"
+    kapt "com.google.dagger:dagger-android-processor:$version_dagger"
 
     // Modules
     implementation project(path: ':matches-domain')
+    implementation project(path: ':core-ui')
 }

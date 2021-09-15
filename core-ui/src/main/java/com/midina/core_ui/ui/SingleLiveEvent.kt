@@ -1,4 +1,4 @@
-package com.midina.matches_ui
+package com.midina.core_ui.ui
 
 import android.util.Log
 import androidx.annotation.MainThread

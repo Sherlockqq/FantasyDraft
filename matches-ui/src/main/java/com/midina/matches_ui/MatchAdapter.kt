@@ -1,4 +1,4 @@
-package com.example.fantasydraft.match
+package com.midina.matches_ui
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,9 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.fantasydraft.R
-import com.midina.core_match_domain.MatchSchedule
-
+import com.midina.matches_domain.model.MatchSchedule
 
 class MatchAdapter() :
     RecyclerView.Adapter<MatchAdapter.MyViewHolder>() {

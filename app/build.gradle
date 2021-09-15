@@ -55,10 +55,13 @@ dependencies {
     implementation "org.jsoup:jsoup:$version_jsoup"
 
     //Dagger
-    implementation "com.google.dagger:dagger:$version_dagger"
     kapt "com.google.dagger:dagger-compiler:$version_dagger"
+    kapt "com.google.dagger:dagger-android-processor:$version_dagger"
 
     //Modules
     implementation project(path: ':matches-data')
+    implementation project(path: ':matches-domain')
+    implementation project(path: ':matches-ui')
+    implementation project(path: ':core-ui')
 
 }

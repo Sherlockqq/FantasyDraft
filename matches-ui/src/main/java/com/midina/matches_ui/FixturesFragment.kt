@@ -2,22 +2,24 @@ package com.midina.matches_ui
 
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import javax.inject.Inject
-
+import com.midina.core_ui.ui.BaseFragment
+import com.midina.matches_domain.model.MatchSchedule
+import com.midina.matches_ui.databinding.FragmentFixturesBinding
 
 //material sizes/ dimensions
 
-class FixturesFragment : Fragment() {
+class FixturesFragment : BaseFragment() {
 
     private lateinit var binding: FragmentFixturesBinding
     private val adapter = MatchAdapter()
 
-    @Inject
-    lateinit var viewModel: FixturesViewModel
+    val viewModel: FixturesViewModel by lazy {
+        ViewModelProvider(this, viewmodelFactory )[FixturesViewModel::class.java] }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
