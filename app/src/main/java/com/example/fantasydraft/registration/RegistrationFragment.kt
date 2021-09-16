@@ -17,15 +17,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.fantasydraft.R
 import com.example.fantasydraft.databinding.RegistrationFragmentBinding
+import com.example.fantasydraft.utils.State
 import java.lang.NumberFormatException
 
-//TODO Asc About Date Input
 //TODO Correct Date input
 //TODO Check everything is put and correctly
 //TODO Correct showing CustomView
 //TODO Make ProgressBar Beauty
 
-//TODO Show layout
 class RegistrationFragment: Fragment() {
 
     private lateinit var binding: RegistrationFragmentBinding
@@ -42,16 +41,17 @@ class RegistrationFragment: Fragment() {
             false)
 
 
+        binding.etName.onFocusChangeListener = View.OnFocusChangeListener { view, b ->
+            if(!b && binding.etName.text.toString().isEmpty()) {
+                binding.tvNameRequest.isVisible = true
+                binding.cvFirstName.setState(State.ERROR)
+            }
+        }
+
         binding.etName.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if(s.toString().isNotEmpty()){
-                    //TODO GREEN CustomView
-                    binding.tvNameRequest.isGone = true
-                    binding.cvFirstName.setState()
-                }else{
-                    //TODO RED CustomView
-                    binding.tvNameRequest.isVisible = true
-                }
+                binding.tvNameRequest.isGone = true
+                binding.cvFirstName.setState(State.CORRECT)
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 Log.i("FSDF","DSFS")
@@ -60,17 +60,20 @@ class RegistrationFragment: Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 Log.i("FSDF","DSFS")
             }
+
         })
 
+
+        binding.etLastName.onFocusChangeListener = View.OnFocusChangeListener { view, b ->
+            if(!b && binding.etLastName.text.toString().isEmpty()) {
+                binding.tvLastNameRequest.isVisible = true
+                binding.cvLastname.setState(State.ERROR)
+            }
+        }
         binding.etLastName.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if(s.toString().isNotEmpty()){
-                    //TODO GREEN CustomView
-                    binding.tvLastNameRequest.isGone = true
-                }else{
-                    //TODO RED CustomView
-                    binding.tvLastNameRequest.isVisible = true
-                }
+                binding.tvLastNameRequest.isGone = true
+                binding.cvLastname.setState(State.CORRECT)
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                 Log.i("FSDF","DSFS")
@@ -79,43 +82,25 @@ class RegistrationFragment: Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 Log.i("FSDF","DSFS")
             }
+
         })
 
-//        binding.etEmail.setOnKeyListener(object : View.OnKeyListener {
-//            override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
-//                // if the event is a key down event on the enter button
-//                if (event.action == KeyEvent.ACTION_DOWN &&
-//                    keyCode == KeyEvent.KEYCODE_ENTER
-//                ) {
-//                    if(isEmailValid(binding.etEmail.text)){
-//                        //TODO GREEN CustomView
-//                        binding.tvEmailRequest.isGone = true
-//                    }else{
-//                        //TODO RED CustomView
-//
-//                        binding.tvEmailRequest.isVisible = true
-//                    }
-//
-//                    return true
-//                }
-//                return false
-//            }
-//            fun isEmailValid(text:Editable?) : Boolean{
-//                return android.util.Patterns.EMAIL_ADDRESS.matcher(text.toString()).matches()
-//            }
-//        })
-
+        binding.etEmail.onFocusChangeListener = View.OnFocusChangeListener { view, b ->
+            if(!b && !isEmailValid(binding.etEmail.text)) {
+                binding.tvEmailRequest.isVisible = true
+                binding.cvEmail.setState(State.ERROR)
+            }
+        }
 
         binding.etEmail.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                if(isEmailValid(s)){
-                    //TODO GREEN CustomView
-                    binding.tvEmailRequest.isGone = true
-                }else{
-                    //TODO RED CustomView
-                    //TODO Not to show when user is not finished
+                if(s.toString().isEmpty()){
                     binding.tvEmailRequest.isVisible = true
-
+                    binding.cvEmail.setState(State.ERROR)
+                }
+                if(isEmailValid(s)){
+                    binding.tvEmailRequest.isGone = true
+                    binding.cvEmail.setState(State.CORRECT)
                 }
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -125,32 +110,31 @@ class RegistrationFragment: Fragment() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 Log.i("FSDF","DSFS")
             }
-            fun isEmailValid(text:Editable?) : Boolean{
-                return android.util.Patterns.EMAIL_ADDRESS.matcher(text.toString()).matches()
-            }
+
         })
+
+        binding.etPassword.onFocusChangeListener = View.OnFocusChangeListener { view, b ->
+            if(!b && binding.etPassword.text.toString().length < 8) {
+                binding.tvPassRequirements.isVisible = true
+                binding.cvPassword.setState(State.ERROR)
+            }
+        }
 
         binding.etPassword.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
                 if(s.toString().isEmpty()) {
                     binding.passProgressBar.isGone = true
-                    //TODO RED CustomView
+                    binding.cvPassword.setState(State.ERROR)
                 }
                 else {
                     val textSize = s.toString().length
+                    if(textSize == 8){
+                        binding.tvPassRequirements.isGone = true
+                        binding.cvPassword.setState(State.CORRECT)
+                    }
                     binding.passProgressBar.isVisible = true
                     binding.passProgressBar.progress = textSize
-                    if(textSize < 8){
-                        binding.tvPassRequirements.isVisible = true
-                        //TODO RED CustomView
-                        //TODO Not to show when user is not finished
-                    }
-                    else{
-                        binding.tvPassRequirements.isGone = true
-                        //TODO GREEN CustomView
-
-                    }
                 }
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -163,10 +147,11 @@ class RegistrationFragment: Fragment() {
 
         })
 
-//        TODO request focus
-      //  binding.etDateDays.setOnFocusChangeListener()
         binding.etDateDays.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
+                if(s?.length == 2){
+                    binding.etDateMonthes.requestFocus()
+                }
                 val daysNum: Int
                 try{
                    daysNum  = s.toString().toInt()
@@ -190,6 +175,9 @@ class RegistrationFragment: Fragment() {
 
         binding.etDateMonthes.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
+                if(s?.length == 2){
+                    binding.etDateYears.requestFocus()
+                }
                 val monthesNum: Int
                 try{
                     monthesNum  = s.toString().toInt()
@@ -220,6 +208,8 @@ class RegistrationFragment: Fragment() {
 
             binding.cbUnspecified.isClickable = true
             binding.cbUnspecified.isChecked = false
+
+            binding.cvGender.setState(State.CORRECT)
         }
 
         binding.cbFemale.setOnClickListener{
@@ -230,6 +220,7 @@ class RegistrationFragment: Fragment() {
 
             binding.cbUnspecified.isClickable = true
             binding.cbUnspecified.isChecked = false
+            binding.cvGender.setState(State.CORRECT)
         }
 
         binding.cbUnspecified.setOnClickListener{
@@ -240,9 +231,12 @@ class RegistrationFragment: Fragment() {
 
             binding.cbFemale.isClickable = true
             binding.cbFemale.isChecked = false
+            binding.cvGender.setState(State.CORRECT)
         }
 
         return binding.root
     }
-
+    private fun isEmailValid(text:Editable?) : Boolean{
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(text.toString()).matches()
+    }
 }
