@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.26197916666666665" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main2.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fixture_item.xml" value="0.335" />
@@ -16,6 +17,7 @@
         <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.24322916666666666" />
         <entry key="app/src/main/res/menu/options_menu.xml" value="0.24322916666666666" />
         <entry key="matches-data/src/main/res/font/arvo.xml" value="0.17407407407407408" />
+        <entry key="matches-ui/src/main/res/layout/fragment_fixtures.xml" value="0.1" />
       </map>
     </option>
   </component>

@@ -141,7 +141,6 @@ class FixturesViewModel @Inject constructor(private val getMatchesSchedule: GetM
 
     }
 
-    //TODO ЭТО НАДО В USECASE?
     private fun getLocaleDateTimePair(first: String, last:String) :
             Pair<LocalDateTime,LocalDateTime>{
 
