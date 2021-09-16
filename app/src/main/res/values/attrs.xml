@@ -2,7 +2,8 @@
 <resources>
 
     <declare-styleable name="CircleCustomView">
-        <attr name="circleColor" format="color"/>
+        <attr name="circleType" format="integer"/>
+
     </declare-styleable>
 
 </resources>

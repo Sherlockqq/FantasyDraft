@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,11 +41,13 @@ class RegistrationFragment: Fragment() {
             container,
             false)
 
+
         binding.etName.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if(s.toString().isNotEmpty()){
                     //TODO GREEN CustomView
                     binding.tvNameRequest.isGone = true
+                    binding.cvFirstName.setState()
                 }else{
                     //TODO RED CustomView
                     binding.tvNameRequest.isVisible = true
@@ -78,6 +81,31 @@ class RegistrationFragment: Fragment() {
             }
         })
 
+//        binding.etEmail.setOnKeyListener(object : View.OnKeyListener {
+//            override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
+//                // if the event is a key down event on the enter button
+//                if (event.action == KeyEvent.ACTION_DOWN &&
+//                    keyCode == KeyEvent.KEYCODE_ENTER
+//                ) {
+//                    if(isEmailValid(binding.etEmail.text)){
+//                        //TODO GREEN CustomView
+//                        binding.tvEmailRequest.isGone = true
+//                    }else{
+//                        //TODO RED CustomView
+//
+//                        binding.tvEmailRequest.isVisible = true
+//                    }
+//
+//                    return true
+//                }
+//                return false
+//            }
+//            fun isEmailValid(text:Editable?) : Boolean{
+//                return android.util.Patterns.EMAIL_ADDRESS.matcher(text.toString()).matches()
+//            }
+//        })
+
+
         binding.etEmail.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if(isEmailValid(s)){
@@ -87,6 +115,7 @@ class RegistrationFragment: Fragment() {
                     //TODO RED CustomView
                     //TODO Not to show when user is not finished
                     binding.tvEmailRequest.isVisible = true
+
                 }
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -134,6 +163,8 @@ class RegistrationFragment: Fragment() {
 
         })
 
+//        TODO request focus
+      //  binding.etDateDays.setOnFocusChangeListener()
         binding.etDateDays.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 val daysNum: Int

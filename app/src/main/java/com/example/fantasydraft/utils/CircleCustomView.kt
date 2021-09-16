@@ -1,19 +1,27 @@
 package com.example.fantasydraft.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
 import com.example.fantasydraft.R
 
 //TODO CUSTOM_VIEW
-class CircleCustomView (context: Context, attrs: AttributeSet) : View(context, attrs){
+
+
+
+class CircleCustomView (context: Context, attrs: AttributeSet,viewState : Int) :
+    View(context, attrs){
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     // Some colors for the face background, eyes and mouth.
     private var unUsedColor = Color.GRAY
+
 
     // View size in pixels
     private var size = 120
@@ -26,13 +34,20 @@ class CircleCustomView (context: Context, attrs: AttributeSet) : View(context, a
 
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun drawFaceBackground(canvas: Canvas) {
+        val d : Drawable  = resources.getDrawable(R.drawable.ic_check_circle_24)
+        d.setBounds(10,60,50,10)
+        d.draw(canvas)
+    }
 
-        paint.color = unUsedColor
-        paint.style = Paint.Style.FILL
+    fun setState(){
+        background = context.getDrawable(R.drawable.ic_check_circle_24)
+    }
 
-        val radius = size / 2f
-
-        canvas.drawCircle(size / 2f, size / 2f, radius, paint)
+    enum class State{
+        DEFAULT,
+        ERROR,
+        CORRECT
     }
 }
