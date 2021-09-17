@@ -8,6 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.midina.matches_domain.model.MatchSchedule
 
+const val HEADER_VIEW_TYPE = 111
+const val ITEM_VIEW_TYPE = 222
+
 class MatchAdapter : RecyclerView.Adapter<MatchAdapter.MyViewHolder>() {
 
     private var list: List<MatchSchedule> = emptyList()

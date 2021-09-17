@@ -7,11 +7,11 @@ import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.View
-import com.example.fantasydraft.R
 import android.graphics.Bitmap
 
 import android.graphics.drawable.BitmapDrawable
 import android.util.Log
+import com.midina.core_ui.R
 
 //TODO Make Default circle size as others size
 

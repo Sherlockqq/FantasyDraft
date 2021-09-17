@@ -40,7 +40,7 @@ object MatchParse {
         val matchesMap : MutableMap<Int,List<MatchSchedule>> = mutableMapOf()
         for(index in 0 .. TOUR_SIZE){
             if(index == 0){
-                matchesMap[index] = matchesList
+                matchesMap[index] = getFullMapMatch(matchesList)
             }else{
                 matchesMap[index] = getOneTourList(index,matchesList)
             }
@@ -149,5 +149,24 @@ object MatchParse {
         return matchScore
     }
 
+    private fun getFullMapMatch(matches: List<MatchSchedule>) : List<MatchSchedule> {
+        val matchesList : MutableList<MatchSchedule> = mutableListOf()
+        var tourCount = 0
+        var matchesIndex = 0
+        for(index in 0..268){
+            if(tourCount != matches[matchesIndex].tour){
+                tourCount++
+                matchesList.add(index, MatchSchedule(index,tourCount, "",
+                    "","","",true))
+            }
+            else{
+                matchesList.add(index, MatchSchedule(index,tourCount,
+                    matches[matchesIndex].homeTeam,matches[matchesIndex].guestTeam,
+                    matches[matchesIndex].date,matches[matchesIndex].score,matches[matchesIndex].isHeader))
+                matchesIndex++
+            }
+        }
+        return matchesList
+    }
 
 }

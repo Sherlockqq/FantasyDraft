@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -14,8 +15,7 @@ import com.example.fantasydraft.registration.OnBottomNavHideListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.android.AndroidInjection
 import javax.inject.Inject
-import com.google.android.material.navigation.NavigationBarView
-import com.google.android.material.internal.ContextUtils.getActivity
+
 
 
 //TODO Remove BNV When it needed

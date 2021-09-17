@@ -315,7 +315,6 @@
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:background="@color/lb_grey"
                 android:max="8"
                 android:progressBackgroundTint="#8BC34A"
                 android:progressTint="#FFEB3B"
