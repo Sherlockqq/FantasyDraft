@@ -13,12 +13,9 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.util.Log
 
+//TODO Make Default circle size as others size
 
-//TODO CUSTOM_VIEW
-
-
-
-class CircleCustomView (context: Context, attrs: AttributeSet) :
+class CheckStateView (context: Context, attrs: AttributeSet) :
     View(context, attrs) {
 
     private val paint = Paint()
@@ -58,10 +55,6 @@ class CircleCustomView (context: Context, attrs: AttributeSet) :
                 }
             }
         }
-
-        Log.i("gdfg","FDsf")
-//        val radius = size / 2f
-//        canvas.drawCircle(size / 2f, size / 2f, radius, paint)
     }
     fun drawableToBitmap(drawable: Drawable): Bitmap? {
         if (drawable is BitmapDrawable) {

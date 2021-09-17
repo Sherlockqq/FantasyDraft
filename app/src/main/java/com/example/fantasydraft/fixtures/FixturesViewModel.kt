@@ -293,13 +293,11 @@ class FixturesViewModel: ViewModel() {
             }
 
         }
-
         return if(tourCount == TOUR_SIZE){
             tourCount
         }else{
             tourCount + 1
         }
-
     }
 }
 
