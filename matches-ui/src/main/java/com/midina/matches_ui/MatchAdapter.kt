@@ -8,13 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.midina.matches_domain.model.MatchSchedule
 
-class MatchAdapter() :
-    RecyclerView.Adapter<MatchAdapter.MyViewHolder>() {
-
-    //hashMap key = tour / value = list Matches
+class MatchAdapter : RecyclerView.Adapter<MatchAdapter.MyViewHolder>() {
 
     private var list: List<MatchSchedule> = emptyList()
-
 
     fun updateMatches(updatedList: List<MatchSchedule>){
         list = updatedList
@@ -22,63 +18,87 @@ class MatchAdapter() :
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
-        val itemView = LayoutInflater.from(parent.context).inflate(
-            R.layout.fixture_item,
-            parent,
-            false)
-        return MyViewHolder(itemView)
-
+        when(viewType){
+            HEADER_VIEW_TYPE -> {
+                val itemView: View =LayoutInflater.from(parent.context).inflate(
+                    R.layout.fixture_header,
+                    parent,
+                    false)
+                return MyViewHolder.HeaderViewHolder(itemView)
+            }
+            else -> {
+                val itemView: View =LayoutInflater.from(parent.context).inflate(
+                    R.layout.fixture_item,
+                    parent,
+                    false)
+                return MyViewHolder.MatchViewHolder(itemView)
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-
-        val currentItem = list[position]
-        holder.tour.text = "Tour : " + currentItem.tour.toString()
-        holder.date.text = currentItem.date
-        holder.home.text = currentItem.homeTeam
-        holder.guest.text = currentItem.guestTeam
-        holder.score.text = currentItem.score
-
-        holder.homeImage.setImageResource(getImage(currentItem.homeTeam))
-        holder.guestImage.setImageResource(getImage(currentItem.guestTeam))
-
-    }
-
-    private fun getImage(team : String): Int{
-        when(team){
-            "Львов" -> return R.drawable.lviv_logo
-            "Верес" -> return R.drawable.veres_logo
-            "Шахтер Донецк" -> return R.drawable.shakhtar_logo
-            "Металлист 1925" -> return R.drawable.metallist25_logo
-            "Десна" -> return R.drawable.desna_logo
-            "Заря" -> return R.drawable.zarya_logo
-            "Ворскла" -> return R.drawable.vorskla_logo
-            "Динамо Киев" -> return R.drawable.dynamo_logo
-            "Мариуполь" -> return R.drawable.mariupol_logo
-            "Колос К" -> return R.drawable.kolos_logo
-            "Ингулец" -> return R.drawable.ingulets_logo
-            "Рух Львов" -> return R.drawable.rukh_logo
-            "Черноморец" -> return R.drawable.chornomoets_logo
-            "Александрия" -> return R.drawable.oleksandriya_logo
-            "Днепр-1" -> return R.drawable.dnipro1_logo
-            "Минай" -> return R.drawable.minaj_logo
-        }
-        return R.drawable.connection_error
+        holder.bind(list[position])
     }
 
     override fun getItemCount(): Int {
-       return list.size
+        return list.size
     }
 
-    class MyViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView){
+    override fun getItemViewType(position: Int): Int {
+        return when(list[position]?.isHeader){
+            true -> HEADER_VIEW_TYPE
+            else -> ITEM_VIEW_TYPE
+        }
+    }
 
-        val tour : TextView = itemView.findViewById(R.id.tour_number)
-        val home : TextView = itemView.findViewById(R.id.home_team)
-        val score : TextView = itemView.findViewById(R.id.match_score)
-        val guest : TextView = itemView.findViewById(R.id.guest_team)
-        val date : TextView = itemView.findViewById(R.id.match_date)
-        val homeImage : ImageView = itemView.findViewById(R.id.home_logo)
-        val guestImage : ImageView = itemView.findViewById(R.id.guest_logo)
+    sealed class MyViewHolder (itemView : View) : RecyclerView.ViewHolder(itemView) {
+        open fun bind(item: MatchSchedule){}
+
+        class HeaderViewHolder(itemView : View) : MyViewHolder(itemView){
+            private val tour : TextView = itemView.findViewById(R.id.tour_header)
+            override fun bind(item: MatchSchedule){
+                tour.text = "Tour : " + item.tour.toString()
+            }
+        }
+
+        class MatchViewHolder(itemView: View) : MyViewHolder(itemView) {
+            private val home: TextView = itemView.findViewById(R.id.home_team)
+            private val score: TextView = itemView.findViewById(R.id.match_score)
+            private val guest: TextView = itemView.findViewById(R.id.guest_team)
+            private val date: TextView = itemView.findViewById(R.id.match_date)
+            private val homeImage: ImageView = itemView.findViewById(R.id.home_logo)
+            private val guestImage: ImageView = itemView.findViewById(R.id.guest_logo)
+
+            override fun bind(item: MatchSchedule){
+                date.text = item.date
+                home.text = item.homeTeam
+                guest.text = item.guestTeam
+                score.text = item.score
+                homeImage.setImageResource(getImage(item.homeTeam))
+                guestImage.setImageResource(getImage(item.guestTeam))
+            }
+            private fun getImage(team : String): Int{
+                when(team){
+                    "Львов" -> return R.drawable.lviv_logo
+                    "Верес" -> return R.drawable.veres_logo
+                    "Шахтер Донецк" -> return R.drawable.shakhtar_logo
+                    "Металлист 1925" -> return R.drawable.metallist25_logo
+                    "Десна" -> return R.drawable.desna_logo
+                    "Заря" -> return R.drawable.zarya_logo
+                    "Ворскла" -> return R.drawable.vorskla_logo
+                    "Динамо Киев" -> return R.drawable.dynamo_logo
+                    "Мариуполь" -> return R.drawable.mariupol_logo
+                    "Колос К" -> return R.drawable.kolos_logo
+                    "Ингулец" -> return R.drawable.ingulets_logo
+                    "Рух Львов" -> return R.drawable.rukh_logo
+                    "Черноморец" -> return R.drawable.chornomoets_logo
+                    "Александрия" -> return R.drawable.oleksandriya_logo
+                    "Днепр-1" -> return R.drawable.dnipro1_logo
+                    "Минай" -> return R.drawable.minaj_logo
+                }
+                return R.drawable.connection_error
+            }
+        }
     }
 
 }
