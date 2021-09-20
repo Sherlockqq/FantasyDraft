@@ -53,7 +53,6 @@ class FixturesViewModel @Inject constructor(private val getMatchesSchedule: GetM
     init {
         _tours.value = 0
         parse()
-
     }
 
     private fun parse(){
@@ -71,7 +70,6 @@ class FixturesViewModel @Inject constructor(private val getMatchesSchedule: GetM
                     _tours.postValue(tourByDate)
                    _events.postValue(matchesMap[tourByDate]?.let { UiEvent.Success(it) })
                 }
-
                 is ResultEvent.Error -> _events.postValue(UiEvent.Error)
             }
 

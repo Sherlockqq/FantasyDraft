@@ -1,5 +1,6 @@
 package com.example.fantasydraft.registration
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -19,20 +20,20 @@ import com.example.fantasydraft.utils.State
 import java.lang.NumberFormatException
 import android.view.inputmethod.EditorInfo
 
-import android.view.KeyEvent
-
-import android.widget.TextView
-
 import android.widget.TextView.OnEditorActionListener
-
-
+import androidx.core.widget.doAfterTextChanged
 
 
 //TODO Correct Date input
 //TODO Check everything is put and correctly
 //TODO Correct showing CustomView
 //TODO Make ProgressBar Beauty
-//TODO Date Keyboard with ->
+//TODO Disable Putting not number in Date EditText`s
+//TODO One char in Days or Monthes than unfocused
+//TODO Make CustomView correct size( test on physical device)
+//TODO Make Year listeners in VM
+//TODO Make CV Date
+
 
 class RegistrationFragment: Fragment() {
 
@@ -61,6 +62,7 @@ class RegistrationFragment: Fragment() {
         listener?.onShow()
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -76,150 +78,29 @@ class RegistrationFragment: Fragment() {
 
         binding.viewModel = viewModel
 
-        binding.etName.onFocusChangeListener = View.OnFocusChangeListener { view, b ->
-            if(!b && binding.etName.text.toString().isEmpty()) {
-                binding.tvNameRequest.isVisible = true
-                binding.cvFirstName.setState(State.ERROR)
-            }
-        }
-
-        binding.etName.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                if(s.toString().isEmpty()){
-                    binding.tvNameRequest.isVisible = true
-                    binding.cvFirstName.setState(State.ERROR)
-                }else{
-                    binding.tvNameRequest.isGone = true
-                    binding.cvFirstName.setState(State.CORRECT)
-                }
-            }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                Log.i("FSDF","DSFS")
-            }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Log.i("FSDF","DSFS")
-            }
-        })
-
-        binding.etLastName.onFocusChangeListener = View.OnFocusChangeListener { view, b ->
-            if(!b && binding.etLastName.text.toString().isEmpty()) {
-                binding.tvLastNameRequest.isVisible = true
-                binding.cvLastname.setState(State.ERROR)
-            }
-        }
-
-        binding.etLastName.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                if (s.toString().isEmpty()){
-                    binding.tvLastNameRequest.isVisible = true
-                    binding.cvLastname.setState(State.ERROR)
-                }else{
-                    binding.tvLastNameRequest.isGone = true
-                    binding.cvLastname.setState(State.CORRECT)
-                }
-            }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                Log.i("FSDF","DSFS")
-            }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Log.i("FSDF","DSFS")
-            }
-        })
-
-        binding.etEmail.onFocusChangeListener = View.OnFocusChangeListener { view, b ->
-            if(!b && !viewModel.isEmail(binding.etEmail.text.toString())) {
-                binding.tvEmailRequest.isVisible = true
-                binding.cvEmail.setState(State.ERROR)
-            }
-        }
-
-        binding.etEmail.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                if(s.toString().isEmpty()){
-                    binding.tvEmailRequest.isVisible = true
-                    binding.cvEmail.setState(State.ERROR)
-                }
-                if(viewModel.isEmail(s.toString())){
-                    binding.tvEmailRequest.isGone = true
-                    binding.cvEmail.setState(State.CORRECT)
-                }
-            }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                Log.i("FSDF","DSFS")
-            }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Log.i("FSDF","DSFS")
-            }
-        })
-
-        binding.etPassword.onFocusChangeListener = View.OnFocusChangeListener { view, b ->
-            if(!b && binding.etPassword.text.toString().length < 8) {
-                binding.tvPassRequirements.isVisible = true
-                binding.cvPassword.setState(State.ERROR)
-            }
-        }
-
-        binding.etPassword.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                if(s.toString().isEmpty()) {
-                    binding.passProgressBar.isGone = true
-                    binding.cvPassword.setState(State.ERROR)
-                }
-                else {
-                    val textSize = s.toString().length
-                    if(textSize == 8){
-                        binding.tvPassRequirements.isGone = true
-                        binding.cvPassword.setState(State.CORRECT)
-                    }
-                    binding.passProgressBar.isVisible = true
-                    binding.passProgressBar.progress = textSize
-                }
-            }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                Log.i("FSDF","DSFS")
-            }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Log.i("FSDF","DSFS")
-            }
-
-        })
+        viewModel.firstNameEvents.observe(viewLifecycleOwner,{handleFirstNameEvents(it)})
+        viewModel.lastNameEvents.observe(viewLifecycleOwner, {handleLastNameEvents(it)})
+        viewModel.emailEvents.observe(viewLifecycleOwner,{handleEmailEvents(it)})
+        viewModel.passwordEvents.observe(viewLifecycleOwner,{handlePasswordEvents(it)})
+        viewModel.daysEvents.observe(viewLifecycleOwner,{handleDaysEvents(it)})
+        viewModel.monthesEvents.observe(viewLifecycleOwner,{handleMonthesEvents(it)})
 
         binding.etDateDays.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if(binding.etDateDays.text.length == 1){
+                    binding.etDateDays.setText("0${binding.etDateDays.text}")
+                }
                 binding.etDateMonthes.requestFocus()
                 return@OnEditorActionListener true
             }
             false
         })
 
-        binding.etDateDays.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) {
-                if(s?.length == 2){
-                    binding.etDateMonthes.requestFocus()
-                }
-                val daysNum: Int
-                try{
-                   daysNum  = s.toString().toInt()
-
-                    if(daysNum in 1..31){
-                        binding.tvDateRq.text = "True"
-                    }else{
-                        binding.tvDateRq.text = "False"
-                    }
-                }catch (e: NumberFormatException){
-                    binding.tvDateRq.text = "False"
-                }
-            }
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                Log.i("FSDF","DSFS")
-            }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                Log.i("FSDF","DSFS")
-            }
-        })
-
         binding.etDateMonthes.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
+                if(binding.etDateMonthes.text.length == 1){
+                    binding.etDateMonthes.setText("0${binding.etDateMonthes.text}")
+                }
                 binding.etDateYears.requestFocus()
                 return@OnEditorActionListener true
             }
@@ -261,6 +142,7 @@ class RegistrationFragment: Fragment() {
             binding.cbUnspecified.isChecked = false
 
             binding.cvGender.setState(State.CORRECT)
+            viewModel.genderState = State.CORRECT
         }
 
         binding.cbFemale.setOnClickListener{
@@ -272,6 +154,8 @@ class RegistrationFragment: Fragment() {
             binding.cbUnspecified.isClickable = true
             binding.cbUnspecified.isChecked = false
             binding.cvGender.setState(State.CORRECT)
+            viewModel.genderState = State.CORRECT
+
         }
 
         binding.cbUnspecified.setOnClickListener{
@@ -283,8 +167,121 @@ class RegistrationFragment: Fragment() {
             binding.cbFemale.isClickable = true
             binding.cbFemale.isChecked = false
             binding.cvGender.setState(State.CORRECT)
+            viewModel.genderState = State.CORRECT
+
         }
 
         return binding.root
+    }
+
+    private fun handleFirstNameEvents(event: FirstNameUiEvent){
+        when (event){
+            is FirstNameUiEvent.OnTextEmpty -> {
+                binding.tvNameRequest.isVisible = true
+                binding.cvFirstName.setState(State.ERROR)
+            }
+            is FirstNameUiEvent.OnTextValid -> {
+                binding.tvNameRequest.isGone = true
+                binding.cvFirstName.setState(State.CORRECT)
+            }
+        }
+    }
+
+    private fun handleLastNameEvents(event: LastNameUiEvent){
+        when (event){
+            is LastNameUiEvent.OnTextEmpty -> {
+                binding.tvLastNameRequest.isVisible = true
+                binding.cvLastname.setState(State.ERROR)
+            }
+            is LastNameUiEvent.OnTextValid -> {
+                binding.tvLastNameRequest.isGone = true
+                binding.cvLastname.setState(State.CORRECT)
+            }
+        }
+    }
+
+    private fun handleEmailEvents(event: EmailUiEvent){
+        when (event){
+            is EmailUiEvent.OnTextEmpty -> {
+                binding.tvEmailRequest.isVisible = true
+                binding.cvEmail.setState(State.ERROR)
+            }
+            is EmailUiEvent.OnTextValid -> {
+                binding.tvEmailRequest.isGone = true
+                binding.cvEmail.setState(State.CORRECT)
+            }
+            is EmailUiEvent.OnTextInvalid ->{
+                binding.tvEmailRequest.isVisible = true
+                binding.cvEmail.setState(State.ERROR)
+            }
+        }
+    }
+
+    private fun handlePasswordEvents(event: PasswordUiEvent){
+        when (event){
+            is PasswordUiEvent.OnTextEmpty -> {
+                binding.passProgressBar.isGone = true
+                binding.cvPassword.setState(State.ERROR)
+            }
+            is PasswordUiEvent.OnTextValid -> {
+                binding.tvPassRequirements.isGone = true
+                binding.cvPassword.setState(State.CORRECT)
+            }
+            is PasswordUiEvent.OnTextInvalid ->{
+                binding.passProgressBar.isGone = true
+                binding.cvPassword.setState(State.ERROR)
+            }
+            is PasswordUiEvent.OnProcess ->{
+                binding.passProgressBar.isVisible = true
+                binding.passProgressBar.progress = event.textSize
+            }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun handleDaysEvents(event: DaysUiEvent){
+        when (event){
+            is DaysUiEvent.OnTextEmpty -> {
+                binding.tvDateRq.isVisible = true
+                binding.cvDate.setState(State.ERROR)
+            }
+            is DaysUiEvent.OnTextValid -> {
+                if(binding.etDateDays.text.toString().length == 2){
+                    binding.etDateMonthes.requestFocus()
+                }
+            }
+            is DaysUiEvent.OnNotFocus -> {
+                if(binding.etDateDays.text.toString().length == 1) {
+                    binding.etDateDays.setText("0${binding.etDateDays.text}")
+                }
+            }
+            is DaysUiEvent.OnTextInvalid -> {
+                binding.tvDateRq.isVisible = true
+                binding.cvDate.setState(State.ERROR)
+            }
+        }
+    }
+
+    private fun handleMonthesEvents(event: MonthesUiEvent){
+        when (event){
+            is MonthesUiEvent.OnTextEmpty -> {
+                binding.tvDateRq.isVisible = true
+                binding.cvDate.setState(State.ERROR)
+            }
+            is MonthesUiEvent.OnTextValid -> {
+                if(binding.etDateMonthes.text.toString().length == 2){
+                    binding.etDateYears.requestFocus()
+                }
+            }
+            is MonthesUiEvent.OnNotFocus -> {
+                if(binding.etDateMonthes.text.toString().length == 1) {
+                    binding.etDateMonthes.setText("0${binding.etDateMonthes.text}")
+                }
+            }
+            is MonthesUiEvent.OnTextInvalid -> {
+                binding.tvDateRq.isVisible = true
+                binding.cvDate.setState(State.ERROR)
+            }
+        }
     }
 }

@@ -53,6 +53,7 @@ dependencies {
 
     //JSoup
     implementation "org.jsoup:jsoup:$version_jsoup"
+    implementation 'org.chromium.net:cronet-embedded:76.3809.111'
 
     //Dagger
     kapt "com.google.dagger:dagger-compiler:$version_dagger"

@@ -57,6 +57,8 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/first_name"
+                    app:addTextChangedListener="@{viewModel.FirstNameOnTextChangeListener}"
+                    app:onFocusChangeListener = "@{viewModel.FirstNameOnFocusListener}"
                     android:inputType="textPersonName"
                     android:minHeight="48dp"
                     tools:ignore="SpeakableTextPresentCheck" />
@@ -135,6 +137,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
+                    app:addTextChangedListener="@{viewModel.lastNameOnTextChangeListener}"
+                    app:onFocusChangeListener = "@{viewModel.lastNameOnFocusListener}"
                     android:hint="@string/last_name"
                     android:inputType="textPersonName"
                     android:minHeight="48dp" />
@@ -214,6 +218,8 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/email_example"
+                    app:addTextChangedListener="@{viewModel.emailOnTextChangeListener}"
+                    app:onFocusChangeListener = "@{viewModel.emailOnFocusListener}"
                     android:inputType="textEmailAddress"
                     android:minHeight="48dp"
                     tools:ignore="SpeakableTextPresentCheck" />
@@ -303,6 +309,8 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:hint="@string/password_hint"
+                    app:addTextChangedListener="@{viewModel.passwordOnTextChangeListener}"
+                    app:onFocusChangeListener = "@{viewModel.passwordOnFocusListener}"
                     android:inputType="textPassword"
                     android:minHeight="48dp" />
 
@@ -492,6 +500,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/dd"
+                    app:addTextChangedListener="@{viewModel.daysOnTextChangeListener}"
+                    app:onFocusChangeListener = "@{viewModel.daysOnFocusListener}"
                     android:inputType="date"
                     android:maxLength="2"
                     android:textSize="12sp"
@@ -528,6 +538,8 @@
                     android:hint="@string/mm"
                     android:inputType="date"
                     android:maxLength="2"
+                    app:addTextChangedListener="@{viewModel.monthesOnTextChangeListener}"
+                    app:onFocusChangeListener = "@{viewModel.monthesOnFocusListener}"
                     android:textSize="12sp"
                     android:imeOptions="actionDone"/>
             </com.google.android.material.textfield.TextInputLayout>
