@@ -36,4 +36,10 @@ dependencies {
     implementation "androidx.core:core-ktx:$version_core"
     implementation "androidx.appcompat:appcompat:$version_appcompat"
     implementation "com.google.android.material:material:$version_material"
+
+    //Firebase
+    implementation platform("com.google.firebase:firebase-bom:$version_firebase")
+    implementation 'com.google.firebase:firebase-auth-ktx'
+
+    implementation project(path: ':registration-domain')
 }

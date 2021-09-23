@@ -51,10 +51,10 @@ class FixturesViewModel @Inject constructor(private val getMatchesSchedule: GetM
 
     init {
         _tours.value = 0
-        parse()
+        dataLoading()
     }
 
-    private fun parse(){
+    private fun dataLoading(){
         _events.postValue(UiEvent.Loading)
 
         viewModelScope.launch(Dispatchers.IO){
@@ -103,7 +103,7 @@ class FixturesViewModel @Inject constructor(private val getMatchesSchedule: GetM
         showList(filter)
     }
 
-    private fun backClicked(){
+    fun backArrowClicked(){
         _tours.value = _tours.value?.minus(1)
         _tours.value?.let {
             if(it > 0){
@@ -114,18 +114,9 @@ class FixturesViewModel @Inject constructor(private val getMatchesSchedule: GetM
         }
     }
 
-    fun backArrowClicked(){
-        backClicked()
-    }
-
-
-    private fun nextClicked(){
+    fun nextArrowClicked(){
         _tours.value = _tours.value?.plus(1)
         _events.value = matchesMap[_tours.value]?.let {mapList -> UiEvent.Success(mapList) }
-    }
-
-    fun nextArrowClicked(){
-        nextClicked()
     }
 
 

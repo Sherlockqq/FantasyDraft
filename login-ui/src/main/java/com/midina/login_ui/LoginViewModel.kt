@@ -2,16 +2,17 @@ package com.midina.login_ui
 
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import androidx.lifecycle.viewModelScope
+import com.midina.login_domain.usecase.SigningIn
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class LoginViewModel: ViewModel() {
 
-    private val fAuth = Firebase.auth
+class LoginViewModel(private val signingIn : SigningIn): ViewModel() {
+
 
     private val _email = MutableLiveData<String>()
     val email : LiveData<String>
@@ -50,19 +51,12 @@ class LoginViewModel: ViewModel() {
         }
     }
 
-    private fun signingIn(){
-        fAuth.signInWithEmailAndPassword(_email.value.toString(),
-            _password.value.toString()).addOnCompleteListener {
-                task ->
-                if(task.isSuccessful){
-                    Log.i("SIGN IN","SIGNED IN")
-                }else{
-                    Log.i("SIGN IN","NOT SIGNED IN")
-                }
+    fun signInClicked(){
+        viewModelScope.launch(Dispatchers.IO) {
+            signIn()
         }
     }
-
-    fun signInClicked(){
-        signingIn()
+    suspend fun signIn(){
+        signingIn.execute(_email.value.toString(),_password.value.toString())
     }
 }

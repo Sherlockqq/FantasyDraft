@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk = version_comp_sdk
 
     defaultConfig {
         applicationId "com.example.fantasydraft"
-        minSdk 21
-        targetSdk 31
-        versionCode 1
+        minSdk = version_min_sdk
+        targetSdk = version_target_sdk
+        versionCode = version_code
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -73,10 +73,11 @@ dependencies {
     implementation project(path: ':draft-data')
     implementation project(path: ':draft-domain')
     implementation project(path: ':draft-ui')
-    implementation project(path: ':registration-data')
     implementation project(path: ':registration-ui')
-    implementation project(path: ':login-data')
+    implementation project(path: ':registration-domain')
+    implementation project(path: ':registration-data')
     implementation project(path: ':login-domain')
+    implementation project(path: ':login-data')
     implementation project(path: ':login-ui')
     implementation project(path: ':core-ui')
 }

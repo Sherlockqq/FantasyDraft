@@ -18,7 +18,6 @@ class CheckStateView (context: Context, attrs: AttributeSet) :
 
     private val paint = Paint()
 
-    // Some colors for the face background, eyes and mouth.
     private var stateImage = State.DEFAULT
 
     // View size in pixels

@@ -23,10 +23,10 @@
                 android:id="@+id/tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/nameMarginStart"
+                android:layout_marginTop="@dimen/nameMarginTop"
                 android:text="@string/first_name"
-                android:textSize="20sp"
+                android:textSize="@dimen/mainTextOfTopic"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -35,8 +35,8 @@
                 android:id="@+id/tv_name_rq"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/rqMarginStart"
+                android:layout_marginTop="@dimen/rqNameMarginTop"
                 android:text="@string/required"
                 app:layout_constraintStart_toEndOf="@+id/tv_name"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -44,10 +44,10 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_firstName"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="256dp"
+                android:layout_width="@dimen/editTextWidth"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="@dimen/etMarginStart"
+                android:layout_marginTop="@dimen/etMarginTop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_name">
 
@@ -60,7 +60,7 @@
                     android:afterTextChanged="@{(text) -> viewModel.onFirstNameChanged(text)}"
                     app:onFocusChangeListener = "@{viewModel.FirstNameOnFocusListener}"
                     android:inputType="textPersonName"
-                    android:minHeight="48dp"
+                    android:minHeight="@dimen/etMinHeight"
                     tools:ignore="SpeakableTextPresentCheck" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,8 +68,8 @@
                 android:id="@+id/tv_name_request"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/requestMarginStart"
+                android:layout_marginTop="@dimen/requestMarginTop"
                 android:text="@string/name_request"
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
@@ -78,8 +78,8 @@
             <com.midina.core_ui.ui.CheckStateView
 
                 android:id="@+id/cvFirstName"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/cvWidth"
+                android:layout_height="@dimen/cvHeight"
                 android:layout_marginEnd="@dimen/cvEndMargin"
                 app:layout_constraintBottom_toBottomOf="@+id/dividerLine1"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -90,9 +90,9 @@
             <View
                 android:id="@+id/dividerLine1"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="8dp"
-                android:background="#000000"
+                android:layout_height="@dimen/dividerHeight"
+                android:layout_marginTop="@dimen/dividerMarginTop"
+                android:background="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -102,10 +102,10 @@
                 android:id="@+id/tv_last_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginStart="@dimen/mainTextMarginStart"
+                android:layout_marginTop="@dimen/mainTextMarginTop"
                 android:text="@string/last_name"
-                android:textSize="20sp"
+                android:textSize="@dimen/mainTextOfTopic"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dividerLine1" />
@@ -114,8 +114,8 @@
                 android:id="@+id/tv_last_name_rq"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginStart="@dimen/rqMarginStart"
+                android:layout_marginTop="@dimen/rqMarginTop"
                 android:text="@string/required"
                 app:layout_constraintStart_toEndOf="@+id/tv_last_name"
                 app:layout_constraintTop_toBottomOf="@+id/dividerLine1" />
@@ -124,10 +124,10 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_lastName"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="256dp"
+                android:layout_width="@dimen/editTextWidth"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="@dimen/etMarginStart"
+                android:layout_marginTop="@dimen/etMarginTop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_last_name">
 
@@ -141,7 +141,7 @@
                     app:onFocusChangeListener = "@{viewModel.lastNameOnFocusListener}"
                     android:hint="@string/last_name"
                     android:inputType="textPersonName"
-                    android:minHeight="48dp" />
+                    android:minHeight="@dimen/etMinHeight" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -149,8 +149,8 @@
                 android:id="@+id/tv_last_name_request"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/requestMarginStart"
+                android:layout_marginTop="@dimen/requestMarginTop"
                 android:text="@string/lastName_request"
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
@@ -159,8 +159,8 @@
 
             <com.midina.core_ui.ui.CheckStateView
                 android:id="@+id/cvLastname"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/cvWidth"
+                android:layout_height="@dimen/cvHeight"
                 android:layout_marginEnd="@dimen/cvEndMargin"
                 app:layout_constraintBottom_toBottomOf="@+id/dividerLine2"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -171,9 +171,9 @@
             <View
                 android:id="@+id/dividerLine2"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="8dp"
-                android:background="#000000"
+                android:layout_height="@dimen/dividerHeight"
+                android:layout_marginTop="@dimen/dividerMarginTop"
+                android:background="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -183,10 +183,10 @@
                 android:id="@+id/tv_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginStart="@dimen/mainTextMarginStart"
+                android:layout_marginTop="@dimen/mainTextMarginTop"
                 android:text="@string/email_address"
-                android:textSize="20sp"
+                android:textSize="@dimen/mainTextOfTopic"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dividerLine2" />
@@ -195,8 +195,8 @@
                 android:id="@+id/tv_email_rq"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginStart="@dimen/rqMarginStart"
+                android:layout_marginTop="@dimen/rqMarginTop"
                 android:text="@string/required"
                 app:layout_constraintStart_toEndOf="@+id/tv_email"
                 app:layout_constraintTop_toBottomOf="@+id/dividerLine2" />
@@ -205,10 +205,10 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_email"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="256dp"
+                android:layout_width="@dimen/editTextWidth"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="@dimen/etMarginStart"
+                android:layout_marginTop="@dimen/etMarginTop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_email">
 
@@ -221,7 +221,7 @@
                     android:afterTextChanged="@{(text) -> viewModel.onEmailChanged(text)}"
                     app:onFocusChangeListener = "@{viewModel.emailOnFocusListener}"
                     android:inputType="textEmailAddress"
-                    android:minHeight="48dp"
+                    android:minHeight="@dimen/etMinHeight"
                     tools:ignore="SpeakableTextPresentCheck" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -231,8 +231,8 @@
                 android:id="@+id/tv_email_request"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/requestMarginStart"
+                android:layout_marginTop="@dimen/requestMarginTop"
                 android:text="@string/email_request"
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
@@ -242,16 +242,16 @@
                 android:id="@+id/tv_email_sending"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/emailSendingMarginStart"
+                android:layout_marginTop="@dimen/emailSendingMarginTop"
                 android:text="@string/confirmation"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_email_request" />
 
             <com.midina.core_ui.ui.CheckStateView
                 android:id="@+id/cvEmail"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/cvWidth"
+                android:layout_height="@dimen/cvHeight"
                 android:layout_marginEnd="@dimen/cvEndMargin"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_email_sending"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -262,9 +262,9 @@
             <View
                 android:id="@+id/dividerLine3"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="8dp"
-                android:background="#000000"
+                android:layout_height="@dimen/dividerHeight"
+                android:layout_marginTop="@dimen/dividerMarginTop"
+                android:background="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -274,10 +274,10 @@
                 android:id="@+id/tv_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginStart="@dimen/mainTextMarginStart"
+                android:layout_marginTop="@dimen/mainTextMarginTop"
                 android:text="@string/password"
-                android:textSize="20sp"
+                android:textSize="@dimen/mainTextOfTopic"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dividerLine3" />
@@ -286,8 +286,8 @@
                 android:id="@+id/tv_pass_rq"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginStart="@dimen/rqMarginStart"
+                android:layout_marginTop="@dimen/rqMarginTop"
                 android:text="@string/required"
                 app:layout_constraintStart_toEndOf="@+id/tv_password"
                 app:layout_constraintTop_toBottomOf="@+id/dividerLine3" />
@@ -295,10 +295,10 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_password"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="256dp"
+                android:layout_width="@dimen/editTextWidth"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="@dimen/etMarginStart"
+                android:layout_marginTop="@dimen/etMarginTop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_password"
                 app:passwordToggleEnabled="true">
@@ -312,20 +312,20 @@
                     android:afterTextChanged="@{(text) -> viewModel.onPasswordChanged(text)}"
                     app:onFocusChangeListener = "@{viewModel.passwordOnFocusListener}"
                     android:inputType="textPassword"
-                    android:minHeight="48dp" />
+                    android:minHeight="@dimen/etMinHeight" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
             <ProgressBar
                 android:id="@+id/pass_progress_bar"
                 style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="256dp"
-                android:layout_height="32dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_width="@dimen/progressBarWidth"
+                android:layout_height="@dimen/progressBarHeight"
+                android:layout_marginStart="@dimen/progressBarMarginStart"
+                android:layout_marginTop="@dimen/progressBarMarginTop"
                 android:max="8"
-                android:progressBackgroundTint="#8BC34A"
-                android:progressTint="#FFEB3B"
+                android:progressBackgroundTint="@color/progressBackgroundTint"
+                android:progressTint="@color/progressTint"
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/til_password"
@@ -335,8 +335,8 @@
                 android:id="@+id/tv_pass_requirements"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/requestMarginStart"
+                android:layout_marginTop="@dimen/requestMarginTop"
                 android:text="@string/pass_requirements"
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="parent"
@@ -344,8 +344,8 @@
 
             <com.midina.core_ui.ui.CheckStateView
                 android:id="@+id/cvPassword"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/cvWidth"
+                android:layout_height="@dimen/cvHeight"
                 android:layout_marginEnd="@dimen/cvEndMargin"
                 app:layout_constraintBottom_toBottomOf="@+id/dividerLine4"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -356,9 +356,9 @@
             <View
                 android:id="@+id/dividerLine4"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="8dp"
-                android:background="#000000"
+                android:layout_height="@dimen/dividerHeight"
+                android:layout_marginTop="@dimen/dividerMarginTop"
+                android:background="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -368,10 +368,10 @@
                 android:id="@+id/tv_gender"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginStart="@dimen/mainTextMarginStart"
+                android:layout_marginTop="@dimen/mainTextMarginTop"
                 android:text="@string/gender"
-                android:textSize="20sp"
+                android:textSize="@dimen/mainTextOfTopic"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dividerLine4" />
@@ -380,8 +380,8 @@
                 android:id="@+id/tv_gender_rq"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginStart="@dimen/rqMarginStart"
+                android:layout_marginTop="@dimen/rqMarginTop"
                 android:text="@string/required"
                 app:layout_constraintStart_toEndOf="@+id/tv_gender"
                 app:layout_constraintTop_toBottomOf="@+id/dividerLine4" />
@@ -390,8 +390,8 @@
                 android:id="@+id/cb_male"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/genderMaleMarginStart"
+                android:layout_marginTop="@dimen/genderMarginTop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_gender" />
 
@@ -399,8 +399,8 @@
                 android:id="@+id/cb_female"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/genderMarginStart"
+                android:layout_marginTop="@dimen/genderMarginTop"
                 app:layout_constraintStart_toEndOf="@+id/cb_male"
                 app:layout_constraintTop_toBottomOf="@+id/tv_gender" />
 
@@ -408,8 +408,8 @@
                 android:id="@+id/cb_unspecified"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/genderMarginStart"
+                android:layout_marginTop="@dimen/genderMarginTop"
                 app:layout_constraintStart_toEndOf="@+id/cb_female"
                 app:layout_constraintTop_toBottomOf="@+id/tv_gender" />
 
@@ -417,8 +417,8 @@
                 android:id="@+id/tv_male"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/genderMaleMarginStart"
+                android:layout_marginTop="@dimen/genderMarginTop"
                 android:text="@string/male"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cb_male" />
@@ -427,7 +427,7 @@
                 android:id="@+id/tv_female"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/genderMarginTop"
                 android:text="@string/female"
                 app:layout_constraintStart_toStartOf="@+id/cb_female"
                 app:layout_constraintTop_toBottomOf="@+id/cb_female" />
@@ -436,15 +436,15 @@
                 android:id="@+id/tv_unspecified"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/genderMarginTop"
                 android:text="@string/unspecified"
                 app:layout_constraintStart_toStartOf="@+id/cb_unspecified"
                 app:layout_constraintTop_toBottomOf="@+id/cb_unspecified" />
 
             <com.midina.core_ui.ui.CheckStateView
                 android:id="@+id/cvGender"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/cvWidth"
+                android:layout_height="@dimen/cvHeight"
                 android:layout_marginEnd="@dimen/cvEndMargin"
                 app:layout_constraintBottom_toBottomOf="@+id/dividerLine5"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -455,9 +455,9 @@
             <View
                 android:id="@+id/dividerLine5"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="8dp"
-                android:background="#000000"
+                android:layout_height="@dimen/dividerHeight"
+                android:layout_marginTop="@dimen/dividerMarginTop"
+                android:background="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -467,10 +467,10 @@
                 android:id="@+id/tv_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginStart="@dimen/mainTextMarginStart"
+                android:layout_marginTop="@dimen/mainTextMarginTop"
                 android:text="@string/date"
-                android:textSize="20sp"
+                android:textSize="@dimen/mainTextOfTopic"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dividerLine5" />
@@ -479,8 +479,8 @@
                 android:id="@+id/tv_date_rq"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginStart="@dimen/rqMarginStart"
+                android:layout_marginTop="@dimen/rqMarginTop"
                 android:text="@string/required"
                 app:layout_constraintStart_toEndOf="@+id/tv_date"
                 app:layout_constraintTop_toBottomOf="@+id/dividerLine5" />
@@ -490,8 +490,8 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/etMarginStart"
+                android:layout_marginTop="@dimen/dateMarginTop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_date">
 
@@ -504,7 +504,7 @@
                     app:onFocusChangeListener = "@{viewModel.daysOnFocusListener}"
                     android:inputType="number"
                     android:maxLength="2"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/dateTextSize"
                     android:imeOptions="actionDone"/>
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -514,10 +514,10 @@
                 android:id="@+id/tv_slash1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="@dimen/slashMarginStart"
+                android:layout_marginTop="@dimen/firstSlashMarginTop"
                 android:text="@string/slash"
-                android:textSize="36sp"
+                android:textSize="@dimen/slash"
                 app:layout_constraintStart_toEndOf="@+id/til_days"
                 app:layout_constraintTop_toBottomOf="@+id/tv_date" />
 
@@ -526,8 +526,8 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/dateMarginStart"
+                android:layout_marginTop="@dimen/dateMarginTop"
                 app:layout_constraintStart_toEndOf="@+id/tv_slash1"
                 app:layout_constraintTop_toBottomOf="@+id/tv_date">
 
@@ -540,7 +540,7 @@
                     android:maxLength="2"
                     app:addTextChangedListener="@{viewModel.monthesOnTextChangeListener}"
                     app:onFocusChangeListener = "@{viewModel.monthesOnFocusListener}"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/dateTextSize"
                     android:imeOptions="actionDone"/>
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -549,10 +549,10 @@
                 android:id="@+id/tv_slash2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginStart="@dimen/slashMarginStart"
+                android:layout_marginTop="@dimen/slashMarginTop"
                 android:text="@string/slash"
-                android:textSize="36sp"
+                android:textSize="@dimen/slash"
                 app:layout_constraintStart_toEndOf="@+id/til_monthes"
                 app:layout_constraintTop_toBottomOf="@+id/tv_date" />
 
@@ -560,10 +560,10 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_years"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="72dp"
+                android:layout_width="@dimen/yearsWidth"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="@dimen/dateMarginStart"
+                android:layout_marginTop="@dimen/dateMarginTop"
                 app:layout_constraintStart_toEndOf="@+id/tv_slash2"
                 app:layout_constraintTop_toBottomOf="@+id/tv_date">
 
@@ -578,15 +578,15 @@
                     app:onFocusChangeListener = "@{viewModel.yearsOnFocusListener}"
                     android:inputType="number"
                     android:maxLength="4"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/dateTextSize" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
 
             <com.midina.core_ui.ui.CheckStateView
                 android:id="@+id/cvDate"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="@dimen/cvWidth"
+                android:layout_height="@dimen/cvHeight"
                 android:layout_marginEnd="@dimen/cvEndMargin"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="@+id/dividerLine6"
@@ -599,9 +599,9 @@
             <View
                 android:id="@+id/dividerLine6"
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginTop="8dp"
-                android:background="#000000"
+                android:layout_height="@dimen/dividerHeight"
+                android:layout_marginTop="@dimen/dividerMarginTop"
+                android:background="@color/black"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -611,8 +611,8 @@
                 android:id="@+id/bt_regist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="@dimen/registerMarginTop"
+                android:layout_marginBottom="@dimen/registerMarginBottom"
                 android:text="@string/to_regist"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

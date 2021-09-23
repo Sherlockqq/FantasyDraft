@@ -8,10 +8,14 @@ import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.midina.core_ui.ui.State
 import com.midina.core_ui.ui.SingleLiveEvent
+import com.midina.registration_domain.usecase.registrUser
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.NumberFormatException
 
 private const val JANUARY = 1
@@ -33,7 +37,7 @@ private const val MONTHES_INT_SIZE = 2
 private const val YEARS_INT_SIZE = 4
 
 //TODO Mediator live data
-class RegistrationViewModel: ViewModel() {
+class RegistrationViewModel(private val registrUser: registrUser): ViewModel() {
 
     private val fAuth = Firebase.auth
 
@@ -358,22 +362,16 @@ class RegistrationViewModel: ViewModel() {
         return false
     }
 
-    private fun registrUser(){
+    private suspend fun registrUser(){
         if(checkingAllIsCorrect()){
-            fAuth.createUserWithEmailAndPassword(_email.value.toString(),
-            _password.value.toString()).addOnCompleteListener {
-                task ->
-                if(task.isSuccessful){
-                    Log.i("CHECK","WIN")
-                }else{
-                    Log.i("CHECK","LOSE")
-                }
-            }
+            registrUser.execute(_email.value.toString(),_password.value.toString())
         }
     }
 
     fun registrationIsClicked(){
-        registrUser()
+        viewModelScope.launch(Dispatchers.IO) {
+            registrUser()
+        }
     }
 
 }

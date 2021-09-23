@@ -108,42 +108,15 @@ class RegistrationFragment: Fragment() {
 
 
         binding.cbMale.setOnClickListener{
-            binding.cbMale.isClickable = false
-
-            binding.cbFemale.isClickable = true
-            binding.cbFemale.isChecked = false
-
-            binding.cbUnspecified.isClickable = true
-            binding.cbUnspecified.isChecked = false
-
-            binding.cvGender.setState(State.CORRECT)
-            viewModel.genderState = State.CORRECT
+            MaleChecked()
         }
 
         binding.cbFemale.setOnClickListener{
-            binding.cbFemale.isClickable = false
-
-            binding.cbMale.isClickable = true
-            binding.cbMale.isChecked = false
-
-            binding.cbUnspecified.isClickable = true
-            binding.cbUnspecified.isChecked = false
-            binding.cvGender.setState(State.CORRECT)
-            viewModel.genderState = State.CORRECT
-
+            FemaleChecked()
         }
 
         binding.cbUnspecified.setOnClickListener{
-            binding.cbUnspecified.isClickable = false
-
-            binding.cbMale.isClickable = true
-            binding.cbMale.isChecked = false
-
-            binding.cbFemale.isClickable = true
-            binding.cbFemale.isChecked = false
-            binding.cvGender.setState(State.CORRECT)
-            viewModel.genderState = State.CORRECT
-
+            UnspecifiedChecked()
         }
 
         return binding.root
@@ -286,5 +259,40 @@ class RegistrationFragment: Fragment() {
             }
         }
     }
+    private fun MaleChecked(){
+        binding.cbMale.isClickable = false
 
+        binding.cbFemale.isClickable = true
+        binding.cbFemale.isChecked = false
+
+        binding.cbUnspecified.isClickable = true
+        binding.cbUnspecified.isChecked = false
+
+        binding.cvGender.setState(State.CORRECT)
+        viewModel.genderState = State.CORRECT
+    }
+
+    private fun FemaleChecked(){
+        binding.cbFemale.isClickable = false
+
+        binding.cbMale.isClickable = true
+        binding.cbMale.isChecked = false
+
+        binding.cbUnspecified.isClickable = true
+        binding.cbUnspecified.isChecked = false
+        binding.cvGender.setState(State.CORRECT)
+        viewModel.genderState = State.CORRECT
+    }
+
+    private fun UnspecifiedChecked(){
+        binding.cbUnspecified.isClickable = false
+
+        binding.cbMale.isClickable = true
+        binding.cbMale.isChecked = false
+
+        binding.cbFemale.isClickable = true
+        binding.cbFemale.isChecked = false
+        binding.cvGender.setState(State.CORRECT)
+        viewModel.genderState = State.CORRECT
+    }
 }

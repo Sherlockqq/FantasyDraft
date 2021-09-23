@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk = version_comp_sdk
 
     defaultConfig {
-        minSdk 21
-        targetSdk 31
-        versionCode 1
+        minSdk = version_min_sdk
+        targetSdk = version_target_sdk
+        versionCode = version_code
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -50,10 +50,7 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$version_dagger"
     kapt "com.google.dagger:dagger-android-processor:$version_dagger"
 
-    //Firebase
-    implementation platform("com.google.firebase:firebase-bom:$version_firebase")
-    implementation 'com.google.firebase:firebase-auth-ktx'
-
     //Modules
+    implementation project(path: ':login-domain')
     implementation project(path: ':core-ui')
 }
