@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="editTextWidth">256dp</dimen>
+    <dimen name="editTextMarginBottom">32dp</dimen>
+    <dimen name="LoginMarginTop">8dp</dimen>
+</resources>

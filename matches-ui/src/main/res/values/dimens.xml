@@ -2,4 +2,18 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fixturesItemsText">16sp</dimen>
+    <dimen name="imageWidth">36dp</dimen>
+    <dimen name="imageHeight">42dp</dimen>
+    <dimen name="imageMarginStart">8dp</dimen>
+    <dimen name="imageMarginTop">8dp</dimen>
+    <dimen name="imageMarginBottom">8dp</dimen>
+    <dimen name="imageMarginEnd">8dp</dimen>
+    <dimen name="teamMarginTop">16dp</dimen>
+    <dimen name="dateMarginTop">8dp</dimen>
+    <dimen name="dateMarginEnd">8dp</dimen>
+    <dimen name="scoreMarginTop">16dp</dimen>
+    <dimen name="teamMarginEnd">8dp</dimen>
+    <dimen name="tourMarginStart">8dp</dimen>
+    <dimen name="tourMarginTop">8dp</dimen>
 </resources>

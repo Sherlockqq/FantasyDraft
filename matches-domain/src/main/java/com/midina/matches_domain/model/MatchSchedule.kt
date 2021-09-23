@@ -6,5 +6,6 @@ data class MatchSchedule(
     var homeTeam : String,
     var guestTeam : String,
     var date : String,
-    var score : String
+    var score : String,
+    val isHeader : Boolean? = null
 )

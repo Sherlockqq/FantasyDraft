@@ -9,8 +9,20 @@ ext {
     version_navigation = "2.3.5"
     version_constaint = "2.1.0"
     version_material = "1.4.0"
+    version_annotation = "1.2.0"
+    version_legacy = "1.0.0"
 //    di
     version_dagger = "2.38.1"
-//    other
+//    jsoup
     version_jsoup = "1.13.1"
+//    Glide
+    version_glide ="4.12.0"
+//Firebase
+    version_firebase = "28.4.1"
+
+    //SDK
+    version_comp_sdk = 31
+    version_min_sdk = 21
+    version_target_sdk = 31
+    version_code = 1
 }

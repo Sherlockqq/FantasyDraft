@@ -4,17 +4,19 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.fantasydraft.databinding.ActivityMainBinding
+import com.midina.core_ui.ui.OnBottomNavHideListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
 
 @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -42,4 +44,13 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
+
+    override fun onHide() {
+        binding.bottomNavigation.isVisible = false
+    }
+
+    override fun onShow() {
+        binding.bottomNavigation.isVisible = true
+    }
+
 }

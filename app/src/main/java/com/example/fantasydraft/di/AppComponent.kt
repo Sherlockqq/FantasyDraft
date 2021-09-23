@@ -3,6 +3,7 @@ package com.example.fantasydraft.di
 import android.content.Context
 import com.example.fantasydraft.FantasydraftApplication
 import com.midina.core_ui.di.ViewModelBuilderModule
+import com.midina.draft_ui.di.DraftUiModule
 import com.midina.matches_data.di.MatchesDataModule
 import com.midina.matches_ui.di.MatchesUiModule
 import dagger.BindsInstance
@@ -16,7 +17,8 @@ import dagger.android.AndroidInjectionModule
     ViewModelBuilderModule::class,
     MatchesDataModule::class,
     MatchesUiModule::class,
-    MainActivityModule::class])
+    MainActivityModule::class,
+    DraftUiModule::class])
 interface AppComponent {
     @Component.Builder
     interface Builder {
