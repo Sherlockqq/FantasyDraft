@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/draft_navigation"
+    app:startDestination="@id/draftFragment">
+
+    <fragment
+        android:id="@+id/draftFragment"
+        android:name="com.midina.draft_ui.DraftFragment"
+        android:label="DraftFragment"
+        tools:layout="@layout/fragment_draft" />
+
+</navigation>

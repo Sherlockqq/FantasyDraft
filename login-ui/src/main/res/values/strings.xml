@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="email_example">example@gmail.com</string>
+    <string name="password_hint">Your password</string>
+    <string name="sign_in">Sign In</string>
+</resources>

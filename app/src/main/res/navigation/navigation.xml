@@ -2,26 +2,10 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/navigation"
-    app:startDestination="@id/fixturesFragment">
+    android:id="@+id/nav_graph"
+    app:startDestination="@+id/fixtures_navigation">
 
-    <fragment
-        android:id="@+id/fixturesFragment"
-        android:name="com.midina.matches_ui.FixturesFragment"
-        android:label="@string/fixtures_label"/>
-    <fragment
-        android:id="@+id/draftFragment"
-        android:name="com.example.fantasydraft.draft.DraftFragment"
-        android:label="fragment_draft"
-        tools:layout="@layout/fragment_draft" >
-        <action
-            android:id="@+id/toRegister"
-            app:destination="@id/registrationFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/registrationFragment"
-        android:name="com.example.fantasydraft.registration.RegistrationFragment"
-        android:label="RegistrationFragment"
-        tools:layout="@layout/registration_fragment"/>
+    <include app:graph="@navigation/fixtures_navigation" />
+    <include app:graph="@navigation/draft_navigation"/>
 
 </navigation>

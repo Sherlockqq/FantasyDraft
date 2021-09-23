@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "133687627539",
+    "project_id": "fantasydraft-fe232",
+    "storage_bucket": "fantasydraft-fe232.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:133687627539:android:561e0e0d9da90874f214e6",
+        "android_client_info": {
+          "package_name": "com.example.fantasydraft"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "133687627539-a9iald5r5016acf91dc9jjq6vk1ejpj2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmVvtx4h-FRt-NaHhoowaNVsTEutIFngg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "133687627539-a9iald5r5016acf91dc9jjq6vk1ejpj2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

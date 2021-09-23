@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sign_in">Sign In</string>
+    <string name="register">I need to register</string>
+    <string name="upl">Ukrainian Premier League</string>
+    <string name="welcome_to_fantasy">Welcome to Fantasy</string>
+</resources>

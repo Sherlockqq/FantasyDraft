@@ -13,9 +13,18 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/core-ui" />
+            <option value="$PROJECT_DIR$/draft-data" />
+            <option value="$PROJECT_DIR$/draft-domain" />
+            <option value="$PROJECT_DIR$/draft-ui" />
+            <option value="$PROJECT_DIR$/login-data" />
+            <option value="$PROJECT_DIR$/login-domain" />
+            <option value="$PROJECT_DIR$/login-ui" />
             <option value="$PROJECT_DIR$/matches-data" />
             <option value="$PROJECT_DIR$/matches-domain" />
             <option value="$PROJECT_DIR$/matches-ui" />
+            <option value="$PROJECT_DIR$/registration-data" />
+            <option value="$PROJECT_DIR$/registration-domain" />
+            <option value="$PROJECT_DIR$/registration-ui" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

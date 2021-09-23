@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.midina.matches_domain.model.MatchSchedule
 
 const val HEADER_VIEW_TYPE = 111
@@ -77,8 +78,14 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.MyViewHolder>() {
                 home.text = item.homeTeam
                 guest.text = item.guestTeam
                 score.text = item.score
-                homeImage.setImageResource(getImage(item.homeTeam))
-                guestImage.setImageResource(getImage(item.guestTeam))
+
+                Glide.with(itemView).load(getImage(item.homeTeam)).into(homeImage)
+                Glide.with(itemView).load(getImage(item.guestTeam)).into(guestImage)
+
+
+
+                //TODO set config 565
+                //Todo уменьшить картинку через фоторедактор а потом tinypng
             }
             private fun getImage(team : String): Int{
                 when(team){
@@ -94,7 +101,7 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.MyViewHolder>() {
                     "Колос К" -> return R.drawable.kolos_logo
                     "Ингулец" -> return R.drawable.ingulets_logo
                     "Рух Львов" -> return R.drawable.rukh_logo
-                    "Черноморец" -> return R.drawable.chornomoets_logo
+                    "Черноморец" -> return R.drawable.chornomorets_logo
                     "Александрия" -> return R.drawable.oleksandriya_logo
                     "Днепр-1" -> return R.drawable.dnipro1_logo
                     "Минай" -> return R.drawable.minaj_logo

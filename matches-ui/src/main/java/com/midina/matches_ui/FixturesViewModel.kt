@@ -1,6 +1,7 @@
 package com.midina.matches_ui
 
 
+import android.os.Build
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,8 +20,6 @@ import java.util.*
 import javax.inject.Inject
 
 //TODO parse gif when match is going
-//TODO TourHeaders in RecyclerView
-//TODO Clean Architecture
 
 private const val DATE_PATTERN = "dd.MM.yyyy HH:mm"
 private const val TOUR_SIZE = 30
@@ -66,9 +65,16 @@ class FixturesViewModel @Inject constructor(private val getMatchesSchedule: GetM
                 is ResultEvent.Success -> {
                     matchesMap = result.value
                     getDateMap()
-                    val tourByDate = getTourByDate()
-                    _tours.postValue(tourByDate)
-                   _events.postValue(matchesMap[tourByDate]?.let { UiEvent.Success(it) })
+                    //TODO CHECK IF IT IS WORK
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        val tourByDate = getTourByDate()
+                        _tours.postValue(tourByDate)
+                        _events.postValue(matchesMap[tourByDate]?.let { UiEvent.Success(it) })
+                    }else{
+                        _tours.postValue(0)
+                        _events.postValue(matchesMap[0]?.let { UiEvent.Success(it) })
+                    }
+
                 }
                 is ResultEvent.Error -> _events.postValue(UiEvent.Error)
             }
@@ -97,7 +103,7 @@ class FixturesViewModel @Inject constructor(private val getMatchesSchedule: GetM
         showList(filter)
     }
 
-    fun backArrowClicked(){
+    private fun backClicked(){
         _tours.value = _tours.value?.minus(1)
         _tours.value?.let {
             if(it > 0){
@@ -108,9 +114,18 @@ class FixturesViewModel @Inject constructor(private val getMatchesSchedule: GetM
         }
     }
 
-    fun nextArrowClicked(){
+    fun backArrowClicked(){
+        backClicked()
+    }
+
+
+    private fun nextClicked(){
         _tours.value = _tours.value?.plus(1)
         _events.value = matchesMap[_tours.value]?.let {mapList -> UiEvent.Success(mapList) }
+    }
+
+    fun nextArrowClicked(){
+        nextClicked()
     }
 
 
@@ -139,7 +154,6 @@ class FixturesViewModel @Inject constructor(private val getMatchesSchedule: GetM
 
     }
 
-    //TODO ЭТО НАДО В USECASE?
     private fun getLocaleDateTimePair(first: String, last:String) :
             Pair<LocalDateTime,LocalDateTime>{
 
@@ -161,14 +175,13 @@ class FixturesViewModel @Inject constructor(private val getMatchesSchedule: GetM
         for (index in 0 until MATCHES_COUNT){
             matchCount++
             if(matchCount == MATCHES_IN_TOUR){
-                //TODO SHOW THIS SHIT
-                dateMap[tourCount] = matchesMap[tourCount]?.get(FIRST_MATCH_IN_TOUR)?.let { first ->
-                    matchesMap[tourCount]?.get(MATCHES_IN_TOUR-1)?.let { second ->
-                        getLocaleDateTimePair(
+                matchesMap[tourCount]?.get(FIRST_MATCH_IN_TOUR)?.let { first ->
+                        matchesMap[tourCount]?.get(MATCHES_IN_TOUR-1)?.let { second ->
+                            dateMap[tourCount] = getLocaleDateTimePair(
                             first.date,
                             second.date)
                     }
-                }!!
+                }
                 matchCount = FIRST_MATCH_IN_TOUR
                 tourCount++
             }
