@@ -20,10 +20,6 @@ class CheckStateView (context: Context, attrs: AttributeSet) :
 
     private var stateImage = State.DEFAULT
 
-    // View size in pixels
-    private var size = 120
-
-
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onDraw(canvas: Canvas) {
 
@@ -34,21 +30,21 @@ class CheckStateView (context: Context, attrs: AttributeSet) :
                 val d = resources.getDrawable(R.drawable.default_state)
                 val bitmap =  drawableToBitmap(d)
                 if (bitmap != null) {
-                    canvas.drawBitmap(bitmap,null, Rect(0,0,160,160),paint)
+                    canvas.drawBitmap(bitmap,null, Rect(0,0,120,120),paint)
                 }
             }
             State.CORRECT -> {
                 val d = resources.getDrawable(R.drawable.ic_check_circle_24)
                 val bitmap =  drawableToBitmap(d)
                 if (bitmap != null) {
-                    canvas.drawBitmap(bitmap,null, Rect(0,0,160,160),paint)
+                    canvas.drawBitmap(bitmap,null, Rect(0,0,120,120),paint)
                 }
             }
             State.ERROR -> {
                 val d = resources.getDrawable(R.drawable.ic_baseline_cancel_24, null)
                 val bitmap =  drawableToBitmap(d)
                 if (bitmap != null) {
-                    canvas.drawBitmap(bitmap,null, Rect(0,0,160,160),paint)
+                    canvas.drawBitmap(bitmap,null, Rect(0,0,120,120),paint)
                 }
             }
         }

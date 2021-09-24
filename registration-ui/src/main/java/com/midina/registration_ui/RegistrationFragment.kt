@@ -133,6 +133,10 @@ class RegistrationFragment: BaseFragment() {
                 binding.tvNameRequest.isGone = true
                 binding.cvFirstName.setState(State.CORRECT)
             }
+            is FirstNameUiEvent.OnTextInvalid -> {
+                binding.tvNameRequest.isVisible = true
+                binding.cvFirstName.setState(State.ERROR)
+            }
         }
     }
 
@@ -145,6 +149,10 @@ class RegistrationFragment: BaseFragment() {
             is LastNameUiEvent.OnTextValid -> {
                 binding.tvLastNameRequest.isGone = true
                 binding.cvLastname.setState(State.CORRECT)
+            }
+            is LastNameUiEvent.OnTextInvalid ->{
+                binding.tvLastNameRequest.isVisible = true
+                binding.cvLastname.setState(State.ERROR)
             }
         }
     }
@@ -229,7 +237,7 @@ class RegistrationFragment: BaseFragment() {
             is MonthesUiEvent.OnNotFocus -> {
                 if(binding.etDateMonthes.text.toString().length == 1) {
                 //TODO Unsubscribe
-                    //todo передать textWatcher (note OnNotFocus doesnt use TextWatcher)
+                    //todo share textWatcher (note OnNotFocus doesnt use TextWatcher)
                     //binding.etDateMonthes.removeTextChangedListener()
                     binding.etDateMonthes.setText("0${binding.etDateMonthes.text}")
                 //TODO Subscribe

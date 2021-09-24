@@ -82,10 +82,6 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
                 Glide.with(itemView).load(getImage(item.homeTeam)).into(homeImage)
                 Glide.with(itemView).load(getImage(item.guestTeam)).into(guestImage)
 
-
-
-                //TODO set config 565
-                //Todo уменьшить картинку через фоторедактор а потом tinypng
             }
             private fun getImage(team : String): Int{
                 when(team){

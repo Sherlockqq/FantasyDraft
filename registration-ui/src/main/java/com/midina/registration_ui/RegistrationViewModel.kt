@@ -36,10 +36,8 @@ private const val DAYS_INT_SIZE = 2
 private const val MONTHES_INT_SIZE = 2
 private const val YEARS_INT_SIZE = 4
 
-//TODO Mediator live data
-class RegistrationViewModel @Inject constructor(private val RegistrUser: RegistrUser): ViewModel() {
 
-    private val fAuth = Firebase.auth
+class RegistrationViewModel @Inject constructor(private val RegistrUser: RegistrUser): ViewModel() {
 
     private val _firstNameEvents = SingleLiveEvent<FirstNameUiEvent>()
     val firstNameEvents: LiveData<FirstNameUiEvent>
@@ -121,6 +119,11 @@ class RegistrationViewModel @Inject constructor(private val RegistrUser: Registr
         if(!hasFocus && _firstName.value?.isEmpty() == true) {
             firstNameState = State.ERROR
             _firstNameEvents.value = FirstNameUiEvent.OnTextEmpty
+        }else{
+            if(!hasFocus && _firstName.value.toString().length<2) {
+                firstNameState = State.ERROR
+                _firstNameEvents.value = FirstNameUiEvent.OnTextInvalid
+            }
         }
     }
 
@@ -130,8 +133,10 @@ class RegistrationViewModel @Inject constructor(private val RegistrUser: Registr
             firstNameState = State.ERROR
             _firstNameEvents.value = FirstNameUiEvent.OnTextEmpty
         }else{
-            firstNameState = State.CORRECT
-            _firstNameEvents.value = FirstNameUiEvent.OnTextValid
+            if(text.toString().length>=2){
+                firstNameState = State.CORRECT
+                _firstNameEvents.value = FirstNameUiEvent.OnTextValid
+            }
         }
     }
 
@@ -139,6 +144,11 @@ class RegistrationViewModel @Inject constructor(private val RegistrUser: Registr
         if(!hasFocus && _lastName.value?.isEmpty() == true) {
             lastNameState = State.ERROR
             _lastNameEvents.value = LastNameUiEvent.OnTextEmpty
+        }else{
+            if(!hasFocus && _lastName.value.toString().length<2) {
+                lastNameState = State.ERROR
+                _lastNameEvents.value = LastNameUiEvent.OnTextInvalid
+            }
         }
     }
 
@@ -148,8 +158,10 @@ class RegistrationViewModel @Inject constructor(private val RegistrUser: Registr
             lastNameState = State.ERROR
             _lastNameEvents.value = LastNameUiEvent.OnTextEmpty
         }else{
-            lastNameState = State.CORRECT
-            _lastNameEvents.value = LastNameUiEvent.OnTextValid
+            if(text.toString().length>=2){
+                lastNameState = State.CORRECT
+                _lastNameEvents.value = LastNameUiEvent.OnTextValid
+            }
         }
     }
 
@@ -323,7 +335,7 @@ class RegistrationViewModel @Inject constructor(private val RegistrUser: Registr
             if(dateDays.value != null || dateDays.value.toString().isNotEmpty() &&
                 dateMonthes.value != null || dateMonthes.value.toString().isNotEmpty() &&
                 dateYears.value != null || dateYears.value.toString().isNotEmpty()){
-                dateState = if(dateYears.value!! in 1901..2020){
+                dateState = if(dateYears.value!! in 1901..2020){ //range of valid year
                     if (dateMonthes.value!! in JANUARY..DECEMBER){
                         if(checkDaysInMonth()){
                             State.CORRECT
@@ -379,14 +391,13 @@ class RegistrationViewModel @Inject constructor(private val RegistrUser: Registr
 sealed class FirstNameUiEvent{
     object OnTextEmpty : FirstNameUiEvent()
     object OnTextValid : FirstNameUiEvent()
-    //TODO Validation
+    object OnTextInvalid: FirstNameUiEvent()
 }
 
 sealed class LastNameUiEvent {
     object OnTextEmpty : LastNameUiEvent()
     object OnTextValid : LastNameUiEvent()
-  //  object OnTextInvalid: LastNameUiEvent()
-    //TODO Validation
+    object OnTextInvalid: LastNameUiEvent()
 }
 
 sealed class EmailUiEvent{

@@ -81,7 +81,8 @@
                 android:layout_width="@dimen/cvWidth"
                 android:layout_height="@dimen/cvHeight"
                 android:layout_marginEnd="@dimen/cvEndMargin"
-                app:layout_constraintBottom_toBottomOf="@+id/dividerLine1"
+                android:scaleType="fitStart"
+                app:layout_constraintBottom_toBottomOf="@+id/til_firstName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -162,7 +163,7 @@
                 android:layout_width="@dimen/cvWidth"
                 android:layout_height="@dimen/cvHeight"
                 android:layout_marginEnd="@dimen/cvEndMargin"
-                app:layout_constraintBottom_toBottomOf="@+id/dividerLine2"
+                app:layout_constraintBottom_toBottomOf="@+id/til_lastName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dividerLine1">
 
@@ -253,7 +254,7 @@
                 android:layout_width="@dimen/cvWidth"
                 android:layout_height="@dimen/cvHeight"
                 android:layout_marginEnd="@dimen/cvEndMargin"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_email_sending"
+                app:layout_constraintBottom_toBottomOf="@+id/til_email"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dividerLine2">
 
@@ -347,7 +348,7 @@
                 android:layout_width="@dimen/cvWidth"
                 android:layout_height="@dimen/cvHeight"
                 android:layout_marginEnd="@dimen/cvEndMargin"
-                app:layout_constraintBottom_toBottomOf="@+id/dividerLine4"
+                app:layout_constraintBottom_toBottomOf="@+id/til_password"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dividerLine3">
 
@@ -399,18 +400,16 @@
                 android:id="@+id/cb_female"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/genderMarginStart"
                 android:layout_marginTop="@dimen/genderMarginTop"
-                app:layout_constraintStart_toEndOf="@+id/cb_male"
+                app:layout_constraintStart_toStartOf="@+id/tv_female"
                 app:layout_constraintTop_toBottomOf="@+id/tv_gender" />
 
             <CheckBox
                 android:id="@+id/cb_unspecified"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/genderMarginStart"
                 android:layout_marginTop="@dimen/genderMarginTop"
-                app:layout_constraintStart_toEndOf="@+id/cb_female"
+                app:layout_constraintStart_toStartOf="@+id/tv_unspecified"
                 app:layout_constraintTop_toBottomOf="@+id/tv_gender" />
 
             <TextView
@@ -427,18 +426,20 @@
                 android:id="@+id/tv_female"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="@dimen/genderMarginTop"
                 android:text="@string/female"
-                app:layout_constraintStart_toStartOf="@+id/cb_female"
+                app:layout_constraintStart_toEndOf="@+id/tv_male"
                 app:layout_constraintTop_toBottomOf="@+id/cb_female" />
 
             <TextView
                 android:id="@+id/tv_unspecified"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="@dimen/genderMarginTop"
                 android:text="@string/unspecified"
-                app:layout_constraintStart_toStartOf="@+id/cb_unspecified"
+                app:layout_constraintStart_toEndOf="@+id/tv_female"
                 app:layout_constraintTop_toBottomOf="@+id/cb_unspecified" />
 
             <com.midina.core_ui.ui.CheckStateView
@@ -446,7 +447,7 @@
                 android:layout_width="@dimen/cvWidth"
                 android:layout_height="@dimen/cvHeight"
                 android:layout_marginEnd="@dimen/cvEndMargin"
-                app:layout_constraintBottom_toBottomOf="@+id/dividerLine5"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_unspecified"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dividerLine4">
 
@@ -488,7 +489,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_days"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/daysWidth"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/etMarginStart"
                 android:layout_marginTop="@dimen/dateMarginTop"
@@ -524,7 +525,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_monthes"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/monthesWidth"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dateMarginStart"
                 android:layout_marginTop="@dimen/dateMarginTop"
@@ -589,7 +590,7 @@
                 android:layout_height="@dimen/cvHeight"
                 android:layout_marginEnd="@dimen/cvEndMargin"
                 android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="@+id/dividerLine6"
+                app:layout_constraintBottom_toBottomOf="@+id/til_years"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/dividerLine5">
 
