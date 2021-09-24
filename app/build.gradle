@@ -55,16 +55,9 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$version_lifecycle"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_lifecycle"
 
-    //JSoup
-    implementation "org.jsoup:jsoup:$version_jsoup"
-
     //Dagger
     kapt "com.google.dagger:dagger-compiler:$version_dagger"
     kapt "com.google.dagger:dagger-android-processor:$version_dagger"
-
-    //Firebase
-    implementation platform("com.google.firebase:firebase-bom:$version_firebase")
-    implementation 'com.google.firebase:firebase-auth-ktx'
 
     //Modules
     implementation project(path: ':matches-data')
