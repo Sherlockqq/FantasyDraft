@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        Log.e("MainActivity +++ ", "-----------onCreate: viewModel.check =  ${viewModel.check}")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
