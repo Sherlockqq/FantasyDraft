@@ -2,7 +2,6 @@ package com.midina.registration_ui
 
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LiveData
@@ -13,10 +12,11 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.midina.core_ui.ui.State
 import com.midina.core_ui.ui.SingleLiveEvent
-import com.midina.registration_domain.usecase.registrUser
+import com.midina.registration_domain.usecase.RegistrUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.NumberFormatException
+import javax.inject.Inject
 
 private const val JANUARY = 1
 private const val FEBRUARY = 2
@@ -37,7 +37,7 @@ private const val MONTHES_INT_SIZE = 2
 private const val YEARS_INT_SIZE = 4
 
 //TODO Mediator live data
-class RegistrationViewModel(private val registrUser: registrUser): ViewModel() {
+class RegistrationViewModel @Inject constructor(private val RegistrUser: RegistrUser): ViewModel() {
 
     private val fAuth = Firebase.auth
 
@@ -364,7 +364,7 @@ class RegistrationViewModel(private val registrUser: registrUser): ViewModel() {
 
     private suspend fun registrUser(){
         if(checkingAllIsCorrect()){
-            registrUser.execute(_email.value.toString(),_password.value.toString())
+            RegistrUser.execute(_email.value.toString(),_password.value.toString())
         }
     }
 

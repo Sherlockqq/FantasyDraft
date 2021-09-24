@@ -43,7 +43,6 @@ dependencies {
     implementation "com.google.android.material:material:$version_material"
     implementation "androidx.navigation:navigation-fragment-ktx:$version_navigation"
     implementation "androidx.navigation:navigation-ui-ktx:$version_navigation"
-    implementation project(path: ':registration-domain')
 
     //Dagger
     kapt "com.google.dagger:dagger-compiler:$version_dagger"

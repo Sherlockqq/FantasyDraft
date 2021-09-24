@@ -33,11 +33,9 @@ class DraftFragment : BaseFragment() {
         binding.registerButton.setOnClickListener { view ->
             findNavController().navigate(R.id.action_registration_navigation, null)
         }
-//        binding.signInButton.setOnClickListener { view ->
-//            findNavController().navigate(R.id.loginFragment,null)
-//        }
-
+        binding.signInButton.setOnClickListener { view ->
+            findNavController().navigate(R.id.action_login_navigation,null)
+        }
         return binding.root
     }
-
 }

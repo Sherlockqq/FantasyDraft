@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.midina.core_ui.ui.State
 import android.view.inputmethod.EditorInfo
@@ -15,22 +14,23 @@ import android.widget.TextView.OnEditorActionListener
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnBottomNavHideListener
 import com.midina.registration_ui.databinding.RegistrationFragmentBinding
 
 //TODO Make ProgressBar Beauty
 //TODO Make CustomView correct size( test on physical device)
 
-class RegistrationFragment: Fragment() {
+class RegistrationFragment: BaseFragment() {
 
     private lateinit var binding: RegistrationFragmentBinding
     private lateinit var fAuth: FirebaseAuth
     private val viewModel: RegistrationViewModel by lazy {
-        ViewModelProvider(this).get(RegistrationViewModel::class.java)
-    }
+        ViewModelProvider(this, viewmodelFactory )[RegistrationViewModel::class.java] }
 
     private var listener : OnBottomNavHideListener? = null
 
@@ -51,6 +51,7 @@ class RegistrationFragment: Fragment() {
         super.onStop()
         listener?.onShow()
     }
+
 
     @SuppressLint("SetTextI18n")
     override fun onCreateView(
