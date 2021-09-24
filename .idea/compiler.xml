@@ -4,6 +4,7 @@
     <bytecodeTargetLevel target="1.7">
       <module name="FantasyDraft.app" target="11" />
       <module name="FantasyDraft.core-match-data" target="1.8" />
+      <module name="FantasyDraft.core-nav" target="11" />
       <module name="FantasyDraft.core-ui" target="11" />
       <module name="FantasyDraft.draft-data" target="11" />
       <module name="FantasyDraft.draft-ui" target="11" />

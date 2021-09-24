@@ -9,9 +9,10 @@ import androidx.lifecycle.viewModelScope
 import com.midina.login_domain.usecase.SigningIn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class LoginViewModel(private val signingIn : SigningIn): ViewModel() {
+class LoginViewModel @Inject constructor(private val signingIn : SigningIn): ViewModel() {
 
 
     private val _email = MutableLiveData<String>()

@@ -1,13 +1,14 @@
-package com.midina.android.registration_data.usecaseimpl
+package com.midina.registration_data
 
-import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.midina.registration_domain.usecase.registrUser
+import javax.inject.Singleton
 
-class registrUserImpl() : registrUser {
-    override suspend fun execute(email: String, password: String): Boolean {
 
+@Singleton
+class RegistrUserRepository {
+
+    fun getIsRegistered(email: String, password: String) : Boolean {
         val fAuth = Firebase.auth
         var isCreate : Boolean = false
 

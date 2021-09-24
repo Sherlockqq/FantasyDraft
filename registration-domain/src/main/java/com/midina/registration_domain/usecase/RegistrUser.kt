@@ -1,5 +1,5 @@
 package com.midina.registration_domain.usecase
 
-interface registrUser {
+interface RegistrUser {
     suspend fun execute(email: String, password: String): Boolean
 }

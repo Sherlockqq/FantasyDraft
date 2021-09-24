@@ -7,5 +7,23 @@
 
     <include app:graph="@navigation/fixtures_navigation" />
     <include app:graph="@navigation/draft_navigation"/>
+    <include app:graph="@navigation/registration_navigation"/>
+    <include app:graph="@navigation/login_navigation"/>
+
+    <action
+        android:id="@+id/action_registration_navigation"
+        app:destination="@+id/registration_navigation"
+        app:launchSingleTop="true" />
+
+    <action
+        android:id="@+id/action_login_navigation"
+        app:destination="@+id/login_navigation"
+        app:launchSingleTop="true" />
+
+<!--    <action-->
+<!--        android:id="@+id/action_draft_navigation"-->
+<!--        app:destination="@+id/draft_navigation"-->
+<!--        app:launchSingleTop="true"-->
+<!--        app:popUpTo="@id/draft_navigation" />-->
 
 </navigation>

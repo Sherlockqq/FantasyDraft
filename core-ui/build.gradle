@@ -38,6 +38,8 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$version_appcompat"
     implementation "com.google.android.material:material:$version_material"
 
+    api project(path: ':core-nav')
+
     //Dagger
     api "com.google.dagger:dagger:$version_dagger"
     kapt "com.google.dagger:dagger-compiler:$version_dagger"

@@ -47,10 +47,6 @@ dependencies {
     implementation "androidx.annotation:annotation:$version_annotation"
     implementation "androidx.legacy:legacy-support-v4:$version_legacy"
 
-    //Navigation
-    implementation "androidx.navigation:navigation-fragment-ktx:$version_navigation"
-    implementation "androidx.navigation:navigation-ui-ktx:$version_navigation"
-
     //Lifecycle
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$version_lifecycle"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_lifecycle"

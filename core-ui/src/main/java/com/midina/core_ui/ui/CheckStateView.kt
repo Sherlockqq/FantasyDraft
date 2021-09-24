@@ -41,7 +41,7 @@ class CheckStateView (context: Context, attrs: AttributeSet) :
                 }
             }
             State.ERROR -> {
-                val d = resources.getDrawable(R.drawable.ic_baseline_cancel_24)
+                val d = resources.getDrawable(R.drawable.ic_baseline_cancel_24, null)
                 val bitmap =  drawableToBitmap(d)
                 if (bitmap != null) {
                     canvas.drawBitmap(bitmap,null, Rect(0,0,120,120),paint)

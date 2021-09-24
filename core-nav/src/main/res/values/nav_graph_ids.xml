@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--  registration  -->
+    <item name="action_registration_navigation" type="id"/>
+    <!--  login  -->
+    <item name="action_login_navigation" type="id"/>
+    <!--  draft  -->
+    <item name="action_draft_navigation" type="id"/>
+</resources>

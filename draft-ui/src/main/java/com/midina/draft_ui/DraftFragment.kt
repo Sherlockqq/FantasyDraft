@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.draft_ui.databinding.FragmentDraftBinding
 
@@ -29,14 +30,12 @@ class DraftFragment : BaseFragment() {
 
         binding.viewModel = viewModel
 
-//        binding.registerButton.setOnClickListener { view ->
-//            findNavController().navigate(R.id.registrationFragment, null)
-//        }
-//        binding.signInButton.setOnClickListener { view ->
-//            findNavController().navigate(R.id.loginFragment,null)
-//        }
-
+        binding.registerButton.setOnClickListener { view ->
+            findNavController().navigate(R.id.action_registration_navigation, null)
+        }
+        binding.signInButton.setOnClickListener { view ->
+            findNavController().navigate(R.id.action_login_navigation,null)
+        }
         return binding.root
     }
-
 }

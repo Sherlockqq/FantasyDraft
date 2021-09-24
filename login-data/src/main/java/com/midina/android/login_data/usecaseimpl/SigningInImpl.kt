@@ -1,18 +1,11 @@
 package com.midina.android.login_data.usecaseimpl
-
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
+import com.midina.android.login_data.SigningInRepository
 import com.midina.login_domain.usecase.SigningIn
+import javax.inject.Inject
 
-class SigningInImpl(): SigningIn {
-    override suspend fun execute(email: String, password: String): Boolean{
-        val fAuth = Firebase.auth
-        var isSign : Boolean = false
-        fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
-                task ->
-            isSign = task.isSuccessful
-        }
-        return isSign
-    }
+class SigningInImpl @Inject constructor
+    (private val signingInRepository: SigningInRepository): SigningIn {
+    override suspend fun execute(email: String, password: String): Boolean =
+        signingInRepository.getIsSingned(email, password)
 }
 
