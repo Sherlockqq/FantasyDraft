@@ -15,20 +15,17 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnBottomNavHideListener
 import com.midina.registration_ui.databinding.RegistrationFragmentBinding
 
 //TODO Make ProgressBar Beauty
 //TODO Make CustomView correct size( test on physical device)
+//TODO Make Date Beauty
 
 class RegistrationFragment: BaseFragment() {
 
     private lateinit var binding: RegistrationFragmentBinding
-    private lateinit var fAuth: FirebaseAuth
     private val viewModel: RegistrationViewModel by lazy {
         ViewModelProvider(this, viewmodelFactory )[RegistrationViewModel::class.java] }
 
@@ -65,8 +62,6 @@ class RegistrationFragment: BaseFragment() {
             container,
             false)
 
-        fAuth = Firebase.auth
-
         binding.lifecycleOwner = viewLifecycleOwner
 
         binding.viewModel = viewModel
@@ -78,11 +73,7 @@ class RegistrationFragment: BaseFragment() {
         viewModel.daysEvents.observe(viewLifecycleOwner,{handleDaysEvents(it)})
         viewModel.monthesEvents.observe(viewLifecycleOwner,{handleMonthesEvents(it)})
         viewModel.yearsEvents.observe(viewLifecycleOwner,{handleYearsEvents(it)})
-
-        binding.btRegist.setOnClickListener {
-            viewModel.registrationIsClicked()
-            //todo navigate to draft fragment
-        }
+        viewModel.registEvents.observe(viewLifecycleOwner,{handleRegistrationEvents(it)})
 
         //todo move to VM
         binding.etDateDays.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
@@ -118,6 +109,11 @@ class RegistrationFragment: BaseFragment() {
 
         binding.cbUnspecified.setOnClickListener{
             UnspecifiedChecked()
+        }
+
+        binding.btRegist.setOnClickListener {
+            viewModel.registrationIsClicked()
+            //todo navigate to draft fragment
         }
 
         return binding.root
@@ -184,6 +180,9 @@ class RegistrationFragment: BaseFragment() {
             is PasswordUiEvent.OnTextValid -> {
                 binding.tvPassRequirements.isGone = true
                 binding.cvPassword.setState(State.CORRECT)
+                val max = 8
+                binding.passProgressBar.progress = max
+
             }
             is PasswordUiEvent.OnTextInvalid ->{
                 binding.passProgressBar.isGone = true
@@ -268,6 +267,15 @@ class RegistrationFragment: BaseFragment() {
             }
         }
     }
+
+    private fun handleRegistrationEvents(event: RegistrationEvent){
+        when(event){
+            is RegistrationEvent.OnRegistered ->{
+                findNavController().navigate(R.id.action_draft_navigation,null)
+            }
+        }
+    }
+
     private fun MaleChecked(){
         binding.cbMale.isClickable = false
 
