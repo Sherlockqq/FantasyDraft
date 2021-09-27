@@ -57,7 +57,7 @@ class LoginViewModel @Inject constructor(private val signingIn : SigningIn): Vie
             signIn()
         }
     }
-    suspend fun signIn(){
+    private suspend fun signIn(){
         signingIn.execute(_email.value.toString(),_password.value.toString())
     }
 }

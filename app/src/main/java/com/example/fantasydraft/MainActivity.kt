@@ -2,7 +2,7 @@ package com.example.fantasydraft
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.animation.AnimationUtils
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -24,6 +24,11 @@ class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
     private val viewModel: MainActivityViewModel by viewModels { viewModelFactory }
     private lateinit var binding: ActivityMainBinding
 
+    override fun onResume() {
+        super.onResume()
+        onShowBottomNavView()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
@@ -44,11 +49,15 @@ class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
         navView.setupWithNavController(navController)
     }
 
-    override fun onHide() {
+    override fun onHideBottomNavView() {
+        val anim = AnimationUtils.loadAnimation(this,R.anim.slide_in_bottom)
+        binding.bottomNavigation.startAnimation(anim)
         binding.bottomNavigation.isVisible = false
     }
 
-    override fun onShow() {
+    override fun onShowBottomNavView() {
+        val anim = AnimationUtils.loadAnimation(this,R.anim.slide_in_top)
+        binding.bottomNavigation.startAnimation(anim)
         binding.bottomNavigation.isVisible = true
     }
 
