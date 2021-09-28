@@ -60,5 +60,4 @@ class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
         binding.bottomNavigation.startAnimation(anim)
         binding.bottomNavigation.isVisible = true
     }
-
 }
