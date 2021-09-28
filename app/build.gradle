@@ -5,6 +5,7 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+// commit bug fix number 111
 android {
     compileSdk = version_comp_sdk
 
