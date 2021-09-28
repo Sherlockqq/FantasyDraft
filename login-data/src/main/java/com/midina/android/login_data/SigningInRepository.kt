@@ -7,7 +7,7 @@ import javax.inject.Singleton
 @Singleton
 class SigningInRepository {
 
-    fun getIsSingned(email: String, password: String) : Boolean {
+    fun getIsSigned(email: String, password: String) : Boolean {
         val fAuth = Firebase.auth
         var isSign : Boolean = false
         fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
@@ -15,7 +15,5 @@ class SigningInRepository {
             isSign = task.isSuccessful
         }
         return isSign
-
     }
-
 }

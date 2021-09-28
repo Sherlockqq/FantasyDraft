@@ -111,6 +111,11 @@ class RegistrationFragment: BaseFragment() {
             UnspecifiedChecked()
         }
 
+        binding.btRegist.setOnClickListener {
+            viewModel.registrationIsClicked()
+            //todo navigate to draft fragment
+        }
+
         return binding.root
     }
 
@@ -262,6 +267,15 @@ class RegistrationFragment: BaseFragment() {
             }
         }
     }
+
+    private fun handleRegistrationEvents(event: RegistrationEvent){
+        when(event){
+            is RegistrationEvent.OnRegistered ->{
+                findNavController().navigate(R.id.action_draft_navigation,null)
+            }
+        }
+    }
+
     private fun MaleChecked(){
         binding.cbMale.isClickable = false
 

@@ -6,6 +6,6 @@ import javax.inject.Inject
 class SigningInImpl @Inject constructor
     (private val signingInRepository: SigningInRepository): SigningIn {
     override suspend fun execute(email: String, password: String): Boolean =
-        signingInRepository.getIsSingned(email, password)
+        signingInRepository.getIsSigned(email, password)
 }
 
