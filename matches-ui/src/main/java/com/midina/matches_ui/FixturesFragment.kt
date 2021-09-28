@@ -11,9 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.matches_domain.model.MatchSchedule
 import com.midina.matches_ui.databinding.FragmentFixturesBinding
-
-//material sizes/ dimensions
-
+//TODO COre data
 class FixturesFragment : BaseFragment() {
 
     private lateinit var binding: FragmentFixturesBinding
@@ -41,6 +39,8 @@ class FixturesFragment : BaseFragment() {
 
         setHasOptionsMenu(true)
 
+        setGameText()
+
         viewModel.events.observe(viewLifecycleOwner, {handleEvents(it)})
         binding.fixturesList.adapter = adapter
 
@@ -55,6 +55,13 @@ class FixturesFragment : BaseFragment() {
         return binding.root
     }
 
+    private fun setGameText(){
+        if(viewModel.tours.value != 0 ){
+            binding.gameweekText.text = "GameWeek ${viewModel.tours.value}"
+        }else{
+            binding.gameweekText.setText(R.string.schedule)
+        }    }
+
     private fun handleEvents(event: UiEvent){
         when (event){
             is UiEvent.Success -> onSuccess(event.matches)
@@ -66,11 +73,7 @@ class FixturesFragment : BaseFragment() {
 
     private fun onSuccess(event: List<MatchSchedule>) {
         if(event.isNotEmpty()){
-            if(viewModel.tours.value != 0 ){
-                binding.gameweekText.text = "GameWeek ${viewModel.tours.value}"
-            }else{
-                binding.gameweekText.setText(R.string.schedule)
-            }
+            setGameText()
 
             binding.progressBar.isVisible = false
             binding.nonSuccessText.isVisible = false
@@ -107,6 +110,9 @@ class FixturesFragment : BaseFragment() {
         binding.nonSuccessText.setText(R.string.loading)
         binding.nonSuccessText.isVisible = true
         binding.progressBar.isVisible = true
+        binding.nextArrow.isVisible = false
+        binding.backArrow.isVisible = false
+        binding.gameweekText.isVisible = false
     }
 
     private fun onEmptyState(){

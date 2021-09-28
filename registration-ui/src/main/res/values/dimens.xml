@@ -39,6 +39,6 @@
     <dimen name="yearsWidth">72dp</dimen>
     <dimen name="registerMarginTop">8dp</dimen>
     <dimen name="registerMarginBottom">8dp</dimen>
-    <dimen name="monthesWidth">36dp</dimen>
-    <dimen name="daysWidth">36dp</dimen>
+    <dimen name="monthesWidth">56dp</dimen>
+    <dimen name="daysWidth">48dp</dimen>
 </resources>
