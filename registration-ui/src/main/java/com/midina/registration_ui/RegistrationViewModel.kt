@@ -36,8 +36,11 @@ private const val DAYS_INT_SIZE = 2
 private const val MONTHES_INT_SIZE = 2
 private const val YEARS_INT_SIZE = 4
 
-
 class RegistrationViewModel @Inject constructor(private val RegistrUser: RegistrUser): ViewModel() {
+
+    private val _registEvents = SingleLiveEvent<RegistrationEvent>()
+    val registEvents : LiveData<RegistrationEvent>
+        get() = _registEvents
 
     private val _firstNameEvents = SingleLiveEvent<FirstNameUiEvent>()
     val firstNameEvents: LiveData<FirstNameUiEvent>
@@ -377,6 +380,7 @@ class RegistrationViewModel @Inject constructor(private val RegistrUser: Registr
     private suspend fun registrUser(){
         if(checkingAllIsCorrect()){
             RegistrUser.execute(_email.value.toString(),_password.value.toString())
+            _registEvents.postValue(RegistrationEvent.OnRegistered)
         }
     }
 
@@ -432,4 +436,8 @@ sealed class YearsUiEvent{
     object OnTextInvalid : YearsUiEvent()
     object OnTextValid : YearsUiEvent()
     object OnNotFocus : YearsUiEvent()
+}
+
+sealed class RegistrationEvent{
+    object OnRegistered :RegistrationEvent()
 }
