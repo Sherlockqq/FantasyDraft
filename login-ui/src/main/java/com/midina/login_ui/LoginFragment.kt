@@ -5,10 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnBottomNavHideListener
+import com.midina.core_ui.ui.State
 import com.midina.login_ui.databinding.FragmentLoginBinding
 
 
@@ -53,9 +57,25 @@ class LoginFragment : BaseFragment() {
 
         binding.viewModel = viewModel
 
+        viewModel.loginEvents.observe(viewLifecycleOwner,{handleLoginEvents(it)})
+
+
         binding.btSignIn.setOnClickListener {
             viewModel.signInClicked()
         }
         return binding.root
     }
+
+    private fun handleLoginEvents(event: LoginEvent){
+        when (event){
+            is LoginEvent.OnSigned -> {
+                binding.tvRequirements.isGone = true
+                findNavController().navigate(R.id.action_draft_navigation,null)
+            }
+            is LoginEvent.OnNotSigned -> {
+                binding.tvRequirements.isVisible = true
+            }
+        }
+    }
+
 }

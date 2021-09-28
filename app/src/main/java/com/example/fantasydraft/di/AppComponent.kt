@@ -4,6 +4,7 @@ import android.content.Context
 import com.example.fantasydraft.FantasydraftApplication
 import com.midina.android.login_data.di.LoginDataModule
 import com.midina.core_ui.di.ViewModelBuilderModule
+import com.midina.draft_data.di.DraftDataModule
 import com.midina.draft_ui.di.DraftUiModule
 import com.midina.login_ui.di.LoginUiModule
 import com.midina.matches_data.di.MatchesDataModule
@@ -23,6 +24,7 @@ import dagger.android.AndroidInjectionModule
     MatchesUiModule::class,
     MainActivityModule::class,
     DraftUiModule::class,
+    DraftDataModule::class,
     RegistrationUiModule::class,
     RegistrationDataModule::class,
     LoginUiModule::class,

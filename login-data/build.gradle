@@ -42,6 +42,9 @@ dependencies {
     implementation "com.google.dagger:dagger:$version_dagger"
     kapt "com.google.dagger:dagger-compiler:$version_dagger"
 
+    //Coroutine
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version_coroutine"
+
     //Firebase
     implementation platform("com.google.firebase:firebase-bom:$version_firebase")
     implementation 'com.google.firebase:firebase-auth-ktx'
