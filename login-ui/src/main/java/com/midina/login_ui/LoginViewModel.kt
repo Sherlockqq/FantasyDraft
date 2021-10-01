@@ -33,26 +33,12 @@ class LoginViewModel @Inject constructor(private val signingIn : SigningIn): Vie
         _password.value = ""
     }
 
-    val emailOnTextChangeListener = object : TextWatcher {
-        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-        }
-
-        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-        }
-
-        override fun afterTextChanged(text: Editable?) {
-            _email.value = text.toString()
-        }
+    fun onEmailChanged(text:Editable?){
+        _email.value = text.toString()
     }
 
-    val passwordOnTextChangeListener = object : TextWatcher{
-        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-        }
-        override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-        }
-        override fun afterTextChanged(text: Editable?) {
-            _password.value = text.toString()
-        }
+    fun onPasswordChanged(text: Editable?){
+        _password.value = text.toString()
     }
 
     fun signInClicked(){

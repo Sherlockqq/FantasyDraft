@@ -12,9 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnBottomNavHideListener
-import com.midina.core_ui.ui.State
 import com.midina.login_ui.databinding.FragmentLoginBinding
-
 
 class LoginFragment : BaseFragment() {
 
@@ -51,14 +49,14 @@ class LoginFragment : BaseFragment() {
             inflater,
             R.layout.fragment_login,
             container,
-            false)
+            false
+        )
 
         binding.lifecycleOwner = viewLifecycleOwner
 
         binding.viewModel = viewModel
 
-        viewModel.loginEvents.observe(viewLifecycleOwner,{handleLoginEvents(it)})
-
+        viewModel.loginEvents.observe(viewLifecycleOwner, { handleLoginEvents(it) })
 
         binding.btSignIn.setOnClickListener {
             viewModel.signInClicked()
@@ -77,5 +75,4 @@ class LoginFragment : BaseFragment() {
             }
         }
     }
-
 }
