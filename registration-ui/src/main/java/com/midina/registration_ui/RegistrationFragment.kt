@@ -71,7 +71,7 @@ class RegistrationFragment: BaseFragment() {
         viewModel.daysEvents.observe(viewLifecycleOwner,{handleDaysEvents(it)})
         viewModel.monthesEvents.observe(viewLifecycleOwner,{handleMonthesEvents(it)})
         viewModel.yearsEvents.observe(viewLifecycleOwner,{handleYearsEvents(it)})
-        viewModel.registEvents.observe(viewLifecycleOwner,{handleRegistrationEvents(it)})
+        viewModel.registerEvents.observe(viewLifecycleOwner,{handleRegistrationEvents(it)})
 
         //todo move to VM
         binding.etDateDays.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
@@ -284,6 +284,7 @@ class RegistrationFragment: BaseFragment() {
 
         binding.cvGender.setState(State.CORRECT)
         viewModel.genderState = State.CORRECT
+        viewModel.maleClicked()
     }
 
     private fun FemaleChecked(){
@@ -296,6 +297,7 @@ class RegistrationFragment: BaseFragment() {
         binding.cbUnspecified.isChecked = false
         binding.cvGender.setState(State.CORRECT)
         viewModel.genderState = State.CORRECT
+        viewModel.femaleClicked()
     }
 
     private fun UnspecifiedChecked(){
@@ -308,5 +310,6 @@ class RegistrationFragment: BaseFragment() {
         binding.cbFemale.isChecked = false
         binding.cvGender.setState(State.CORRECT)
         viewModel.genderState = State.CORRECT
+        viewModel.unspecifiedClicked()
     }
 }

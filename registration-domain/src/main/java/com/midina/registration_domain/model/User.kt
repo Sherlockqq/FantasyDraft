@@ -1,4 +1,4 @@
-package com.midina.registration_domain
+package com.midina.registration_domain.model
 
 import java.util.*
 
@@ -13,5 +13,5 @@ data class User(
     val lastName : String,
     val emailAddress : String,
     val gender : Gender,
-    val dateOfBirth : Date
+    //val dateOfBirth : Date
 )

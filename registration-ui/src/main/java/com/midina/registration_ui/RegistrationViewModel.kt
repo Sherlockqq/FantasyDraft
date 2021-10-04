@@ -1,5 +1,6 @@
 package com.midina.registration_ui
 
+import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -10,11 +11,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.midina.core_ui.ui.State
 import com.midina.core_ui.ui.SingleLiveEvent
+import com.midina.registration_domain.model.Gender
+import com.midina.registration_domain.model.User
 import com.midina.registration_domain.model.ResultEvent
-import com.midina.registration_domain.usecase.RegistrUser
+import com.midina.registration_domain.usecase.RegisterUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.NumberFormatException
+import java.time.LocalDate
+import java.time.ZoneId
+import java.util.*
 import javax.inject.Inject
 
 private const val JANUARY = 1
@@ -35,11 +41,11 @@ private const val DAYS_INT_SIZE = 2
 private const val MONTHES_INT_SIZE = 2
 private const val YEARS_INT_SIZE = 4
 
-class RegistrationViewModel @Inject constructor(private val registrUser: RegistrUser): ViewModel() {
+class RegistrationViewModel @Inject constructor(private val registerUser: RegisterUser): ViewModel() {
 
-    private val _registEvents = SingleLiveEvent<RegistrationEvent>()
-    val registEvents : LiveData<RegistrationEvent>
-        get() = _registEvents
+    private val _registerEvents = SingleLiveEvent<RegistrationEvent>()
+    val registerEvents : LiveData<RegistrationEvent>
+        get() = _registerEvents
 
     private val _firstNameEvents = SingleLiveEvent<FirstNameUiEvent>()
     val firstNameEvents: LiveData<FirstNameUiEvent>
@@ -109,6 +115,8 @@ class RegistrationViewModel @Inject constructor(private val registrUser: Registr
     var dateState : State = State.DEFAULT
 
     var genderState : State = State.DEFAULT
+
+    private var gender: Gender = Gender.UNSPECIFIED
 
     init{
         _firstName.value = ""
@@ -376,11 +384,15 @@ class RegistrationViewModel @Inject constructor(private val registrUser: Registr
         return false
     }
 
-    private suspend fun registrUser(){
+    private suspend fun registerUser(){
         if(checkingAllIsCorrect()){
-            val result = registrUser.execute(_email.value.toString(),_password.value.toString())
+            val dateStr = _dateDays.value.toString()+"-"+_dateMonthes.value.toString()+"-"+_dateYears.value.toString()
+            val dateLD = LocalDate.parse(dateStr)
+            val date = convertToDateViaInstant(dateLD)
+            val user = User(_firstName.value.toString(),_lastName.value.toString(),_email.value.toString(),gender)
+            val result = registerUser.execute(user,_password.value.toString())
             when(result){
-                ResultEvent.Success -> _registEvents.postValue(RegistrationEvent.OnRegistered)
+                ResultEvent.Success -> _registerEvents.postValue(RegistrationEvent.OnRegistered)
                 ResultEvent.InvalidData -> {}//TODO Exception
                 ResultEvent.Error -> {}//TODO Exception
             }
@@ -389,8 +401,24 @@ class RegistrationViewModel @Inject constructor(private val registrUser: Registr
 
     fun registrationIsClicked(){
         viewModelScope.launch(Dispatchers.IO) {
-            registrUser()
+            registerUser()
         }
+    }
+    private fun convertToDateViaInstant(dateToConvert: LocalDate): Date? {
+        return Date.from(
+            dateToConvert.atStartOfDay()
+                .atZone(ZoneId.systemDefault())
+                .toInstant()
+        )
+    }
+    fun maleClicked(){
+        gender = Gender.MALE
+    }
+    fun femaleClicked(){
+        gender = Gender.FEMALE
+    }
+    fun unspecifiedClicked(){
+        gender = Gender.UNSPECIFIED
     }
 
 }

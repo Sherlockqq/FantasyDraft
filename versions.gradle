@@ -21,6 +21,9 @@ ext {
     version_firebase = "28.4.1"
 //Coroutines
     version_coroutine = "1.5.0"
+//Room
+    roomVersion = '2.3.0'
+
     //SDK
     version_comp_sdk = 31
     version_min_sdk = 21
