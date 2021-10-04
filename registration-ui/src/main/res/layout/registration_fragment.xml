@@ -568,7 +568,6 @@
                 app:layout_constraintStart_toEndOf="@+id/tv_slash2"
                 app:layout_constraintTop_toBottomOf="@+id/tv_date">
 
-
                 <EditText
                     android:id="@+id/et_date_years"
                     android:layout_width="match_parent"

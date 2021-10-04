@@ -4,4 +4,6 @@
     <string name="register">I need to register</string>
     <string name="upl">Ukrainian Premier League</string>
     <string name="welcome_to_fantasy">Welcome to Fantasy</string>
+    <string name="start">Start Game</string>
+    <string name="sign_out">Sign Out</string>
 </resources>

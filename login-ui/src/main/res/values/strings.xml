@@ -3,4 +3,5 @@
     <string name="email_example">example@gmail.com</string>
     <string name="password_hint">Your password</string>
     <string name="sign_in">Sign In</string>
+    <string name="requirements">Please input correct email and password!</string>
 </resources>

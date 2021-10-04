@@ -19,9 +19,7 @@ import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnBottomNavHideListener
 import com.midina.registration_ui.databinding.RegistrationFragmentBinding
 
-//TODO Make ProgressBar Beauty
 //TODO Make CustomView correct size( test on physical device)
-//TODO Make Date Beauty
 
 class RegistrationFragment: BaseFragment() {
 
@@ -113,7 +111,6 @@ class RegistrationFragment: BaseFragment() {
 
         binding.btRegist.setOnClickListener {
             viewModel.registrationIsClicked()
-            //todo navigate to draft fragment
         }
 
         return binding.root

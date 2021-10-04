@@ -8,10 +8,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.midina.core_ui.ui.State
 import com.midina.core_ui.ui.SingleLiveEvent
+import com.midina.registration_domain.model.ResultEvent
 import com.midina.registration_domain.usecase.RegistrUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,7 +35,7 @@ private const val DAYS_INT_SIZE = 2
 private const val MONTHES_INT_SIZE = 2
 private const val YEARS_INT_SIZE = 4
 
-class RegistrationViewModel @Inject constructor(private val RegistrUser: RegistrUser): ViewModel() {
+class RegistrationViewModel @Inject constructor(private val registrUser: RegistrUser): ViewModel() {
 
     private val _registEvents = SingleLiveEvent<RegistrationEvent>()
     val registEvents : LiveData<RegistrationEvent>
@@ -379,8 +378,12 @@ class RegistrationViewModel @Inject constructor(private val RegistrUser: Registr
 
     private suspend fun registrUser(){
         if(checkingAllIsCorrect()){
-            RegistrUser.execute(_email.value.toString(),_password.value.toString())
-            _registEvents.postValue(RegistrationEvent.OnRegistered)
+            val result = registrUser.execute(_email.value.toString(),_password.value.toString())
+            when(result){
+                ResultEvent.Success -> _registEvents.postValue(RegistrationEvent.OnRegistered)
+                ResultEvent.InvalidData -> {}//TODO Exception
+                ResultEvent.Error -> {}//TODO Exception
+            }
         }
     }
 

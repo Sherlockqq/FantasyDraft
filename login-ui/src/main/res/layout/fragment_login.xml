@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/editTextMarginBottom"
                 android:hint="@string/email_example"
-                app:addTextChangedListener="@{viewModel.emailOnTextChangeListener}"
+                android:afterTextChanged="@{(text) -> viewModel.onEmailChanged(text)}"
                 android:ems="10"
                 android:inputType="textEmailAddress" />
 
@@ -53,10 +53,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/password_hint"
-                app:addTextChangedListener="@{viewModel.passwordOnTextChangeListener}"
+                android:afterTextChanged="@{(text) -> viewModel.onPasswordChanged(text)}"
                 android:ems="10"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tv_requirements"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/requirements"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til_password" />
 
         <Button
             android:id="@+id/bt_sign_in"
@@ -66,7 +78,7 @@
             android:text="@string/sign_in"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/til_password" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_requirements" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
