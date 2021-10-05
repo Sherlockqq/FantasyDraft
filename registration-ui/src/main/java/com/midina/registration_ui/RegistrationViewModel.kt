@@ -386,9 +386,9 @@ class RegistrationViewModel @Inject constructor(private val registerUser: Regist
 
     private suspend fun registerUser(){
         if(checkingAllIsCorrect()){
-            val dateStr = _dateDays.value.toString()+"-"+_dateMonthes.value.toString()+"-"+_dateYears.value.toString()
-            val dateLD = LocalDate.parse(dateStr)
-            val date = convertToDateViaInstant(dateLD)
+//            val dateStr = _dateDays.value.toString()+"-"+_dateMonthes.value.toString()+"-"+_dateYears.value.toString()
+//            val dateLD = LocalDate.parse(dateStr)
+//            val date = convertToDateViaInstant(dateLD)
             val user = User(_firstName.value.toString(),_lastName.value.toString(),_email.value.toString(),gender)
             val result = registerUser.execute(user,_password.value.toString())
             when(result){

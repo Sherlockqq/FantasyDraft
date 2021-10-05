@@ -1,5 +1,6 @@
 package com.midina.registration_data
 
+import android.util.Log
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.midina.registration_data.database.UserDao
@@ -7,7 +8,6 @@ import com.midina.registration_data.database.UserEntity
 import com.midina.registration_domain.model.User
 import com.midina.registration_domain.model.ResultEvent
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -43,7 +43,8 @@ class RegisterUserRepository @Inject constructor(
            }
        }
    }
-    suspend fun addUser(user:UserEntity){
+    private suspend fun addUser(user:UserEntity){
         userDao.insert(user)
+        Log.d("DATABASE","User Added")
     }
 }

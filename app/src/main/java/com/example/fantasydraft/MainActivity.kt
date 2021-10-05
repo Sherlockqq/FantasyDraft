@@ -49,6 +49,11 @@ class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
         navView.setupWithNavController(navController)
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment)
+        return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
     override fun onHideBottomNavView() {
         val anim = AnimationUtils.loadAnimation(this,R.anim.slide_in_bottom)
         binding.bottomNavigation.startAnimation(anim)

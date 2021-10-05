@@ -35,8 +35,7 @@ class RegistrationDataModule {
 
     @Provides
     @Singleton
-    //TODO RESOLVE THIS ERROR!!!
-    fun provideRegisterUserRepository() = RegisterUserRepository()
+    fun provideRegisterUserRepository(user:UserDao) = RegisterUserRepository(user)
 }
 
 @Module
@@ -44,3 +43,4 @@ interface RegistrationDataUseCaseModule {
     @Binds
     fun bindRegisterUserImpl(registerUser: RegisterUserImpl): RegisterUser
 }
+
