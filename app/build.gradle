@@ -55,6 +55,8 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$version_dagger"
     kapt "com.google.dagger:dagger-android-processor:$version_dagger"
 
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
     //Modules
     implementation project(path: ':matches-data')
     implementation project(path: ':matches-domain')
@@ -68,5 +70,8 @@ dependencies {
     implementation project(path: ':login-domain')
     implementation project(path: ':login-data')
     implementation project(path: ':login-ui')
+    implementation project(path: ':match-data')
+    implementation project(path: ':match-domain')
+    implementation project(path: ':match-ui')
     implementation project(path: ':core-ui')
 }

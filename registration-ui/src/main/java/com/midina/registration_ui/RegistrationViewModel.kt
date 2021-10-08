@@ -3,6 +3,7 @@ package com.midina.registration_ui
 import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LiveData
@@ -309,29 +310,30 @@ class RegistrationViewModel @Inject constructor(private val registerUser: Regist
     }
 
 
-    private fun yearsHandler(text:Editable?){
+    private fun yearsHandler(text:Editable?) {
 
-        if(text.toString().isEmpty()){
+        if(text.toString().isEmpty()) {
             _yearsEvents.value = YearsUiEvent.OnTextEmpty
-        }else{
-            try{
+        }
+        else {
+            try {
                 val yearsNum: Int = text.toString().toInt()
                 _dateYears.value = yearsNum
                 if(text.toString().length == YEARS_INT_SIZE){
                     isDate()
                     _yearsEvents.value = YearsUiEvent.OnTextValid
                 }
-            }catch (e: NumberFormatException){
+            } catch (e: NumberFormatException) {
                 _yearsEvents.value = YearsUiEvent.OnTextInvalid
             }
         }
     }
 
-    private fun isEmail(email: String):Boolean{
+    private fun isEmail(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
-    private fun checkingAllIsCorrect():Boolean{
+    private fun checkingAllIsCorrect(): Boolean{
         return firstNameState== State.CORRECT &&
                 lastNameState== State.CORRECT &&
                 emailState== State.CORRECT &&
@@ -393,8 +395,14 @@ class RegistrationViewModel @Inject constructor(private val registerUser: Regist
             val result = registerUser.execute(user,_password.value.toString())
             when(result){
                 ResultEvent.Success -> _registerEvents.postValue(RegistrationEvent.OnRegistered)
-                ResultEvent.InvalidData -> {}//TODO Exception
-                ResultEvent.Error -> {}//TODO Exception
+                ResultEvent.InvalidData -> {
+                    Log.d("RegistrationVM","Invalid Data")
+                    //TODO Exception
+                }
+                ResultEvent.Error -> {
+                    Log.d("RegistrationVM","Error")
+                    //TODO Exception
+                }
             }
         }
     }

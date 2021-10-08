@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
 
-@Inject
+    @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel: MainActivityViewModel by viewModels { viewModelFactory }

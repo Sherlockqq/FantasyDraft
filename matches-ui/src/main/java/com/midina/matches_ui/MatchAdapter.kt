@@ -15,6 +15,16 @@ const val ITEM_VIEW_TYPE = 222
 class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
 
     private var list: List<MatchSchedule> = emptyList()
+    private lateinit var mListener : OnItemClickListener
+
+    interface OnItemClickListener{
+        fun onItemClick(position: Int, match:MatchSchedule)
+    }
+
+    fun setOnItemClickListener(listener: OnItemClickListener){
+        mListener = listener
+    }
+
 
     fun updateMatches(updatedList: List<MatchSchedule>){
         list = updatedList
@@ -35,7 +45,7 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
                     R.layout.fixture_item,
                     parent,
                     false)
-                return FixturesHolder.MatchViewHolder(itemView)
+                return FixturesHolder.MatchViewHolder(itemView,mListener)
             }
         }
     }
@@ -56,6 +66,9 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
     }
 
     sealed class FixturesHolder (itemView : View) : RecyclerView.ViewHolder(itemView) {
+
+        var match: MatchSchedule? =null
+
         open fun bind(item: MatchSchedule){}
 
         class HeaderViewHolder(itemView : View) : FixturesHolder(itemView){
@@ -65,7 +78,7 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
             }
         }
 
-        class MatchViewHolder(itemView: View) : FixturesHolder(itemView) {
+        class MatchViewHolder(itemView: View,listener: OnItemClickListener) : FixturesHolder(itemView) {
             private val home: TextView = itemView.findViewById(R.id.home_team)
             private val score: TextView = itemView.findViewById(R.id.match_score)
             private val guest: TextView = itemView.findViewById(R.id.guest_team)
@@ -73,7 +86,14 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
             private val homeImage: ImageView = itemView.findViewById(R.id.home_logo)
             private val guestImage: ImageView = itemView.findViewById(R.id.guest_logo)
 
+            init{
+                itemView.setOnClickListener{
+                    this?.match?.let { match -> listener.onItemClick(adapterPosition, match) }
+                }
+            }
+
             override fun bind(item: MatchSchedule){
+                match = item
                 date.text = item.date
                 home.text = item.homeTeam
                 guest.text = item.guestTeam
@@ -106,6 +126,5 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
             }
         }
     }
-
 }
 

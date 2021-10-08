@@ -3,6 +3,9 @@ package com.example.fantasydraft.di
 import android.content.Context
 import com.example.fantasydraft.FantasydraftApplication
 import com.midina.android.login_data.di.LoginDataModule
+import com.midina.android.match_data.di.MatchDataModule
+import com.midina.android.match_ui.MatchFragment
+import com.midina.android.match_ui.di.MatchUiModule
 import com.midina.core_ui.di.ViewModelBuilderModule
 import com.midina.draft_data.di.DraftDataModule
 import com.midina.draft_ui.di.DraftUiModule
@@ -28,7 +31,9 @@ import dagger.android.AndroidInjectionModule
     RegistrationUiModule::class,
     RegistrationDataModule::class,
     LoginUiModule::class,
-    LoginDataModule::class])
+    LoginDataModule::class,
+    MatchUiModule::class,
+    MatchDataModule::class])
 
 interface AppComponent {
     @Component.Builder

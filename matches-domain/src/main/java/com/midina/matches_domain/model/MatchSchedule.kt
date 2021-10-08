@@ -9,3 +9,7 @@ data class MatchSchedule(
     var score : String,
     val isHeader : Boolean? = null
 )
+
+enum class Weather {
+
+}

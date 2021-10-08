@@ -10,5 +10,4 @@
         android:name="com.midina.draft_ui.DraftFragment"
         android:label="DraftFragment"
         tools:layout="@layout/fragment_draft" />
-
 </navigation>

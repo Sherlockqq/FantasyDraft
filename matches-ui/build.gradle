@@ -48,6 +48,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_lifecycle"
     implementation "androidx.navigation:navigation-fragment-ktx:$version_navigation"
     implementation "androidx.navigation:navigation-ui-ktx:$version_navigation"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     //Dagger
     kapt "com.google.dagger:dagger-compiler:$version_dagger"

@@ -23,6 +23,12 @@ ext {
     version_coroutine = "1.5.0"
 //Room
     roomVersion = '2.3.0'
+//Retrofit
+    version_retrofit = '2.9.0'
+    version_retrofit_converter = '2.9.0'
+
+//OkHttp
+    version_okhttp = '4.9.0'
 
     //SDK
     version_comp_sdk = 31

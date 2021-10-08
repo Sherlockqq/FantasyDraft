@@ -6,4 +6,6 @@
     <item name="action_login_navigation" type="id"/>
     <!--  draft  -->
     <item name="action_draft_navigation" type="id"/>
+    <!-- match -->
+    <item name="action_match_navigation" type="id"/>
 </resources>

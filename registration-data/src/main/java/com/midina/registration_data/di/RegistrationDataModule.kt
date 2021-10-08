@@ -20,7 +20,7 @@ class RegistrationDataModule {
 
     @Provides
     @Singleton
-    fun provideRoom(appContext: Context):UserDatabase{
+    fun provideRoom (appContext: Context): UserDatabase{
         return Room
             .databaseBuilder(appContext,UserDatabase::class.java,"database-user")
             .fallbackToDestructiveMigration()

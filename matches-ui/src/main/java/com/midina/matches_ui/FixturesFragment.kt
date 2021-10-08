@@ -3,15 +3,17 @@ package com.midina.matches_ui
 import android.os.Bundle
 import android.view.*
 import androidx.core.view.isInvisible
-import androidx.fragment.app.Fragment
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.matches_domain.model.MatchSchedule
 import com.midina.matches_ui.databinding.FragmentFixturesBinding
-//TODO COre data
+import com.midina.matches_ui.fixtures.FixturesViewModel
+import com.midina.matches_ui.fixtures.UiEvent
+
 class FixturesFragment : BaseFragment() {
 
     private lateinit var binding: FragmentFixturesBinding
@@ -43,6 +45,20 @@ class FixturesFragment : BaseFragment() {
 
         viewModel.events.observe(viewLifecycleOwner, {handleEvents(it)})
         binding.fixturesList.adapter = adapter
+        adapter.setOnItemClickListener(object : MatchAdapter.OnItemClickListener {
+            override fun onItemClick(position: Int, match: MatchSchedule) {
+
+                val bundle= Bundle()
+
+                bundle.putString("HomeTeam",match.homeTeam)
+                bundle.putString("GuestTeam",match.guestTeam)
+                bundle.putString("Score",match.score)
+                bundle.putString("Date",match.date)
+
+                findNavController().navigate(R.id.action_match_navigation,bundle)
+                //  Toast.makeText(context,"Clicked position #$position",Toast.LENGTH_LONG).show()
+            }
+        })
 
         binding.backArrow.setOnClickListener {
             viewModel.backArrowClicked()
