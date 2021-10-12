@@ -13,14 +13,17 @@ import com.midina.matches_domain.model.MatchSchedule
 import com.midina.matches_ui.databinding.FragmentFixturesBinding
 import com.midina.matches_ui.fixtures.FixturesViewModel
 import com.midina.matches_ui.fixtures.UiEvent
+import javax.inject.Inject
 
 class FixturesFragment : BaseFragment() {
+
 
     private lateinit var binding: FragmentFixturesBinding
     private val adapter = MatchAdapter()
 
     val viewModel: FixturesViewModel by lazy {
         ViewModelProvider(this, viewmodelFactory )[FixturesViewModel::class.java] }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

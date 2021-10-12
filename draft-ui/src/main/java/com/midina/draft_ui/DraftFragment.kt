@@ -1,6 +1,7 @@
 package com.midina.draft_ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,11 @@ class DraftFragment : BaseFragment() {
     val viewModel: DraftViewModel by lazy {
         ViewModelProvider(this, viewmodelFactory )[DraftViewModel::class.java] }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        lifecycle.addObserver(viewModel)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,7 +40,6 @@ class DraftFragment : BaseFragment() {
             false)
 
         binding.lifecycleOwner = viewLifecycleOwner
-
         binding.viewModel = viewModel
 
         viewModel.signEvents.observe(viewLifecycleOwner,{handleSignsEvents(it)})
@@ -64,5 +69,10 @@ class DraftFragment : BaseFragment() {
                 binding.btPlay.isEnabled = false
             }
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("Draft","OnDestroy")
     }
 }

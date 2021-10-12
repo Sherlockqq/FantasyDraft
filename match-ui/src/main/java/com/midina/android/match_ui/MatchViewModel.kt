@@ -11,18 +11,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MatchViewModel @Inject constructor(
-    val getWeather: GetWeather
+    val getWeather: GetWeather,
+    val homeTeam: String
 ) : ViewModel(), LifecycleObserver {
 //todo constctour Factory
 //todo dagger
-//todo getData with lifecycle
-    //Todo view model annotation
 
     private val _events = SingleLiveEvent<UiEvent>()
     val events: LiveData<UiEvent>
         get() = _events
 
-    var homeTeam: String = ""
+   // var homeTeam: String = ""
     var guestTeam: String = ""
     var score: String = ""
     var date: String = ""

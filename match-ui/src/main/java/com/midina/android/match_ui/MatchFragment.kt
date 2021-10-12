@@ -1,6 +1,6 @@
 package com.midina.android.match_ui
 
-
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,18 +14,31 @@ import com.midina.android.match_domain.model.MatchWeather
 import com.midina.android.match_ui.databinding.FragmentMatchBinding
 import com.midina.core_ui.ui.BaseFragment
 import dagger.android.AndroidInjection
+import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
-
+import javax.inject.Named
 
 class MatchFragment : BaseFragment() {
 
     private lateinit var binding: FragmentMatchBinding
+
+    @Inject
+    lateinit var matchViewModelFactory : MatchViewModelFactory
+
+    @Inject @Named("HomeTeam")
+    lateinit var homeTeam: String
+
     val viewModel: MatchViewModel by lazy {
-        ViewModelProvider(this, viewmodelFactory )[MatchViewModel::class.java] }
+        ViewModelProvider(this, matchViewModelFactory )[MatchViewModel::class.java] }
+
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        lifecycle.addObserver(viewModel);
+        lifecycle.addObserver(viewModel)
     }
 
     override fun onCreateView(
@@ -41,7 +54,7 @@ class MatchFragment : BaseFragment() {
 
         val bundle = this.arguments
         if (bundle != null) {
-            viewModel.homeTeam = bundle.getString("HomeTeam").toString()
+            //viewModel.homeTeam = bundle.getString("HomeTeam").toString()
             viewModel.guestTeam = bundle.getString("GuestTeam").toString()
             viewModel.score = bundle.getString("Score").toString()
             viewModel.date = bundle.getString("Date").toString()
