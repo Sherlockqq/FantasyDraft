@@ -22,14 +22,8 @@ class MatchFragment : BaseFragment() {
 
     private lateinit var binding: FragmentMatchBinding
 
-    @Inject
-    lateinit var matchViewModelFactory : MatchViewModelFactory
-
-    @Inject @Named("HomeTeam")
-    lateinit var homeTeam: String
-
     val viewModel: MatchViewModel by lazy {
-        ViewModelProvider(this, matchViewModelFactory )[MatchViewModel::class.java] }
+        ViewModelProvider(this, viewmodelFactory )[MatchViewModel::class.java] }
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)

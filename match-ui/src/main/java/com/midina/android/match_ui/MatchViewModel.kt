@@ -17,6 +17,9 @@ class MatchViewModel @Inject constructor(
 //todo constctour Factory
 //todo dagger
 
+    init {
+        Log.d("TODO Remove", "injected homeTeam : $homeTeam")
+    }
     private val _events = SingleLiveEvent<UiEvent>()
     val events: LiveData<UiEvent>
         get() = _events

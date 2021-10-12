@@ -50,16 +50,7 @@ class FixturesFragment : BaseFragment() {
         binding.fixturesList.adapter = adapter
         adapter.setOnItemClickListener(object : MatchAdapter.OnItemClickListener {
             override fun onItemClick(position: Int, match: MatchSchedule) {
-
-                val bundle= Bundle()
-
-                bundle.putString("HomeTeam",match.homeTeam)
-                bundle.putString("GuestTeam",match.guestTeam)
-                bundle.putString("Score",match.score)
-                bundle.putString("Date",match.date)
-
-                findNavController().navigate(R.id.action_match_navigation,bundle)
-                //  Toast.makeText(context,"Clicked position #$position",Toast.LENGTH_LONG).show()
+                findNavController().navigate(R.id.action_match_navigation, match.toBundle())
             }
         })
 
@@ -158,4 +149,12 @@ class FixturesFragment : BaseFragment() {
         )
         return true
     }
+
+    private fun MatchSchedule.toBundle() =
+         Bundle().also {
+             it.putString("HomeTeam",this.homeTeam)
+             it.putString("GuestTeam",this.guestTeam)
+             it.putString("Score",this.score)
+             it.putString("Date",this.date)
+         }
 }
