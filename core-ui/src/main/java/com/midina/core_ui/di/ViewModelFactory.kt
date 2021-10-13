@@ -23,7 +23,7 @@ annotation class PerFragment
 @MapKey
 annotation class ViewModelKey(val value: KClass<out ViewModel>)
 
-open class ViewModelFactory @Inject constructor(
+class ViewModelFactory @Inject constructor(
     private val creators: Map<Class<out ViewModel>, @JvmSuppressWildcards Provider<ViewModel>>
     ) : ViewModelProvider.Factory {
 

@@ -21,6 +21,7 @@ class WeatherRepository @Inject constructor(private val weatherApi: WeatherApiIn
             Log.d("WeatherRepo", "${retroList.size}")
             val dateList = getDateList(retroList)
             val index = getIndex(date, dateList)
+            val temperature = convertKelvinToCelsius(retroList[index!!].main.temp)
             Log.d("WeatherRepo", "CHECK")
             if (index == null) {
                 ResultEvent.EmptyState
@@ -30,6 +31,7 @@ class WeatherRepository @Inject constructor(private val weatherApi: WeatherApiIn
                         lat,
                         lon,
                         retroList[index].weather[0].description,
+                        temperature,
                         date
                     )
                 )
@@ -37,6 +39,10 @@ class WeatherRepository @Inject constructor(private val weatherApi: WeatherApiIn
         } catch (e: EOFException) {
             ResultEvent.Error
         }
+    }
+
+    private fun convertKelvinToCelsius(kelvin: Double): Double {
+        return kelvin - 273
     }
 
     private fun getDateList(list: List<WeatherDescription>): List<LocalDateTime> {

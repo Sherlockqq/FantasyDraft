@@ -24,6 +24,7 @@
         <entry key="core-ui/src/main/res/drawable/ic_baseline_cancel_24.xml" value="0.1" />
         <entry key="draft-ui/src/main/res/layout/fragment_draft.xml" value="0.1" />
         <entry key="login-ui/src/main/res/layout/fragment_login.xml" value="0.10462962962962963" />
+        <entry key="match-ui/src/main/res/layout/fragment_match.xml" value="0.45" />
         <entry key="matches-data/src/main/res/font/arvo.xml" value="0.17407407407407408" />
         <entry key="matches-ui/src/main/res/drawable/ic_baseline_arrow_back_ios_new_24.xml" value="0.22962962962962963" />
         <entry key="matches-ui/src/main/res/layout/fixture_header.xml" value="0.1" />

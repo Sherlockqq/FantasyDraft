@@ -17,6 +17,7 @@ import javax.inject.Inject
 
 class FixturesFragment : BaseFragment() {
 
+    override val layoutId = R.layout.fragment_fixtures
 
     private lateinit var binding: FragmentFixturesBinding
     private val adapter = MatchAdapter()

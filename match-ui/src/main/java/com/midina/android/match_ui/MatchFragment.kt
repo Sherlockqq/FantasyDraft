@@ -18,8 +18,13 @@ import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 import javax.inject.Named
 
+private const val DAYS_INDEX = 2
+private const val HOURS_INDEX = 1
+private const val MINUTES_INDEX = 0
+
 class MatchFragment : BaseFragment() {
 
+    override val layoutId = R.layout.fragment_match
     private lateinit var binding: FragmentMatchBinding
 
     val viewModel: MatchViewModel by lazy {
@@ -42,16 +47,12 @@ class MatchFragment : BaseFragment() {
 
         binding = DataBindingUtil.inflate(
             inflater,
-            R.layout.fragment_match,
+            layoutId,
             container,
             false)
 
         val bundle = this.arguments
         if (bundle != null) {
-            //viewModel.homeTeam = bundle.getString("HomeTeam").toString()
-            viewModel.guestTeam = bundle.getString("GuestTeam").toString()
-            viewModel.score = bundle.getString("Score").toString()
-            viewModel.date = bundle.getString("Date").toString()
             setView()
         }
         binding.lifecycleOwner = viewLifecycleOwner
@@ -74,7 +75,7 @@ class MatchFragment : BaseFragment() {
 
     private fun onSuccess(weather : MatchWeather){
         Log.d("MatchFragment","Retrofit Success")
-        binding.tvWeather.text=weather.weather
+        binding.tvWeather.text=weather.weather + weather.temperature.toString()
     }
 
     private fun onEmptyState(){
@@ -86,15 +87,27 @@ class MatchFragment : BaseFragment() {
         //TODO Something
     }
 
-
-
     private fun setView(){
-        binding.tvHomeTeam.text = viewModel.homeTeam
-        binding.tvGuestTeam.text = viewModel.guestTeam
+        binding.tvHomeTeam.text = viewModel.getHomeTeamName()
+        binding.tvGuestTeam.text = viewModel.getGuestTeamName()
+        binding.tvDate.text = viewModel.date
+        getScore(viewModel.score)
         Glide.with(this).load(getImage(viewModel.homeTeam)).into(binding.ivHomeTeam)
         Glide.with(this).load(getImage(viewModel.guestTeam)).into(binding.ivGuestTeam)
         Glide.with(this).load(getStadium(viewModel.homeTeam)).into(binding.ivStadium)
 
+    }
+
+    private fun getScore(score: String){
+        if (score == "? : ?"){
+           val timeArray = viewModel.getTimeTillMatch()
+            binding.tvScore.text = "Days: ${timeArray[DAYS_INDEX]} " +
+                    "Hours: ${timeArray[HOURS_INDEX]} Minutes: ${timeArray[MINUTES_INDEX]}"
+        }
+        else {
+            binding.tvScore.text = viewModel.score
+            binding.tvScore.setBackgroundColor(R.color.design_default_color_primary)
+        }
     }
 
     private fun getImage(team : String): Int{

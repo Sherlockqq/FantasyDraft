@@ -1,5 +1,6 @@
 package com.midina.android.match_ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.*
@@ -9,7 +10,12 @@ import com.midina.android.match_domain.usecase.GetWeather
 import com.midina.core_ui.ui.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
+
+private const val DATE_PATTERN = "dd.MM.yyyy HH:mm"
 
 class MatchViewModel @Inject constructor(
     val getWeather: GetWeather,
@@ -21,6 +27,8 @@ class MatchViewModel @Inject constructor(
     var guestTeam: String = ""
     var score: String = ""
     var date: String = ""
+
+    private val sdf by lazy { SimpleDateFormat(DATE_PATTERN) }
 
     init {
         homeTeam = bundle?.getString("HomeTeam").toString()
@@ -124,6 +132,80 @@ class MatchViewModel @Inject constructor(
             }
             Log.d("VM", "RESULT")
         }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    fun getTimeTillMatch(): ArrayList<Int> {
+        val dateFormat = SimpleDateFormat(DATE_PATTERN)
+        val currentDateStr = sdf.format(Date())
+        val currentDate = dateFormat.parse(currentDateStr)
+        val matchDate = dateFormat.parse(date)
+
+        val milliseconds: Long = matchDate.time - currentDate.time
+
+        // 24 часа = 1 440 минут = 1 день
+        val days = (milliseconds / (24 * 60 * 60 * 1000)).toInt()
+        Log.d("MatchViewModel","Разница между датами в днях: $days")
+
+        // 3 600 секунд = 60 минут = 1 час
+        val hours = (milliseconds / (60 * 60 * 1000)).toInt() - (days * 24)
+        Log.d("MatchViewModel","Разница между датами в часах: $hours")
+
+        // 60 000 миллисекунд = 60 секунд = 1 минута
+        val minutes = ((milliseconds / (60 * 1000)).toInt() - (days * 24 * 60)) % 60
+        Log.d("MatchViewModel","Разница между датами в минутах: $minutes")
+
+        val dataArr = ArrayList<Int>()
+
+        dataArr.add(minutes)
+        dataArr.add(hours)
+        dataArr.add(days)
+
+        return dataArr
+    }
+
+    fun getHomeTeamName(): String {
+        when(homeTeam){
+            "Львов" -> return "ЛЬВ"
+            "Верес" -> return "ВЕР"
+            "Шахтер Донецк" -> return "ШАХ"
+            "Металлист 1925" -> return "МЕТ"
+            "Десна" -> return "ДЕС"
+            "Заря" -> return "ЗАР"
+            "Ворскла" -> return "ВОР"
+            "Динамо Киев" -> return "ДИН"
+            "Мариуполь" -> return "МАР"
+            "Колос К" -> return "КОЛ"
+            "Ингулец" -> return "ИНГ"
+            "Рух Львов" -> return "РУХ"
+            "Черноморец" -> return "ЧЕР"
+            "Александрия" -> return "АЛЕ"
+            "Днепр-1" -> return "ДНЕ"
+            "Минай" -> return "МИН"
+        }
+        return "КОМ"
+    }
+
+    fun getGuestTeamName(): String {
+        when(homeTeam){
+            "Львов" -> return "ЛЬВ"
+            "Верес" -> return "ВЕР"
+            "Шахтер Донецк" -> return "ШАХ"
+            "Металлист 1925" -> return "МЕТ"
+            "Десна" -> return "ДЕС"
+            "Заря" -> return "ЗАР"
+            "Ворскла" -> return "ВОР"
+            "Динамо Киев" -> return "ДИН"
+            "Мариуполь" -> return "МАР"
+            "Колос К" -> return "КОЛ"
+            "Ингулец" -> return "ИНГ"
+            "Рух Львов" -> return "РУХ"
+            "Черноморец" -> return "ЧЕР"
+            "Александрия" -> return "АЛЕ"
+            "Днепр-1" -> return "ДНЕ"
+            "Минай" -> return "МИН"
+        }
+        return "КОМ"
     }
 }
 

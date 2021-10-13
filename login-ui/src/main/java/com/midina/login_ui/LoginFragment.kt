@@ -16,9 +16,13 @@ import com.midina.login_ui.databinding.FragmentLoginBinding
 
 class LoginFragment : BaseFragment() {
 
+    override val layoutId = R.layout.fragment_login
+
     private lateinit var binding : FragmentLoginBinding
+
     private val viewModel: LoginViewModel by lazy {
         ViewModelProvider(this, viewmodelFactory )[LoginViewModel::class.java] }
+
     private var listener : OnBottomNavHideListener? = null
 
     override fun onAttach(context: Context) {

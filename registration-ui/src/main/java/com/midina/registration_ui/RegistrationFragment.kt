@@ -23,7 +23,10 @@ import com.midina.registration_ui.databinding.RegistrationFragmentBinding
 
 class RegistrationFragment: BaseFragment() {
 
+    override val layoutId = R.layout.registration_fragment
+
     private lateinit var binding: RegistrationFragmentBinding
+
     private val viewModel: RegistrationViewModel by lazy {
         ViewModelProvider(this, viewmodelFactory )[RegistrationViewModel::class.java] }
 

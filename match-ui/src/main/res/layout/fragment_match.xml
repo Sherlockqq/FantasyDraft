@@ -16,13 +16,15 @@
 
         <ImageView
             android:id="@+id/iv_stadium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:src="@drawable/stadium_olimpiyskii"
+            android:layout_width="match_parent"
+            android:layout_height="256dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.45"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/stadium_olimpiyskii" />
 
         <ImageView
             android:id="@+id/iv_homeTeam"
@@ -56,7 +58,7 @@
             android:textAlignment="viewEnd"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
-            tools:text="Динамо"
+            tools:text="ДИН"
             app:layout_constraintBottom_toBottomOf="@+id/iv_homeTeam"
             app:layout_constraintStart_toEndOf="@+id/iv_homeTeam"
             app:layout_constraintTop_toTopOf="@+id/iv_homeTeam" />
@@ -71,18 +73,19 @@
             android:paddingEnd="16dp"
             android:text=""
             android:textColor="#FFFFFF"
-            tools:text="Шахтер"
+            tools:text="ШАХ"
             app:layout_constraintBottom_toBottomOf="@+id/iv_guestTeam"
             app:layout_constraintEnd_toStartOf="@+id/iv_guestTeam"
             app:layout_constraintTop_toTopOf="@+id/iv_guestTeam"
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/tv_score"
             android:layout_width="0dp"
             android:layout_height="42dp"
-            android:text="TextView"
+            android:background="#000000"
             android:textAlignment="center"
+            android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="@+id/tv_guestTeam"
             app:layout_constraintEnd_toStartOf="@+id/tv_guestTeam"
             app:layout_constraintStart_toEndOf="@+id/tv_homeTeam"
@@ -90,14 +93,31 @@
 
         <TextView
             android:id="@+id/tv_weather"
-            android:layout_width="190dp"
-            android:layout_height="101dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#CC000000"
+            android:paddingStart="8dp"
             android:text=""
-            android:textColor="#1F3685"
-            android:textSize="34sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_date"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_date"
+            app:layout_constraintTop_toTopOf="@+id/tv_date"
             tools:text="Rain" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="#CC000000"
+            android:paddingStart="8dp"
+            android:text="23.09.2019"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

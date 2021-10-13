@@ -19,6 +19,8 @@ import com.midina.draft_ui.databinding.FragmentDraftBinding
 
 class DraftFragment : BaseFragment() {
 
+    override val layoutId = R.layout.fragment_draft
+
     private lateinit var binding: FragmentDraftBinding
     val viewModel: DraftViewModel by lazy {
         ViewModelProvider(this, viewmodelFactory )[DraftViewModel::class.java] }
