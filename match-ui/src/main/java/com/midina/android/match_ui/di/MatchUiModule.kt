@@ -1,5 +1,6 @@
 package com.midina.android.match_ui.di
 
+import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import com.midina.android.match_ui.MatchFragment
 import com.midina.android.match_ui.MatchViewModel
@@ -17,7 +18,7 @@ interface MatchUiModule {
         MatchViewModelModule::class,
         BundleProvidersModule::class])
 
-    fun providesMatchFragment(): MatchFragment// =  matchFragment
+    fun providesMatchFragment(): MatchFragment
 
 }
 @Module
@@ -32,8 +33,7 @@ abstract class MatchViewModelModule {
 class BundleProvidersModule {
 
     @Provides
-    fun provideHomeTeam(matchFragment: MatchFragment): String {
-        val bundle = matchFragment.arguments
-        return bundle?.getString("HomeTeam") ?: ""
+    fun provideBundle(matchFragment: MatchFragment): Bundle? {
+        return matchFragment.arguments
     }
 }

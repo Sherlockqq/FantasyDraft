@@ -1,5 +1,6 @@
 package com.midina.android.match_ui
 
+import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.*
 import com.midina.android.match_domain.model.MatchWeather
@@ -12,22 +13,27 @@ import javax.inject.Inject
 
 class MatchViewModel @Inject constructor(
     val getWeather: GetWeather,
-    val homeTeam: String
-) : ViewModel(), LifecycleObserver {
+    val bundle: Bundle?
+    ) : ViewModel(), LifecycleObserver {
 //todo constctour Factory
-//todo dagger
 
-    init {
-        Log.d("TODO Remove", "injected homeTeam : $homeTeam")
-    }
-    private val _events = SingleLiveEvent<UiEvent>()
-    val events: LiveData<UiEvent>
-        get() = _events
-
-   // var homeTeam: String = ""
+    var homeTeam: String = ""
     var guestTeam: String = ""
     var score: String = ""
     var date: String = ""
+
+    init {
+        homeTeam = bundle?.getString("HomeTeam").toString()
+        guestTeam = bundle?.getString("GuestTeam").toString()
+        score = bundle?.getString("Score").toString()
+        date = bundle?.getString("Date").toString()
+
+        Log.d("TODO Remove", "injected bundle : $bundle")
+    }
+
+    private val _events = SingleLiveEvent<UiEvent>()
+    val events: LiveData<UiEvent>
+        get() = _events
 
     private var lat = 0.0F
     private var lon = 0.0F
