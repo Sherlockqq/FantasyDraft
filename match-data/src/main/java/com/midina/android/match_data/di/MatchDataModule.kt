@@ -37,7 +37,6 @@ class MatchDataModule {
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-        //Todo ad
     }
 
     @Singleton

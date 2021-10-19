@@ -38,7 +38,7 @@ class FixturesViewModel @Inject constructor(private val getMatchesScheduleUsecas
     }
 
     private var matchesMap: Map<Int, List<MatchSchedule>> = mutableMapOf()
-    private var dateMap: MutableMap<Int, Pair<LocalDateTime, LocalDateTime>> = mutableMapOf()
+    private var dateMap: MutableMap<Int, Pair<LocalDateTime?, LocalDateTime?>> = mutableMapOf()
 
     private val sdf by lazy { SimpleDateFormat(DATE_PATTERN) }
 
@@ -66,7 +66,6 @@ class FixturesViewModel @Inject constructor(private val getMatchesScheduleUsecas
                 is ResultEvent.Success -> {
                     matchesMap = result.value
                     getDateMap()
-                    //TODO CHECK IF IT IS WORK
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         val tourByDate = getTourByDate()
                         _tours.postValue(tourByDate)
@@ -149,19 +148,22 @@ class FixturesViewModel @Inject constructor(private val getMatchesScheduleUsecas
     }
 
     private fun getLocaleDateTimePair(first: String, last: String):
-            Pair<LocalDateTime, LocalDateTime> {
+            Pair<LocalDateTime?, LocalDateTime?> {
 
-        val localFirst = LocalDateTime.parse(
-            first,
-            DateTimeFormatter.ofPattern(DATE_PATTERN)
-        )
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val localFirst = LocalDateTime.parse(
+                first,
+                DateTimeFormatter.ofPattern(DATE_PATTERN)
+            )
+            val localLast = LocalDateTime.parse(
+                last,
+                DateTimeFormatter.ofPattern(DATE_PATTERN)
+            )
+            Pair(localFirst, localLast)
+        } else {
+            Pair(null, null)
+        }
 
-        val localLast = LocalDateTime.parse(
-            last,
-            DateTimeFormatter.ofPattern(DATE_PATTERN)
-        )
-
-        return Pair(localFirst, localLast)
     }
 
     private fun getDateMap() {
@@ -189,8 +191,6 @@ class FixturesViewModel @Inject constructor(private val getMatchesScheduleUsecas
 
 sealed class UiEvent {
     class Success(val matches: List<MatchSchedule>) : UiEvent()
-
-    //    class OnTourChanged(val matches: List<MatchSchedule>) : UiEvent()
     object Error : UiEvent()
     object Loading : UiEvent()
     object EmptyState : UiEvent()

@@ -9,6 +9,8 @@ import com.midina.registration_domain.model.User
 import com.midina.registration_domain.model.ResultEvent
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.EOFException
+import java.sql.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.coroutines.resume
@@ -26,15 +28,15 @@ class RegisterUserRepository @Inject constructor(
                 fAuth.createUserWithEmailAndPassword(user.emailAddress, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
+
                             continuation.resume(ResultEvent.Success)
-                            val userEntity = UserEntity(
-                                user.emailAddress,
-                                user.firstName,
-                                user.lastName,
-                                user.gender
-                            )
+
                             GlobalScope.launch {
-                                addUser(userEntity)
+                                try{
+                                    addUser(user.toUserEntity())
+                                } catch (e: EOFException) {
+                                    Log.d("RegisterRepository", "${e.message}")
+                                }
                             }
                         } else {
                             continuation.resume(ResultEvent.InvalidData)
@@ -45,6 +47,14 @@ class RegisterUserRepository @Inject constructor(
             }
         }
     }
+
+    private fun User.toUserEntity() = UserEntity(
+        this.emailAddress,
+        this.firstName,
+        this.lastName,
+        this.gender,
+        Date.valueOf(this.dateOfBirth)
+    )
 
     private suspend fun addUser(user: UserEntity) {
         userDao.insert(user)

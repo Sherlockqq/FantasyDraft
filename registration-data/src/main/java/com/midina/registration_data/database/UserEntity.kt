@@ -3,7 +3,7 @@ package com.midina.registration_data.database
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.midina.registration_domain.model.Gender
-import java.util.*
+import java.sql.Date
 
 @Entity
 data class UserEntity(
@@ -11,5 +11,5 @@ data class UserEntity(
     val firstName: String,
     val lastName: String,
     val gender: Gender,
-    // val dateOfBirth : Date
+     val dateOfBirth : Date
 )

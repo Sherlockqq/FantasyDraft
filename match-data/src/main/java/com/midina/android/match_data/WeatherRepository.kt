@@ -1,5 +1,6 @@
 package com.midina.android.match_data
 
+import android.os.Build
 import android.util.Log
 import com.midina.android.match_data.api.WeatherApiInterface
 import com.midina.android.match_data.data.WeatherDescription
@@ -21,12 +22,12 @@ class WeatherRepository @Inject constructor(private val weatherApi: WeatherApiIn
             Log.d("WeatherRepo", "${retroList.size}")
             val dateList = getDateList(retroList)
             val index = getIndex(date, dateList)
-            val temperature =
-                Math.round(convertKelvinToCelsius(retroList[index!!].main.temp) * 100.0) / 100.0
             Log.d("WeatherRepo", "CHECK")
             if (index == null) {
                 ResultEvent.EmptyState
             } else {
+                val temperature =
+                    Math.round(convertKelvinToCelsius(retroList[index].main.temp) * 100.0) / 100.0
                 ResultEvent.Success(
                     MatchWeather(
                         lat,
@@ -37,7 +38,7 @@ class WeatherRepository @Inject constructor(private val weatherApi: WeatherApiIn
                     )
                 )
             }
-        } catch (e: Exception) {
+        } catch (e: EOFException) {
             ResultEvent.Error
         }
     }
@@ -50,26 +51,32 @@ class WeatherRepository @Inject constructor(private val weatherApi: WeatherApiIn
         val dateList = mutableListOf<LocalDateTime>()
 
         for (index in list.indices) {
-            dateList.add(index, dateConverting(list[index].dtTxt))
+            dateConverting(list[index].dtTxt)?.let { dateList.add(index, it) }
         }
         Log.d("WeatherRepo", "CHECK")
         return dateList
     }
 
-    private fun dateConverting(retroDate: String): LocalDateTime {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        val formatter2 = DateTimeFormatter.ofPattern(DATE_PATTERN)
-        val str = LocalDateTime.parse(retroDate, formatter).format(formatter2)
-        return LocalDateTime.parse(str, formatter2)
+    private fun dateConverting(retroDate: String): LocalDateTime? {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            val formatter2 = DateTimeFormatter.ofPattern(DATE_PATTERN)
+            val str = LocalDateTime.parse(retroDate, formatter).format(formatter2)
+            LocalDateTime.parse(str, formatter2)
+        } else {
+            null
+        }
     }
 
     private fun getIndex(matchDate: String, list: List<LocalDateTime>): Int? {
-        val formatter = DateTimeFormatter.ofPattern(DATE_PATTERN)
-        val date = LocalDateTime.parse(matchDate, formatter)
-        for (index in list.indices) {
-            if (date.isBefore(list[index])) {
-                Log.d("WeatherRepo", "SUCCESS")
-                return index
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val formatter = DateTimeFormatter.ofPattern(DATE_PATTERN)
+            val date = LocalDateTime.parse(matchDate, formatter)
+            for (index in list.indices) {
+                if (date.isBefore(list[index])) {
+                    Log.d("WeatherRepo", "SUCCESS")
+                    return index
+                }
             }
         }
         Log.d("WeatherRepo", "NULL")

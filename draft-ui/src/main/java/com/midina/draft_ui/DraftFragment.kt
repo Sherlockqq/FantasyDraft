@@ -14,9 +14,6 @@ import androidx.navigation.fragment.findNavController
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.draft_ui.databinding.FragmentDraftBinding
 
-
-//TODO FIX BUG (User is signed, navi to Registration, press back button, user is not signed)
-
 class DraftFragment : BaseFragment() {
 
     override val layoutId = R.layout.fragment_draft
