@@ -8,18 +8,19 @@ import javax.inject.Singleton
 
 @Singleton
 class SignedRepository {
-    fun isSigned(): ResultEvent{
+    fun isSigned(): ResultEvent {
         val fAuth = Firebase.auth
         val currentUser = fAuth.currentUser
-        Log.d("TAG","USER EMAIL : ${currentUser?.email}")
-        return if (currentUser == null){
+        Log.d("TAG", "USER EMAIL : ${currentUser?.email}")
+        return if (currentUser == null) {
             ResultEvent.NotSigned
-        }else{
+        } else {
             ResultEvent.Signed
         }
     }
-    fun signedOut(){
+
+    fun signedOut() {
         Firebase.auth.signOut()
-        Log.d("TAG","USER EMAIL : ${Firebase.auth.currentUser?.email}")
+        Log.d("TAG", "USER EMAIL : ${Firebase.auth.currentUser?.email}")
     }
 }

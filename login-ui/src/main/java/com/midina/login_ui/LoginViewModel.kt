@@ -1,62 +1,64 @@
 package com.midina.login_ui
 
 import android.text.Editable
-import android.text.TextWatcher
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.midina.core_ui.ui.SingleLiveEvent
 import com.midina.login_domain.model.ResultEvent
-import com.midina.login_domain.usecase.SigningIn
+import com.midina.login_domain.usecase.SigningInUsecase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-class LoginViewModel @Inject constructor(private val signingIn : SigningIn): ViewModel() {
+class LoginViewModel @Inject constructor(private val signingInUsecase: SigningInUsecase) :
+    ViewModel() {
 
     private val _loginEvents = SingleLiveEvent<LoginEvent>()
-    val loginEvents : LiveData<LoginEvent>
+    val loginEvents: LiveData<LoginEvent>
         get() = _loginEvents
 
     private val _email = MutableLiveData<String>()
-    val email : LiveData<String>
+    val email: LiveData<String>
         get() = _email
 
     private val _password = MutableLiveData<String>()
-    val password : LiveData<String>
+    val password: LiveData<String>
         get() = _password
 
-    init{
+    init {
         _email.value = ""
         _password.value = ""
     }
 
-    fun onEmailChanged(text:Editable?){
+    fun onEmailChanged(text: Editable?) {
         _email.value = text.toString()
     }
 
-    fun onPasswordChanged(text: Editable?){
+    fun onPasswordChanged(text: Editable?) {
         _password.value = text.toString()
     }
 
-    fun signInClicked(){
+    fun signInClicked() {
         viewModelScope.launch(Dispatchers.IO) {
             signIn()
         }
     }
-    private suspend fun signIn(){
-        val result = signingIn.execute(_email.value.toString(),_password.value.toString())
-        when(result){
+
+    private suspend fun signIn() {
+        val result = signingInUsecase.execute(_email.value.toString(), _password.value.toString())
+        when (result) {
             is ResultEvent.Success -> _loginEvents.postValue(LoginEvent.OnSigned)
             is ResultEvent.InvalidateData -> _loginEvents.postValue(LoginEvent.OnNotSigned)
-            is ResultEvent.Error -> {}//TODO Exception
+            is ResultEvent.Error -> {
+            }//TODO Exception
         }
     }
 }
 
-sealed class LoginEvent{
-    object OnSigned :LoginEvent()
-    object OnNotSigned :LoginEvent()
+sealed class LoginEvent {
+    object OnSigned : LoginEvent()
+    object OnNotSigned : LoginEvent()
 }

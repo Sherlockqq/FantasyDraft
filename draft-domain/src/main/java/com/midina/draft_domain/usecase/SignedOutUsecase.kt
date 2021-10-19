@@ -1,5 +1,5 @@
 package com.midina.draft_domain.usecase
 
-interface SignedOut {
+interface SignedOutUseCase {
     suspend fun execute()
 }

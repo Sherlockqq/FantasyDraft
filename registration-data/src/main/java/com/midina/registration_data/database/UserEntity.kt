@@ -7,9 +7,9 @@ import java.util.*
 
 @Entity
 data class UserEntity(
-    @PrimaryKey    val emailAddress : String,
-    val firstName : String,
-    val lastName : String,
-    val gender : Gender,
-   // val dateOfBirth : Date
+    @PrimaryKey val emailAddress: String,
+    val firstName: String,
+    val lastName: String,
+    val gender: Gender,
+    // val dateOfBirth : Date
 )

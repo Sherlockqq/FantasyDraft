@@ -23,7 +23,8 @@ class DraftFragment : BaseFragment() {
 
     private lateinit var binding: FragmentDraftBinding
     val viewModel: DraftViewModel by lazy {
-        ViewModelProvider(this, viewmodelFactory )[DraftViewModel::class.java] }
+        ViewModelProvider(this, viewmodelFactory)[DraftViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,18 +40,19 @@ class DraftFragment : BaseFragment() {
             inflater,
             R.layout.fragment_draft,
             container,
-            false)
+            false
+        )
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        viewModel.signEvents.observe(viewLifecycleOwner,{handleSignsEvents(it)})
+        viewModel.signEvents.observe(viewLifecycleOwner, { handleSignsEvents(it) })
 
         binding.registerButton.setOnClickListener { view ->
             findNavController().navigate(R.id.action_registration_navigation, null)
         }
         binding.signInButton.setOnClickListener { view ->
-            findNavController().navigate(R.id.action_login_navigation,null)
+            findNavController().navigate(R.id.action_login_navigation, null)
         }
         binding.signOutButton.setOnClickListener { view ->
             viewModel.signedOutClicked()
@@ -58,8 +60,8 @@ class DraftFragment : BaseFragment() {
         return binding.root
     }
 
-    private fun handleSignsEvents(event: SigningUiEvent){
-        when (event){
+    private fun handleSignsEvents(event: SigningUiEvent) {
+        when (event) {
             is SigningUiEvent.onSignIn -> {
                 binding.signInButton.isInvisible = true
                 binding.signOutButton.isVisible = true
@@ -75,6 +77,6 @@ class DraftFragment : BaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("Draft","OnDestroy")
+        Log.d("Draft", "OnDestroy")
     }
 }

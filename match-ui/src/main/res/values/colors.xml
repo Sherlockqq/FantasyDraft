@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="team_background">#FFFFFF</color>
+    <color name="tv_team_background">#160A40</color>
+    <color name="tv_team_text_color">#FFFFFF</color>
+    <color name="tv_score_background">#000000</color>
+    <color name="tv_score_text_color">#FFFFFF</color>
+    <color name="tv_date_background">#CC000000</color>
+    <color name="top_bar_text_color">#FFFFFF</color>
+</resources>

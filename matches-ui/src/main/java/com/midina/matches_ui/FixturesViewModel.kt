@@ -11,7 +11,7 @@ import com.midina.core_ui.ui.SingleLiveEvent
 
 import com.midina.matches_domain.model.MatchSchedule
 import com.midina.matches_domain.model.ResultEvent
-import com.midina.matches_domain.usecase.GetMatchesSchedule
+import com.midina.matches_domain.usecase.GetMatchesScheduleUsecase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -28,7 +28,7 @@ private const val MATCHES_IN_TOUR = 8
 private const val FIRST_MATCH_IN_TOUR = 0
 private const val MATCHES_COUNT = 240
 
-class FixturesViewModel @Inject constructor(private val getMatchesSchedule: GetMatchesSchedule) :
+class FixturesViewModel @Inject constructor(private val getMatchesScheduleUsecase: GetMatchesScheduleUsecase) :
     ViewModel() {
 
     enum class TourFilter {
@@ -60,7 +60,7 @@ class FixturesViewModel @Inject constructor(private val getMatchesSchedule: GetM
 
         viewModelScope.launch(Dispatchers.IO) {
 
-            val result = getMatchesSchedule.execute()
+            val result = getMatchesScheduleUsecase.execute()
 
             when (result) {
                 is ResultEvent.Success -> {

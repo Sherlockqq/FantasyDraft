@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="email_example">example@gmail.com</string>
-    <string name="password_hint">Your password</string>
-    <string name="sign_in">Sign In</string>
-    <string name="requirements">Please input correct email and password!</string>
+    <string name="password_hint">Ваш пароль</string>
+    <string name="sign_in">Войти</string>
+    <string name="requirements">Введите правильный пароль и email!</string>
 </resources>

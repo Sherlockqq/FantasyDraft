@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.midina.android.match_domain.model.MatchWeather
 import com.midina.android.match_domain.model.ResultEvent
-import com.midina.android.match_domain.usecase.GetWeather
+import com.midina.android.match_domain.usecase.GetWeatherUsecase
 import com.midina.core_ui.ui.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,35 +16,47 @@ import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 private const val DATE_PATTERN = "dd.MM.yyyy HH:mm"
+private const val MINUTE = 60000L
 
+@SuppressLint("SimpleDateFormat")
 class MatchViewModel @Inject constructor(
-    val getWeather: GetWeather,
-    val bundle: Bundle?
-    ) : ViewModel(), LifecycleObserver {
-//todo constctour Factory
+    private val getWeatherUsecase: GetWeatherUsecase,
+    bundle: Bundle?
+) : ViewModel(), LifecycleObserver {
+
+    private val _dateArr = MutableLiveData<ArrayList<Int>>()
+    val dateArr: LiveData<ArrayList<Int>>
+        get() = _dateArr
+
+    private val _scoreOrDateEvents = SingleLiveEvent<UiScoreOrDateEvent>()
+    val scoreOrDateEvents: LiveData<UiScoreOrDateEvent>
+        get() = _scoreOrDateEvents
+
+    private val _events = SingleLiveEvent<UiEvent>()
+    val events: LiveData<UiEvent>
+        get() = _events
 
     var homeTeam: String = ""
     var guestTeam: String = ""
     var score: String = ""
     var date: String = ""
 
+    private var lat = 0.0F
+    private var lon = 0.0F
+
+    private val timer = Timer()
+
     private val sdf by lazy { SimpleDateFormat(DATE_PATTERN) }
 
     init {
+        _dateArr.value = ArrayList()
         homeTeam = bundle?.getString("HomeTeam").toString()
         guestTeam = bundle?.getString("GuestTeam").toString()
         score = bundle?.getString("Score").toString()
         date = bundle?.getString("Date").toString()
-
-        Log.d("TODO Remove", "injected bundle : $bundle")
+        getScoreOrTime()
     }
 
-    private val _events = SingleLiveEvent<UiEvent>()
-    val events: LiveData<UiEvent>
-        get() = _events
-
-    private var lat = 0.0F
-    private var lon = 0.0F
 
     private fun getCoordinates() {
         when (homeTeam) {
@@ -120,7 +132,7 @@ class MatchViewModel @Inject constructor(
     private fun getData() {
         getCoordinates()
         viewModelScope.launch(Dispatchers.IO) {
-            val result = getWeather.execute(lat, lon, date)
+            val result = getWeatherUsecase.execute(lat, lon, date)
             when (result) {
                 is ResultEvent.Success -> {
                     _events.postValue(UiEvent.Success(result.value))
@@ -134,8 +146,26 @@ class MatchViewModel @Inject constructor(
         }
     }
 
+    private fun getScoreOrTime() {
+        if (score == "? : ?") {
+            timer.scheduleAtFixedRate(
+                object : TimerTask() {
+                    override fun run() {
+                        _dateArr.postValue(getTimeTillMatch())
+                        Log.d("MatchViewModel", "Date Arr Check ${_dateArr.value}")
+                        _scoreOrDateEvents.postValue(UiScoreOrDateEvent.HasDate)
+                    }
+                },
+                0,
+                MINUTE
+            )
+        } else {
+            _scoreOrDateEvents.postValue(UiScoreOrDateEvent.HasScore)
+        }
+    }
+
     @SuppressLint("SimpleDateFormat")
-    fun getTimeTillMatch(): ArrayList<Int> {
+    private fun getTimeTillMatch(): ArrayList<Int> {
         val dateFormat = SimpleDateFormat(DATE_PATTERN)
         val currentDateStr = sdf.format(Date())
         val currentDate = dateFormat.parse(currentDateStr)
@@ -145,27 +175,27 @@ class MatchViewModel @Inject constructor(
 
         // 24 часа = 1 440 минут = 1 день
         val days = (milliseconds / (24 * 60 * 60 * 1000)).toInt()
-        Log.d("MatchViewModel","Разница между датами в днях: $days")
+        //Log.d("MatchViewModel","Разница между датами в днях: $days")
 
         // 3 600 секунд = 60 минут = 1 час
         val hours = (milliseconds / (60 * 60 * 1000)).toInt() - (days * 24)
-        Log.d("MatchViewModel","Разница между датами в часах: $hours")
+        // Log.d("MatchViewModel","Разница между датами в часах: $hours")
 
         // 60 000 миллисекунд = 60 секунд = 1 минута
         val minutes = ((milliseconds / (60 * 1000)).toInt() - (days * 24 * 60)) % 60
-        Log.d("MatchViewModel","Разница между датами в минутах: $minutes")
+        Log.d("MatchViewModel", "Разница между датами в минутах: $minutes")
 
-        val dataArr = ArrayList<Int>()
+        val date = ArrayList<Int>()
 
-        dataArr.add(minutes)
-        dataArr.add(hours)
-        dataArr.add(days)
+        date.add(minutes)
+        date.add(hours)
+        date.add(days)
 
-        return dataArr
+        return date
     }
 
     fun getHomeTeamName(): String {
-        when(homeTeam){
+        when (homeTeam) {
             "Львов" -> return "ЛЬВ"
             "Верес" -> return "ВЕР"
             "Шахтер Донецк" -> return "ШАХ"
@@ -187,7 +217,7 @@ class MatchViewModel @Inject constructor(
     }
 
     fun getGuestTeamName(): String {
-        when(homeTeam){
+        when (guestTeam) {
             "Львов" -> return "ЛЬВ"
             "Верес" -> return "ВЕР"
             "Шахтер Донецк" -> return "ШАХ"
@@ -207,6 +237,16 @@ class MatchViewModel @Inject constructor(
         }
         return "КОМ"
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        timer.cancel()
+    }
+}
+
+sealed class UiScoreOrDateEvent {
+    object HasScore : UiScoreOrDateEvent()
+    object HasDate : UiScoreOrDateEvent()
 }
 
 sealed class UiEvent {

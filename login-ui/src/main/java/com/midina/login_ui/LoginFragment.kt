@@ -18,16 +18,17 @@ class LoginFragment : BaseFragment() {
 
     override val layoutId = R.layout.fragment_login
 
-    private lateinit var binding : FragmentLoginBinding
+    private lateinit var binding: FragmentLoginBinding
 
     private val viewModel: LoginViewModel by lazy {
-        ViewModelProvider(this, viewmodelFactory )[LoginViewModel::class.java] }
+        ViewModelProvider(this, viewmodelFactory)[LoginViewModel::class.java]
+    }
 
-    private var listener : OnBottomNavHideListener? = null
+    private var listener: OnBottomNavHideListener? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if(context is OnBottomNavHideListener){
+        if (context is OnBottomNavHideListener) {
             listener = context
         } else {
             throw IllegalArgumentException()
@@ -68,11 +69,11 @@ class LoginFragment : BaseFragment() {
         return binding.root
     }
 
-    private fun handleLoginEvents(event: LoginEvent){
-        when (event){
+    private fun handleLoginEvents(event: LoginEvent) {
+        when (event) {
             is LoginEvent.OnSigned -> {
                 binding.tvRequirements.isGone = true
-                findNavController().navigate(R.id.action_draft_navigation,null)
+                findNavController().navigate(R.id.action_draft_navigation, null)
             }
             is LoginEvent.OnNotSigned -> {
                 binding.tvRequirements.isVisible = true

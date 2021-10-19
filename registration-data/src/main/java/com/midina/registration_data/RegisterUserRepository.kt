@@ -16,35 +16,38 @@ import kotlin.coroutines.suspendCoroutine
 
 @Singleton
 class RegisterUserRepository @Inject constructor(
-    private val userDao: UserDao) {
+    private val userDao: UserDao
+) {
 
-   suspend fun getIsRegistered(user: User, password: String) : ResultEvent {
-       return suspendCoroutine { continuation ->
-           try{
-               val fAuth = Firebase.auth
-               fAuth.createUserWithEmailAndPassword(user.emailAddress, password).addOnCompleteListener {
-                       task ->
-                   if (task.isSuccessful) {
-                       continuation.resume(ResultEvent.Success)
-                       val userEntity = UserEntity(
-                           user.emailAddress,
-                           user.firstName,
-                           user.lastName,
-                           user.gender)
-                       GlobalScope.launch{
-                           addUser(userEntity)
-                       }
-                   } else {
-                       continuation.resume(ResultEvent.InvalidData)
-                   }
-               }
-           }catch (e:Exception){
-               continuation.resume(ResultEvent.Error)
-           }
-       }
-   }
-    private suspend fun addUser(user:UserEntity){
+    suspend fun getIsRegistered(user: User, password: String): ResultEvent {
+        return suspendCoroutine { continuation ->
+            try {
+                val fAuth = Firebase.auth
+                fAuth.createUserWithEmailAndPassword(user.emailAddress, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            continuation.resume(ResultEvent.Success)
+                            val userEntity = UserEntity(
+                                user.emailAddress,
+                                user.firstName,
+                                user.lastName,
+                                user.gender
+                            )
+                            GlobalScope.launch {
+                                addUser(userEntity)
+                            }
+                        } else {
+                            continuation.resume(ResultEvent.InvalidData)
+                        }
+                    }
+            } catch (e: Exception) {
+                continuation.resume(ResultEvent.Error)
+            }
+        }
+    }
+
+    private suspend fun addUser(user: UserEntity) {
         userDao.insert(user)
-        Log.d("DATABASE","User Added")
+        Log.d("DATABASE", "User Added")
     }
 }

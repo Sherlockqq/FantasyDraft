@@ -17,8 +17,9 @@ interface MatchesUiModule {
             FixturesViewModelModule::class
         ]
     )
-fun providesFixturesFragment(): FixturesFragment
+    fun providesFixturesFragment(): FixturesFragment
 }
+
 @Module
 abstract class FixturesViewModelModule {
     @Binds

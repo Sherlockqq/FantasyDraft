@@ -14,13 +14,16 @@ import dagger.multibindings.IntoMap
 @Module
 interface MatchUiModule {
 
-    @ContributesAndroidInjector(modules = [
-        MatchViewModelModule::class,
-        BundleProvidersModule::class])
+    @ContributesAndroidInjector(
+        modules = [
+            MatchViewModelModule::class,
+            BundleProvidersModule::class]
+    )
 
     fun providesMatchFragment(): MatchFragment
 
 }
+
 @Module
 abstract class MatchViewModelModule {
     @Binds

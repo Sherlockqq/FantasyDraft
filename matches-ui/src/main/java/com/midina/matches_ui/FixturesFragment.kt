@@ -23,7 +23,8 @@ class FixturesFragment : BaseFragment() {
     private val adapter = MatchAdapter()
 
     val viewModel: FixturesViewModel by lazy {
-        ViewModelProvider(this, viewmodelFactory )[FixturesViewModel::class.java] }
+        ViewModelProvider(this, viewmodelFactory)[FixturesViewModel::class.java]
+    }
 
 
     override fun onCreateView(
@@ -35,7 +36,8 @@ class FixturesFragment : BaseFragment() {
             inflater,
             R.layout.fragment_fixtures,
             container,
-            false)
+            false
+        )
 
         binding.lifecycleOwner = viewLifecycleOwner
 
@@ -47,7 +49,7 @@ class FixturesFragment : BaseFragment() {
 
         setGameText()
 
-        viewModel.events.observe(viewLifecycleOwner, {handleEvents(it)})
+        viewModel.events.observe(viewLifecycleOwner, { handleEvents(it) })
         binding.fixturesList.adapter = adapter
         adapter.setOnItemClickListener(object : MatchAdapter.OnItemClickListener {
             override fun onItemClick(position: Int, match: MatchSchedule) {
@@ -60,21 +62,22 @@ class FixturesFragment : BaseFragment() {
         }
 
         binding.nextArrow.setOnClickListener {
-           viewModel.nextArrowClicked()
+            viewModel.nextArrowClicked()
         }
 
         return binding.root
     }
 
-    private fun setGameText(){
-        if(viewModel.tours.value != 0 ){
-            binding.gameweekText.text = "GameWeek ${viewModel.tours.value}"
-        }else{
+    private fun setGameText() {
+        if (viewModel.tours.value != 0) {
+            binding.gameweekText.text = "Тур ${viewModel.tours.value}"
+        } else {
             binding.gameweekText.setText(R.string.schedule)
-        }    }
+        }
+    }
 
-    private fun handleEvents(event: UiEvent){
-        when (event){
+    private fun handleEvents(event: UiEvent) {
+        when (event) {
             is UiEvent.Success -> onSuccess(event.matches)
             is UiEvent.Error -> onError()
             is UiEvent.Loading -> onLoading()
@@ -83,18 +86,18 @@ class FixturesFragment : BaseFragment() {
     }
 
     private fun onSuccess(event: List<MatchSchedule>) {
-        if(event.isNotEmpty()){
+        if (event.isNotEmpty()) {
             setGameText()
 
             binding.progressBar.isVisible = false
             binding.nonSuccessText.isVisible = false
             binding.gameweekText.isVisible = true
-            when(viewModel.tours.value){
+            when (viewModel.tours.value) {
                 0 -> {
                     binding.backArrow.isInvisible = true
                     binding.nextArrow.isVisible = true
                 }
-                30 ->{
+                30 -> {
                     binding.nextArrow.isInvisible = true
                     binding.backArrow.isVisible = true
                 }
@@ -117,7 +120,7 @@ class FixturesFragment : BaseFragment() {
         binding.ConnectionErrorView.isVisible = true
     }
 
-    private fun onLoading(){
+    private fun onLoading() {
         binding.nonSuccessText.setText(R.string.loading)
         binding.nonSuccessText.isVisible = true
         binding.progressBar.isVisible = true
@@ -126,7 +129,7 @@ class FixturesFragment : BaseFragment() {
         binding.gameweekText.isVisible = false
     }
 
-    private fun onEmptyState(){
+    private fun onEmptyState() {
         binding.nonSuccessText.setText(R.string.empty_state)
         binding.progressBar.isVisible = false
         binding.nextArrow.isVisible = false
@@ -152,10 +155,10 @@ class FixturesFragment : BaseFragment() {
     }
 
     private fun MatchSchedule.toBundle() =
-         Bundle().also {
-             it.putString("HomeTeam",this.homeTeam)
-             it.putString("GuestTeam",this.guestTeam)
-             it.putString("Score",this.score)
-             it.putString("Date",this.date)
-         }
+        Bundle().also {
+            it.putString("HomeTeam", this.homeTeam)
+            it.putString("GuestTeam", this.guestTeam)
+            it.putString("Score", this.score)
+            it.putString("Date", this.date)
+        }
 }

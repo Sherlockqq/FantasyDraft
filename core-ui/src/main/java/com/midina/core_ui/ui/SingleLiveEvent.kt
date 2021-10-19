@@ -12,8 +12,8 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
     private val pending = AtomicBoolean(false)
     private val observers = mutableSetOf<Observer<in T>>()
 
-    private val internalObserver = Observer<T>{ t ->
-        if(pending.compareAndSet(true,false)){
+    private val internalObserver = Observer<T> { t ->
+        if (pending.compareAndSet(true, false)) {
             observers.forEach { observer ->
                 observer.onChanged(t)
             }
@@ -21,11 +21,11 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
     }
 
     @MainThread
-    override fun observe(owner : LifecycleOwner, observer: Observer<in T>){
+    override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
 
         //Observe the internal MutableLiveData
         super.observe(owner, Observer { t ->
-            if(pending.compareAndSet(true,false)){
+            if (pending.compareAndSet(true, false)) {
                 observer.onChanged(t)
             }
         })
@@ -33,11 +33,13 @@ class SingleLiveEvent<T> : MutableLiveData<T>() {
         //get all Observers
         observers.add(observer)
 
-        if(!hasObservers()){
+        if (!hasObservers()) {
             super.observe(owner, internalObserver)
-        }else{
-            Log.i("TAG","observe: Multiple observers registered " +
-                    "but only one will be notified of changed")
+        } else {
+            Log.i(
+                "TAG", "observe: Multiple observers registered " +
+                        "but only one will be notified of changed"
+            )
         }
     }
 

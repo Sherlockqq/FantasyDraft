@@ -1,6 +1,5 @@
 package com.midina.registration_ui
 
-import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -15,7 +14,7 @@ import com.midina.core_ui.ui.SingleLiveEvent
 import com.midina.registration_domain.model.Gender
 import com.midina.registration_domain.model.User
 import com.midina.registration_domain.model.ResultEvent
-import com.midina.registration_domain.usecase.RegisterUser
+import com.midina.registration_domain.usecase.RegisterUserUsecase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.NumberFormatException
@@ -42,7 +41,7 @@ private const val DAYS_INT_SIZE = 2
 private const val MONTHES_INT_SIZE = 2
 private const val YEARS_INT_SIZE = 4
 
-class RegistrationViewModel @Inject constructor(private val registerUser: RegisterUser): ViewModel() {
+class RegistrationViewModel @Inject constructor(private val registerUserUsecase: RegisterUserUsecase): ViewModel() {
 
     private val _registerEvents = SingleLiveEvent<RegistrationEvent>()
     val registerEvents : LiveData<RegistrationEvent>
@@ -392,7 +391,7 @@ class RegistrationViewModel @Inject constructor(private val registerUser: Regist
 //            val dateLD = LocalDate.parse(dateStr)
 //            val date = convertToDateViaInstant(dateLD)
             val user = User(_firstName.value.toString(),_lastName.value.toString(),_email.value.toString(),gender)
-            val result = registerUser.execute(user,_password.value.toString())
+            val result = registerUserUsecase.execute(user,_password.value.toString())
             when(result){
                 ResultEvent.Success -> _registerEvents.postValue(RegistrationEvent.OnRegistered)
                 ResultEvent.InvalidData -> {

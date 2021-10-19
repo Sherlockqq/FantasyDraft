@@ -1,8 +1,8 @@
 package com.midina.android.match_data.di
 
 import com.midina.android.match_data.api.WeatherApiInterface
-import com.midina.android.match_data.usecaseImpl.GetWeatherImpl
-import com.midina.android.match_domain.usecase.GetWeather
+import com.midina.android.match_data.usecaseImpl.GetWeatherUsecaseImpl
+import com.midina.android.match_domain.usecase.GetWeatherUsecase
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -17,14 +17,16 @@ import okhttp3.logging.HttpLoggingInterceptor
 
 const val BASE_URL = "http://api.openweathermap.org/data/2.5/"
 
-@Module(includes = [
-    MatchDataUseCaseModule::class
-])
+@Module(
+    includes = [
+        MatchDataUseCaseModule::class
+    ]
+)
 class MatchDataModule {
 
     @Singleton
     @Provides
-    fun getRetrofitInstance():Retrofit{
+    fun getRetrofitInstance(): Retrofit {
 
         val interceptor = HttpLoggingInterceptor()
         interceptor.apply { interceptor.level = HttpLoggingInterceptor.Level.BODY }
@@ -40,7 +42,7 @@ class MatchDataModule {
 
     @Singleton
     @Provides
-    fun getWeatherApiInterface(retrofit: Retrofit):WeatherApiInterface{
+    fun getWeatherApiInterface(retrofit: Retrofit): WeatherApiInterface {
         return retrofit.create(WeatherApiInterface::class.java)
     }
 }
@@ -48,5 +50,5 @@ class MatchDataModule {
 @Module
 interface MatchDataUseCaseModule {
     @Binds
-    fun bindGetMatchWeatherUseCase(getWeatherImpl: GetWeatherImpl): GetWeather
+    fun bindGetMatchWeatherUseCase(getWeatherImpl: GetWeatherUsecaseImpl): GetWeatherUsecase
 }

@@ -55,13 +55,13 @@ class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
     }
 
     override fun onHideBottomNavView() {
-        val anim = AnimationUtils.loadAnimation(this,R.anim.slide_in_bottom)
+        val anim = AnimationUtils.loadAnimation(this, R.anim.slide_in_bottom)
         binding.bottomNavigation.startAnimation(anim)
         binding.bottomNavigation.isVisible = false
     }
 
     override fun onShowBottomNavView() {
-        val anim = AnimationUtils.loadAnimation(this,R.anim.slide_in_top)
+        val anim = AnimationUtils.loadAnimation(this, R.anim.slide_in_top)
         binding.bottomNavigation.startAnimation(anim)
         binding.bottomNavigation.isVisible = true
     }

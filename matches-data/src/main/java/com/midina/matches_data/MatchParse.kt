@@ -15,9 +15,9 @@ private const val TOUR_SIZE = 30
 
 object MatchParse {
 
-    private var dateMap : MutableMap<Int,Pair<LocalDateTime, LocalDateTime>> = mutableMapOf()
+    private var dateMap: MutableMap<Int, Pair<LocalDateTime, LocalDateTime>> = mutableMapOf()
 
-    fun parse(doc:Document) : Map<Int,List<MatchSchedule>>{
+    fun parse(doc: Document): Map<Int, List<MatchSchedule>> {
 
         //Getting Home Teams
         val homeList = getListOfHome(doc)
@@ -38,28 +38,35 @@ object MatchParse {
         return getMapMatch(matchesList)
 
     }
-    private fun getMapMatch(matchesList : List<MatchSchedule>):Map<Int,List<MatchSchedule>> {
-        val matchesMap : MutableMap<Int,List<MatchSchedule>> = mutableMapOf()
-        for(index in 0 .. TOUR_SIZE){
-            if(index == 0){
+
+    private fun getMapMatch(matchesList: List<MatchSchedule>): Map<Int, List<MatchSchedule>> {
+        val matchesMap: MutableMap<Int, List<MatchSchedule>> = mutableMapOf()
+        for (index in 0..TOUR_SIZE) {
+            if (index == 0) {
                 matchesMap[index] = getFullMapMatch(matchesList)
-            }else{
-                matchesMap[index] = getOneTourList(index,matchesList)
+            } else {
+                matchesMap[index] = getOneTourList(index, matchesList)
             }
         }
         return matchesMap
     }
 
-    private fun getOneTourList(tour: Int?, matchesList : List<MatchSchedule>) : MutableList<MatchSchedule>{
+    private fun getOneTourList(
+        tour: Int?,
+        matchesList: List<MatchSchedule>
+    ): MutableList<MatchSchedule> {
         var index = 0
-        val tourList : MutableList<MatchSchedule> = mutableListOf()
-        for(i in matchesList.indices){
-            if(matchesList[i].tour == tour){
-                tourList.add(index, MatchSchedule(i,matchesList[i].tour,
-                    matchesList[i].homeTeam,
-                    matchesList[i].guestTeam,
-                    matchesList[i].date,
-                    matchesList[i].score)
+        val tourList: MutableList<MatchSchedule> = mutableListOf()
+        for (i in matchesList.indices) {
+            if (matchesList[i].tour == tour) {
+                tourList.add(
+                    index, MatchSchedule(
+                        i, matchesList[i].tour,
+                        matchesList[i].homeTeam,
+                        matchesList[i].guestTeam,
+                        matchesList[i].date,
+                        matchesList[i].score
+                    )
                 )
                 index++
             }
@@ -68,60 +75,64 @@ object MatchParse {
     }
 
     private fun getListMatch(
-        home : MutableList<String>,
-        guest : MutableList<String>,
-        date : MutableList<String>,
-        score : MutableList<String>) : List<MatchSchedule>{
+        home: MutableList<String>,
+        guest: MutableList<String>,
+        date: MutableList<String>,
+        score: MutableList<String>
+    ): List<MatchSchedule> {
 
-        val matchesList : MutableList<MatchSchedule> = mutableListOf()
+        val matchesList: MutableList<MatchSchedule> = mutableListOf()
         var tourCount = 1
         var matchesCount = 0
 
-        for(index in 0 until home.size){
-            if(matchesCount == MATCHES_IN_TOUR){
+        for (index in 0 until home.size) {
+            if (matchesCount == MATCHES_IN_TOUR) {
                 tourCount++
                 matchesCount = 0
             }
 
-            matchesList.add(index, MatchSchedule(index,tourCount,
-                home[index],guest[index],date[index],score[index])
+            matchesList.add(
+                index, MatchSchedule(
+                    index, tourCount,
+                    home[index], guest[index], date[index], score[index]
+                )
             )
             matchesCount++
         }
         return matchesList
     }
 
-    private fun getListOfHome(doc: Document):MutableList<String>{
+    private fun getListOfHome(doc: Document): MutableList<String> {
         val elements = doc.select(HOME_TEAM_HTML)
         val links = elements.select("a")
-        val homeTeam : MutableList<String> = mutableListOf()
-        for (index in 0 until links.size){
-            homeTeam.add(index,links[index].html())
+        val homeTeam: MutableList<String> = mutableListOf()
+        for (index in 0 until links.size) {
+            homeTeam.add(index, links[index].html())
         }
         return homeTeam
     }
 
-    private fun getListOfGuest(doc: Document):MutableList<String>{
+    private fun getListOfGuest(doc: Document): MutableList<String> {
         val elements = doc.select(GUEST_TEAM_HTML)
         val links = elements.select("a")
-        val guestTeam : MutableList<String> = mutableListOf()
-        for (index in 0 until links.size){
-            guestTeam.add(index,links[index].html())
+        val guestTeam: MutableList<String> = mutableListOf()
+        for (index in 0 until links.size) {
+            guestTeam.add(index, links[index].html())
         }
         return guestTeam
     }
 
-    private fun getListDate(doc: Document):MutableList<String>{
+    private fun getListDate(doc: Document): MutableList<String> {
         val elements = doc.select(DATE_HTML)
         val classes = elements.select("div")
         val img = classes.select("img")
         val src = img.attr("src")
-        Log.i("DFDs","FSDFDS")
-        val matchDate : MutableList<String> = mutableListOf()
+        Log.i("DFDs", "FSDFDS")
+        val matchDate: MutableList<String> = mutableListOf()
 //        var matchCount = FIRST_MATCH_IN_TOUR
 //        var tourCount = 1
-        for (index in 0 until classes.size){
-            matchDate.add(index,classes[index].attr("title"))
+        for (index in 0 until classes.size) {
+            matchDate.add(index, classes[index].attr("title"))
 //            matchCount++
 //            if(matchCount == MATCHES_IN_TOUR){
 //                dateMap[tourCount] = getLocaleDateTimePair(classes[index].attr("title"),
@@ -133,38 +144,49 @@ object MatchParse {
         return matchDate
     }
 
-    private fun getListScore(doc: Document):MutableList<String>{
+    private fun getListScore(doc: Document): MutableList<String> {
         val elements = doc.select(SCORE_HTML)
         var links = elements.select("a")
-        val matchScore : MutableList<String> = mutableListOf()
+        val matchScore: MutableList<String> = mutableListOf()
 
-        for (index in 0 until links.size){
-            matchScore.add(index,links[index].html()) // Ended matches
+        for (index in 0 until links.size) {
+            matchScore.add(index, links[index].html()) // Ended matches
         }
         val size = links.size
         links = elements.select("span")
 
-        for((linkIndex, index) in (size until (links.size + size)).withIndex()){
-            matchScore.add(index,links[linkIndex].html())
+        for ((linkIndex, index) in (size until (links.size + size)).withIndex()) {
+            matchScore.add(index, links[linkIndex].html())
         }
 
         return matchScore
     }
 
-    private fun getFullMapMatch(matches: List<MatchSchedule>) : List<MatchSchedule> {
-        val matchesList : MutableList<MatchSchedule> = mutableListOf()
+    private fun getFullMapMatch(matches: List<MatchSchedule>): List<MatchSchedule> {
+        val matchesList: MutableList<MatchSchedule> = mutableListOf()
         var tourCount = 0
         var matchesIndex = 0
-        for(index in 0..268){
-            if(tourCount != matches[matchesIndex].tour){
+        for (index in 0..268) {
+            if (tourCount != matches[matchesIndex].tour) {
                 tourCount++
-                matchesList.add(index, MatchSchedule(index,tourCount, "",
-                    "","","",true))
-            }
-            else{
-                matchesList.add(index, MatchSchedule(index,tourCount,
-                    matches[matchesIndex].homeTeam,matches[matchesIndex].guestTeam,
-                    matches[matchesIndex].date,matches[matchesIndex].score,matches[matchesIndex].isHeader))
+                matchesList.add(
+                    index, MatchSchedule(
+                        index, tourCount, "",
+                        "", "", "", true
+                    )
+                )
+            } else {
+                matchesList.add(
+                    index, MatchSchedule(
+                        index,
+                        tourCount,
+                        matches[matchesIndex].homeTeam,
+                        matches[matchesIndex].guestTeam,
+                        matches[matchesIndex].date,
+                        matches[matchesIndex].score,
+                        matches[matchesIndex].isHeader
+                    )
+                )
                 matchesIndex++
             }
         }
