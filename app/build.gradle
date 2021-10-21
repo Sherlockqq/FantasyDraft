@@ -50,12 +50,15 @@ dependencies {
     //Lifecycle
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$version_lifecycle"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_lifecycle"
+    androidTestImplementation 'org.junit.jupiter:junit-jupiter'
+    androidTestImplementation 'org.junit.jupiter:junit-jupiter'
 
     //Dagger
     kapt "com.google.dagger:dagger-compiler:$version_dagger"
     kapt "com.google.dagger:dagger-android-processor:$version_dagger"
 
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    //Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$version_retrofit"
 
     //Modules
     implementation project(path: ':matches-data')
