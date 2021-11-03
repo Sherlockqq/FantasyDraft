@@ -1,14 +1,14 @@
 package com.midina.login_ui
 
 import android.text.Editable
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.midina.core_ui.ui.SingleLiveEvent
 import com.midina.login_domain.model.ResultEvent
 import com.midina.login_domain.usecase.SigningInUsecase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,21 +16,15 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(private val signingInUsecase: SigningInUsecase) :
     ViewModel() {
 
-    private val _loginEvents = SingleLiveEvent<LoginEvent>()
-    val loginEvents: LiveData<LoginEvent>
-        get() = _loginEvents
+    private val _loginEvents = MutableStateFlow<LoginEvent>(LoginEvent.OnNotSigned)
+    val loginEvents: StateFlow<LoginEvent>
+        get() = _loginEvents.asStateFlow()
 
-    private val _email = MutableLiveData<String>()
-    val email: LiveData<String>
-        get() = _email
+    private val _email = MutableStateFlow("")
 
-    private val _password = MutableLiveData<String>()
-    val password: LiveData<String>
-        get() = _password
+    private val _password = MutableStateFlow("")
 
     init {
-        _email.value = ""
-        _password.value = ""
     }
 
     fun onEmailChanged(text: Editable?) {
@@ -48,10 +42,10 @@ class LoginViewModel @Inject constructor(private val signingInUsecase: SigningIn
     }
 
     private suspend fun signIn() {
-        val result = signingInUsecase.execute(_email.value.toString(), _password.value.toString())
+        val result = signingInUsecase.execute(_email.value, _password.value)
         when (result) {
-            is ResultEvent.Success -> _loginEvents.postValue(LoginEvent.OnSigned)
-            is ResultEvent.InvalidateData -> _loginEvents.postValue(LoginEvent.OnNotSigned)
+            is ResultEvent.Success -> _loginEvents.value = LoginEvent.OnSigned
+            is ResultEvent.InvalidateData -> _loginEvents.value = LoginEvent.OnNotSigned
             is ResultEvent.Error -> {
             }//TODO Exception
         }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Fantasy Draft</string>
+    <string name="app_name">Драфт</string>
     <string name="fixtures_label">Матчи</string>
     <string name="text_label_1">Матчи</string>
     <string name="text_label_2">Драфт</string>

@@ -1,18 +1,18 @@
-package com.midina.matches_ui.fixtures
+package com.midina.matches_ui
 
 
 import android.os.Build
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.midina.core_ui.ui.SingleLiveEvent
 
 import com.midina.matches_domain.model.MatchSchedule
 import com.midina.matches_domain.model.ResultEvent
 import com.midina.matches_domain.usecase.GetMatchesScheduleUsecase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
@@ -42,21 +42,19 @@ class FixturesViewModel @Inject constructor(private val getMatchesScheduleUsecas
 
     private val sdf by lazy { SimpleDateFormat(DATE_PATTERN) }
 
-    private val _tours = MutableLiveData<Int>()
-    val tours: LiveData<Int>
-        get() = _tours
+    private val _tours = MutableStateFlow(0)
+    val tours: StateFlow<Int>
+        get() = _tours.asStateFlow()
 
-    private val _events = SingleLiveEvent<UiEvent>()
-    val events: LiveData<UiEvent>
-        get() = _events
+    private val _events = MutableStateFlow<UiEvent>(UiEvent.Loading)
+    val events: StateFlow<UiEvent>
+        get() = _events.asStateFlow()
 
     init {
-        _tours.value = 0
         dataLoading()
     }
 
     private fun dataLoading() {
-        _events.postValue(UiEvent.Loading)
 
         viewModelScope.launch(Dispatchers.IO) {
 
@@ -68,15 +66,15 @@ class FixturesViewModel @Inject constructor(private val getMatchesScheduleUsecas
                     getDateMap()
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         val tourByDate = getTourByDate()
-                        _tours.postValue(tourByDate)
-                        _events.postValue(matchesMap[tourByDate]?.let { UiEvent.Success(it) })
+                        _tours.value = tourByDate
+                        _events.value = matchesMap[tourByDate]?.let { UiEvent.Success(it) }!!
                     } else {
-                        _tours.postValue(0)
-                        _events.postValue(matchesMap[0]?.let { UiEvent.Success(it) })
+                        _tours.value = 0
+                        _events.value = matchesMap[0]?.let { UiEvent.Success(it) }!!
                     }
 
                 }
-                is ResultEvent.Error -> _events.postValue(UiEvent.Error)
+                is ResultEvent.Error -> _events.value = UiEvent.Error
             }
 
         }
@@ -86,15 +84,15 @@ class FixturesViewModel @Inject constructor(private val getMatchesScheduleUsecas
         when (filter) {
             TourFilter.SHOW_FIRST -> {
                 _tours.value = 1
-                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }
+                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }!!
             }
             TourFilter.SHOW_SECOND -> {
                 _tours.value = 2
-                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }
+                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }!!
             }
             else -> {
                 _tours.value = 0
-                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }
+                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }!!
             }
         }
     }
@@ -104,19 +102,19 @@ class FixturesViewModel @Inject constructor(private val getMatchesScheduleUsecas
     }
 
     fun backArrowClicked() {
-        _tours.value = _tours.value?.minus(1)
-        _tours.value?.let {
+        _tours.value = _tours.value.minus(1)
+        _tours.value.let {
             if (it > 0) {
-                _events.value = matchesMap[it]?.let { mapList -> UiEvent.Success(mapList) }
+                _events.value = matchesMap[it]?.let { mapList -> UiEvent.Success(mapList) }!!
             } else {
-                _events.value = matchesMap[0]?.let { mapList -> UiEvent.Success(mapList) }
+                _events.value = matchesMap[0]?.let { mapList -> UiEvent.Success(mapList) }!!
             }
         }
     }
 
     fun nextArrowClicked() {
-        _tours.value = _tours.value?.plus(1)
-        _events.value = matchesMap[_tours.value]?.let { mapList -> UiEvent.Success(mapList) }
+        _tours.value = _tours.value.plus(1)
+        _events.value = matchesMap[_tours.value]?.let { mapList -> UiEvent.Success(mapList) }!!
     }
 
 

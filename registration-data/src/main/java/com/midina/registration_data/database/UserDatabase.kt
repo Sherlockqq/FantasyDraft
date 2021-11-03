@@ -6,7 +6,7 @@ import androidx.room.TypeConverters
 
 // Annotates class to be a Room Database with a table (entity) of the Word class
 
-@Database(entities = [UserEntity::class], version = 1, exportSchema = false)
+@Database(entities = [UserEntity::class], version = 2, exportSchema = false)
 @TypeConverters(DateConverter::class)
 abstract class UserDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao

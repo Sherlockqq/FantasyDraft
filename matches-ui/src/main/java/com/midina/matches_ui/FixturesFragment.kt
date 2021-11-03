@@ -1,19 +1,19 @@
 package com.midina.matches_ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.*
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.matches_domain.model.MatchSchedule
 import com.midina.matches_ui.databinding.FragmentFixturesBinding
-import com.midina.matches_ui.fixtures.FixturesViewModel
-import com.midina.matches_ui.fixtures.UiEvent
-import javax.inject.Inject
+import kotlinx.coroutines.flow.collect
 
 class FixturesFragment : BaseFragment() {
 
@@ -30,7 +30,7 @@ class FixturesFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = DataBindingUtil.inflate(
             inflater,
@@ -49,7 +49,13 @@ class FixturesFragment : BaseFragment() {
 
         setGameText()
 
-        viewModel.events.observe(viewLifecycleOwner, { handleEvents(it) })
+        lifecycleScope.launchWhenCreated {
+            viewModel.events
+                .collect {
+                    handleEvents(it)
+                }
+        }
+
         binding.fixturesList.adapter = adapter
         adapter.setOnItemClickListener(object : MatchAdapter.OnItemClickListener {
             override fun onItemClick(position: Int, match: MatchSchedule) {
@@ -68,6 +74,7 @@ class FixturesFragment : BaseFragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setGameText() {
         if (viewModel.tours.value != 0) {
             binding.gameweekText.text = "Тур ${viewModel.tours.value}"

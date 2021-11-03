@@ -9,10 +9,12 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnBottomNavHideListener
 import com.midina.login_ui.databinding.FragmentLoginBinding
+import kotlinx.coroutines.flow.collect
 
 class LoginFragment : BaseFragment() {
 
@@ -61,7 +63,12 @@ class LoginFragment : BaseFragment() {
 
         binding.viewModel = viewModel
 
-        viewModel.loginEvents.observe(viewLifecycleOwner, { handleLoginEvents(it) })
+        lifecycleScope.launchWhenCreated {
+            viewModel.loginEvents
+                .collect {
+                    handleLoginEvents(it)
+                }
+        }
 
         binding.btSignIn.setOnClickListener {
             viewModel.signInClicked()
