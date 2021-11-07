@@ -76,7 +76,7 @@ class MatchFragment : BaseFragment() {
     private fun handleScoreOrDateEvents(event: UiScoreOrDateEvent) {
         when (event) {
             is UiScoreOrDateEvent.HasScore -> {
-                binding.tvScore.text = viewModel.score.toString()
+                binding.tvScore.text = viewModel.score.value
                 binding.tvScore.setBackgroundColor(R.color.design_default_color_primary)
             }
             is UiScoreOrDateEvent.HasDate -> {

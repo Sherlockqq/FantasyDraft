@@ -58,6 +58,9 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$version_glide"
     kapt "com.github.bumptech.glide:compiler:$version_glide"
 
+    //WorkManager
+    implementation "androidx.work:work-runtime-ktx:$work_version"
+
     // Modules
     implementation project(path: ':matches-domain')
     implementation project(path: ':core-ui')

@@ -1,8 +1,11 @@
 package com.midina.matches_ui
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import androidx.annotation.RequiresApi
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
@@ -10,10 +13,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.*
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.matches_domain.model.MatchSchedule
+import com.midina.matches_ui.MatchWorker.Companion.KEY_LIST
 import com.midina.matches_ui.databinding.FragmentFixturesBinding
 import kotlinx.coroutines.flow.collect
+import java.util.concurrent.TimeUnit
 
 class FixturesFragment : BaseFragment() {
 
@@ -25,7 +31,6 @@ class FixturesFragment : BaseFragment() {
     val viewModel: FixturesViewModel by lazy {
         ViewModelProvider(this, viewmodelFactory)[FixturesViewModel::class.java]
     }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -92,6 +97,7 @@ class FixturesFragment : BaseFragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun onSuccess(event: List<MatchSchedule>) {
         if (event.isNotEmpty()) {
             setGameText()
@@ -114,6 +120,7 @@ class FixturesFragment : BaseFragment() {
                 }
             }
             adapter.updateMatches(event)
+            createWorkManager(event)
         }
     }
 
@@ -168,4 +175,47 @@ class FixturesFragment : BaseFragment() {
             it.putString("Score", this.score)
             it.putString("Date", this.date)
         }
+
+    @SuppressLint("RestrictedApi")
+    private fun createWorkManager(list: List<MatchSchedule>){
+
+//        val myData : Data = Data.Builder()
+//            .put(KEY_LIST, list)
+//            .build()
+
+        if(isWorkNotActive()){
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                val constraints: Constraints =
+//                    Constraints.Builder()
+//                        .setRequiresDeviceIdle(true)
+//                        .build()
+
+                val matchWorkRequest: WorkRequest =
+                    PeriodicWorkRequestBuilder<MatchWorker>(15, TimeUnit.MINUTES)
+                        .addTag("work")
+//                        .setConstraints(constraints)
+                        .build()
+
+                activity?.applicationContext?.let {
+                    WorkManager
+                        .getInstance(it)
+                        .enqueue(matchWorkRequest)
+                }
+            } else {
+                Log.d("FixtureFragment", "Api lower than M")
+                //TODO SOMETHING
+            }
+        } else {
+            Log.d("FixtureFragment", "Work is active")
+        }
+    }
+
+    private fun isWorkNotActive(): Boolean {
+        val wm = context?.let { WorkManager.getInstance(it) }
+        val listOfWorks = wm?.getWorkInfosByTag("work")
+        val listWork = listOfWorks?.get()
+        return (listWork == null) || (listWork.isEmpty())
+    }
+
 }

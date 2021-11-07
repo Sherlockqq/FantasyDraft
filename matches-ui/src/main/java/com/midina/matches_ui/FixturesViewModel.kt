@@ -81,6 +81,7 @@ class FixturesViewModel @Inject constructor(private val getMatchesScheduleUsecas
     }
 
     private fun showList(filter: TourFilter) {
+
         when (filter) {
             TourFilter.SHOW_FIRST -> {
                 _tours.value = 1
