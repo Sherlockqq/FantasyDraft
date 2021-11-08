@@ -289,7 +289,6 @@ class RegistrationFragment : BaseFragment() {
         binding.cbUnspecified.isChecked = false
 
         binding.cvGender.setState(State.CORRECT)
-        viewModel.genderState = State.CORRECT
         viewModel.maleClicked()
     }
 
@@ -302,7 +301,6 @@ class RegistrationFragment : BaseFragment() {
         binding.cbUnspecified.isClickable = true
         binding.cbUnspecified.isChecked = false
         binding.cvGender.setState(State.CORRECT)
-        viewModel.genderState = State.CORRECT
         viewModel.femaleClicked()
     }
 
@@ -315,7 +313,6 @@ class RegistrationFragment : BaseFragment() {
         binding.cbFemale.isClickable = true
         binding.cbFemale.isChecked = false
         binding.cvGender.setState(State.CORRECT)
-        viewModel.genderState = State.CORRECT
         viewModel.unspecifiedClicked()
     }
 }

@@ -140,7 +140,7 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
             firstNameState = State.ERROR
             _firstNameEvents.value = FirstNameUiEvent.OnTextEmpty
         } else {
-            if (text.toString().length >= 2) {
+            if (text.toString().length == 2) {
                 firstNameState = State.CORRECT
                 _firstNameEvents.value = FirstNameUiEvent.OnTextValid
             }
@@ -165,7 +165,7 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
             lastNameState = State.ERROR
             _lastNameEvents.value = LastNameUiEvent.OnTextEmpty
         } else {
-            if (text.toString().length >= 2) {
+            if (text.toString().length == 2) {
                 lastNameState = State.CORRECT
                 _lastNameEvents.value = LastNameUiEvent.OnTextValid
             }
@@ -238,8 +238,7 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
         }
     }
 
-    //todo private
-    fun daysHandler(text: String?) {
+    private fun daysHandler(text: String?) {
 
         if (text?.isEmpty() == true) {
             _daysEvents.value = DaysUiEvent.OnTextEmpty
@@ -275,8 +274,8 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
         }
     }
 
-    //todo private
-    fun monthesHandler(text: String?) {
+
+    private fun monthesHandler(text: String?) {
 
         if (text?.isEmpty() == true) {
             _monthesEvents.value = MonthesUiEvent.OnTextEmpty
@@ -312,8 +311,7 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
         }
     }
 
-    //todo private
-    fun yearsHandler(text: String?) {
+    private fun yearsHandler(text: String?) {
 
         if (text?.isEmpty() == true) {
             _yearsEvents.value = YearsUiEvent.OnTextEmpty
@@ -331,8 +329,7 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
         }
     }
 
-    //todo private
-    fun isEmail(email: String): Boolean {
+    private fun isEmail(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
@@ -412,6 +409,8 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
                     //TODO Exception
                 }
             }
+        } else {
+            Log.d("FDSF","FSDFDS")
         }
     }
 
@@ -423,14 +422,17 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
 
     fun maleClicked() {
         gender = Gender.MALE
+        genderState = State.CORRECT
     }
 
     fun femaleClicked() {
         gender = Gender.FEMALE
+        genderState = State.CORRECT
     }
 
     fun unspecifiedClicked() {
         gender = Gender.UNSPECIFIED
+        genderState = State.CORRECT
     }
 
 }
