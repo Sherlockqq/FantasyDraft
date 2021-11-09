@@ -27,3 +27,4 @@ abstract class FixturesViewModelModule {
     @ViewModelKey(FixturesViewModel::class)
     abstract fun bindFixturesViewModel(viewModel: FixturesViewModel): ViewModel
 }
+

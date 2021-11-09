@@ -1,6 +1,10 @@
 package com.midina.matches_ui
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -13,13 +17,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.work.*
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.matches_domain.model.MatchSchedule
-import com.midina.matches_ui.MatchWorker.Companion.KEY_LIST
 import com.midina.matches_ui.databinding.FragmentFixturesBinding
 import kotlinx.coroutines.flow.collect
-import java.util.concurrent.TimeUnit
 
 class FixturesFragment : BaseFragment() {
 
@@ -32,6 +33,7 @@ class FixturesFragment : BaseFragment() {
         ViewModelProvider(this, viewmodelFactory)[FixturesViewModel::class.java]
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -76,6 +78,9 @@ class FixturesFragment : BaseFragment() {
             viewModel.nextArrowClicked()
         }
 
+//        binding.fixturesList.setOnTouchListener(OnSwipeTouchListener(context)){
+//        }
+
         return binding.root
     }
 
@@ -88,6 +93,7 @@ class FixturesFragment : BaseFragment() {
         }
     }
 
+    @SuppressLint("NewApi")
     private fun handleEvents(event: UiEvent) {
         when (event) {
             is UiEvent.Success -> onSuccess(event.matches)
@@ -101,7 +107,7 @@ class FixturesFragment : BaseFragment() {
     private fun onSuccess(event: List<MatchSchedule>) {
         if (event.isNotEmpty()) {
             setGameText()
-
+            Log.d("MainActivity", "list size : ${event.size}")
             binding.progressBar.isVisible = false
             binding.nonSuccessText.isVisible = false
             binding.gameweekText.isVisible = true
@@ -120,7 +126,7 @@ class FixturesFragment : BaseFragment() {
                 }
             }
             adapter.updateMatches(event)
-            createWorkManager(event)
+            createAlarm(event)
         }
     }
 
@@ -176,46 +182,54 @@ class FixturesFragment : BaseFragment() {
             it.putString("Date", this.date)
         }
 
-    @SuppressLint("RestrictedApi")
-    private fun createWorkManager(list: List<MatchSchedule>){
+    private fun MatchSchedule.toIntent(
+        tour: Int,
+        homeTeam: String,
+        guestTeam: String) =
+        Intent().also {
+            val intent = Intent(activity?.applicationContext, AlarmReceiver::class.java)
 
-//        val myData : Data = Data.Builder()
-//            .put(KEY_LIST, list)
-//            .build()
+            val bundle = Bundle()
 
-        if(isWorkNotActive()){
+            bundle.putInt("tour", tour)
+            bundle.putString("homeTeam", homeTeam)
+            bundle.putString("guestTeam", guestTeam)
+
+            intent.putExtras(bundle)
+    }
+
+    private fun createAlarm(matchesList: List<MatchSchedule>) {
+        val alarmManager =
+            activity?.applicationContext?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        for (index in matchesList.indices) {
+
+            val intent = matchesList[index].toIntent(
+                matchesList[index].tour,
+                matchesList[index].homeTeam,
+                matchesList[index].guestTeam
+            )
+
+            val pendingIntent = PendingIntent.getBroadcast(
+                activity?.applicationContext,
+                index,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                val constraints: Constraints =
-//                    Constraints.Builder()
-//                        .setRequiresDeviceIdle(true)
-//                        .build()
-
-                val matchWorkRequest: WorkRequest =
-                    PeriodicWorkRequestBuilder<MatchWorker>(15, TimeUnit.MINUTES)
-                        .addTag("work")
-//                        .setConstraints(constraints)
-                        .build()
-
-                activity?.applicationContext?.let {
-                    WorkManager
-                        .getInstance(it)
-                        .enqueue(matchWorkRequest)
-                }
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    viewModel.getTimeInMillis("09.11.2021 16:39"),
+                    pendingIntent
+                )
             } else {
-                Log.d("FixtureFragment", "Api lower than M")
-                //TODO SOMETHING
+                alarmManager.setExact(
+                    AlarmManager.RTC_WAKEUP,
+                    viewModel.getTimeInMillis(matchesList[index].date),
+                    pendingIntent
+                    )
             }
-        } else {
-            Log.d("FixtureFragment", "Work is active")
         }
     }
-
-    private fun isWorkNotActive(): Boolean {
-        val wm = context?.let { WorkManager.getInstance(it) }
-        val listOfWorks = wm?.getWorkInfosByTag("work")
-        val listWork = listOfWorks?.get()
-        return (listWork == null) || (listWork.isEmpty())
-    }
-
 }
