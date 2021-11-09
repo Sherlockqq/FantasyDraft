@@ -1,11 +1,8 @@
 package com.midina.matches_ui
 
-
-import android.os.Build
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-
 import com.midina.matches_domain.model.MatchSchedule
 import com.midina.matches_domain.model.ResultEvent
 import com.midina.matches_domain.usecase.GetMatchesScheduleUsecase
@@ -15,8 +12,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 
@@ -28,8 +23,9 @@ private const val MATCHES_IN_TOUR = 8
 private const val FIRST_MATCH_IN_TOUR = 0
 private const val MATCHES_COUNT = 240
 
-class FixturesViewModel @Inject constructor(private val getMatchesScheduleUsecase: GetMatchesScheduleUsecase) :
-    ViewModel() {
+class FixturesViewModel @Inject constructor(
+    private val getMatchesScheduleUsecase: GetMatchesScheduleUsecase)
+    : ViewModel() {
 
     enum class TourFilter {
         SHOW_FIRST,
@@ -38,7 +34,7 @@ class FixturesViewModel @Inject constructor(private val getMatchesScheduleUsecas
     }
 
     private var matchesMap: Map<Int, List<MatchSchedule>> = mutableMapOf()
-    private var dateMap: MutableMap<Int, Pair<LocalDateTime?, LocalDateTime?>> = mutableMapOf()
+    private var dateMap: MutableMap<Int, Pair<String, String>> = mutableMapOf()
 
     private val sdf by lazy { SimpleDateFormat(DATE_PATTERN) }
 
@@ -64,21 +60,16 @@ class FixturesViewModel @Inject constructor(private val getMatchesScheduleUsecas
                 is ResultEvent.Success -> {
                     matchesMap = result.value
                     getDateMap()
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         val tourByDate = getTourByDate()
                         _tours.value = tourByDate
                         _events.value = matchesMap[tourByDate]?.let { UiEvent.Success(it) }!!
-                    } else {
-                        _tours.value = 0
-                        _events.value = matchesMap[0]?.let { UiEvent.Success(it) }!!
-                    }
-
                 }
                 is ResultEvent.Error -> _events.value = UiEvent.Error
             }
-
         }
     }
+
+
 
     private fun showList(filter: TourFilter) {
 
@@ -120,19 +111,20 @@ class FixturesViewModel @Inject constructor(private val getMatchesScheduleUsecas
 
 
     private fun getTourByDate(): Int {
-        val currentDate = sdf.format(Date())
-        Log.d("VM", "Current")
-        val date = LocalDateTime.parse(
-            currentDate,
-            DateTimeFormatter.ofPattern(DATE_PATTERN)
-        )
+
+        val currentDateString = sdf.format(Date())
 
         var tourCount = 1
         for (index in 1..TOUR_SIZE) {
-            if (date.isAfter(dateMap[index]?.second)) {
+
+            if ((getTimeInMillis(currentDateString) -
+                        getTimeInMillis(dateMap[index]?.second.toString()) > 0) ) {
                 tourCount = index
             } else {
-                if (date.isAfter(dateMap[index]?.first) && date.isBefore(dateMap[index]?.second)) {
+                if ((getTimeInMillis(currentDateString) -
+                            getTimeInMillis(dateMap[index]?.first.toString()) > 0)  &&
+                    (getTimeInMillis(currentDateString) -
+                            getTimeInMillis(dateMap[index]?.second.toString()) < 0) ) {
                     return index
                 }
             }
@@ -146,23 +138,9 @@ class FixturesViewModel @Inject constructor(private val getMatchesScheduleUsecas
 
     }
 
-    private fun getLocaleDateTimePair(first: String, last: String):
-            Pair<LocalDateTime?, LocalDateTime?> {
-
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val localFirst = LocalDateTime.parse(
-                first,
-                DateTimeFormatter.ofPattern(DATE_PATTERN)
-            )
-            val localLast = LocalDateTime.parse(
-                last,
-                DateTimeFormatter.ofPattern(DATE_PATTERN)
-            )
-            Pair(localFirst, localLast)
-        } else {
-            Pair(null, null)
-        }
-
+    private fun getStringPair(first: String, last: String):
+            Pair<String, String> {
+        return Pair(first, last)
     }
 
     private fun getDateMap() {
@@ -174,7 +152,7 @@ class FixturesViewModel @Inject constructor(private val getMatchesScheduleUsecas
             if (matchCount == MATCHES_IN_TOUR) {
                 matchesMap[tourCount]?.get(FIRST_MATCH_IN_TOUR)?.let { first ->
                     matchesMap[tourCount]?.get(MATCHES_IN_TOUR - 1)?.let { second ->
-                        dateMap[tourCount] = getLocaleDateTimePair(
+                        dateMap[tourCount] = getStringPair(
                             first.date,
                             second.date
                         )
@@ -184,6 +162,14 @@ class FixturesViewModel @Inject constructor(private val getMatchesScheduleUsecas
                 tourCount++
             }
         }
+    }
+
+    fun getTimeInMillis(matchTime: String): Long {
+        val matchDate = sdf.parse(matchTime)
+
+        Log.d("FixturesViewModel", "Current Date: $matchDate")
+
+        return matchDate.time
     }
 }
 
