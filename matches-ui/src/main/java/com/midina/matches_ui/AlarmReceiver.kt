@@ -11,7 +11,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import javax.inject.Inject
 
-class AlarmReceiver @Inject constructor(): BroadcastReceiver() {
+class AlarmReceiver @Inject constructor() : BroadcastReceiver() {
 
     companion object {
         const val NOTIFICATION_CHANNEL_ID = "1000"
@@ -19,13 +19,14 @@ class AlarmReceiver @Inject constructor(): BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
-        var tour: Int = 0
-        var homeTeam: String = ""
-        var guestTeam: String = ""
+        var tour = 0
+        var homeTeam = ""
+        var guestTeam = ""
+
         try {
-             tour = intent.getIntExtra("tour", 0)
-             homeTeam = intent.getStringExtra("homeTeam").toString()
-             guestTeam = intent.getStringExtra("guestTeam").toString()
+            tour = intent.getIntExtra("tour", 0)
+            homeTeam = intent.getStringExtra("homeTeam").toString()
+            guestTeam = intent.getStringExtra("guestTeam").toString()
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -35,11 +36,10 @@ class AlarmReceiver @Inject constructor(): BroadcastReceiver() {
     }
 
     private fun createNotificationChannel(context: Context) {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(
                 NOTIFICATION_CHANNEL_ID,
-                "Name",
+                "MatchNotificationChannel",
                 NotificationManager.IMPORTANCE_HIGH
             )
 
@@ -51,7 +51,8 @@ class AlarmReceiver @Inject constructor(): BroadcastReceiver() {
         context: Context,
         tour: Int,
         homeTeam: String,
-        guestTeam: String) {
+        guestTeam: String
+    ) {
 
         with(NotificationManagerCompat.from(context)) {
             val build = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
@@ -61,7 +62,7 @@ class AlarmReceiver @Inject constructor(): BroadcastReceiver() {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
 
             notify((0..2132343245).random(), build.build())
-            Log.d("MyReceiver","notify")
+            Log.d("MyReceiver", "notify")
         }
     }
 }

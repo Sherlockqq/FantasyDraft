@@ -24,8 +24,8 @@ private const val FIRST_MATCH_IN_TOUR = 0
 private const val MATCHES_COUNT = 240
 
 class FixturesViewModel @Inject constructor(
-    private val getMatchesScheduleUsecase: GetMatchesScheduleUsecase)
-    : ViewModel() {
+    private val getMatchesScheduleUsecase: GetMatchesScheduleUsecase
+) : ViewModel() {
 
     enum class TourFilter {
         SHOW_FIRST,
@@ -60,15 +60,14 @@ class FixturesViewModel @Inject constructor(
                 is ResultEvent.Success -> {
                     matchesMap = result.value
                     getDateMap()
-                        val tourByDate = getTourByDate()
-                        _tours.value = tourByDate
-                        _events.value = matchesMap[tourByDate]?.let { UiEvent.Success(it) }!!
+                    val tourByDate = getTourByDate()
+                    _tours.value = tourByDate
+                    _events.value = matchesMap[tourByDate]?.let { UiEvent.Success(it) }!!
                 }
                 is ResultEvent.Error -> _events.value = UiEvent.Error
             }
         }
     }
-
 
 
     private fun showList(filter: TourFilter) {
@@ -98,15 +97,17 @@ class FixturesViewModel @Inject constructor(
         _tours.value.let {
             if (it > 0) {
                 _events.value = matchesMap[it]?.let { mapList -> UiEvent.Success(mapList) }!!
-            } else {
+            } else if (it == 0) {
                 _events.value = matchesMap[0]?.let { mapList -> UiEvent.Success(mapList) }!!
             }
         }
     }
 
     fun nextArrowClicked() {
-        _tours.value = _tours.value.plus(1)
-        _events.value = matchesMap[_tours.value]?.let { mapList -> UiEvent.Success(mapList) }!!
+        if (_tours.value < 30) {
+            _tours.value = _tours.value.plus(1)
+            _events.value = matchesMap[_tours.value]?.let { mapList -> UiEvent.Success(mapList) }!!
+        }
     }
 
 
@@ -118,13 +119,15 @@ class FixturesViewModel @Inject constructor(
         for (index in 1..TOUR_SIZE) {
 
             if ((getTimeInMillis(currentDateString) -
-                        getTimeInMillis(dateMap[index]?.second.toString()) > 0) ) {
+                        getTimeInMillis(dateMap[index]?.second.toString()) > 0)
+            ) {
                 tourCount = index
             } else {
                 if ((getTimeInMillis(currentDateString) -
-                            getTimeInMillis(dateMap[index]?.first.toString()) > 0)  &&
+                            getTimeInMillis(dateMap[index]?.first.toString()) > 0) &&
                     (getTimeInMillis(currentDateString) -
-                            getTimeInMillis(dateMap[index]?.second.toString()) < 0) ) {
+                            getTimeInMillis(dateMap[index]?.second.toString()) < 0)
+                ) {
                     return index
                 }
             }

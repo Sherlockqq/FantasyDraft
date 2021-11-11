@@ -70,6 +70,16 @@ class FixturesFragment : BaseFragment() {
             }
         })
 
+        adapter.setOnSwipeListener(object: MatchAdapter.OnSwipeListener {
+            override fun onLeftSwipe() {
+                viewModel.nextArrowClicked()
+            }
+
+            override fun onRightSwipe() {
+                viewModel.backArrowClicked()
+            }
+        })
+
         binding.backArrow.setOnClickListener {
             viewModel.backArrowClicked()
         }
@@ -77,9 +87,6 @@ class FixturesFragment : BaseFragment() {
         binding.nextArrow.setOnClickListener {
             viewModel.nextArrowClicked()
         }
-
-//        binding.fixturesList.setOnTouchListener(OnSwipeTouchListener(context)){
-//        }
 
         return binding.root
     }
@@ -174,6 +181,7 @@ class FixturesFragment : BaseFragment() {
         return true
     }
 
+    //TODO ASK TO DO IT PARCEBLE?
     private fun MatchSchedule.toBundle() =
         Bundle().also {
             it.putString("HomeTeam", this.homeTeam)
@@ -220,7 +228,7 @@ class FixturesFragment : BaseFragment() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 alarmManager.setExactAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
-                    viewModel.getTimeInMillis("09.11.2021 16:39"),
+                    viewModel.getTimeInMillis(matchesList[index].date),
                     pendingIntent
                 )
             } else {
@@ -231,5 +239,15 @@ class FixturesFragment : BaseFragment() {
                     )
             }
         }
+    }
+
+    override fun onDestroyView() {
+        Log.d("Fixture","OnDestroyView")
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        Log.d("Fixture", "OnDestroy")
+        super.onDestroy()
     }
 }
