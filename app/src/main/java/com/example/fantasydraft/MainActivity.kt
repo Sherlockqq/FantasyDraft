@@ -31,7 +31,10 @@ class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
+
+        setTheme(R.style.Theme_FantasyDraft)
         super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
