@@ -50,7 +50,7 @@ class CheckStateView(context: Context, attrs: AttributeSet) :
         }
     }
 
-    fun drawableToBitmap(drawable: Drawable): Bitmap? {
+    private fun drawableToBitmap(drawable: Drawable): Bitmap? {
         if (drawable is BitmapDrawable) {
             return drawable.bitmap
         }
@@ -66,10 +66,10 @@ class CheckStateView(context: Context, attrs: AttributeSet) :
     }
 
     fun setState(state: State) {
-        when (state) {
-            State.DEFAULT -> stateImage = State.DEFAULT
-            State.CORRECT -> stateImage = State.CORRECT
-            State.ERROR -> stateImage = State.ERROR
+        stateImage = when (state) {
+            State.DEFAULT -> State.DEFAULT
+            State.CORRECT -> State.CORRECT
+            State.ERROR -> State.ERROR
         }
         invalidate()
     }

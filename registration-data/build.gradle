@@ -47,6 +47,11 @@ dependencies {
     implementation "androidx.room:room-ktx:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
 
+    //Tests
+    testImplementation "junit:junit:$version_junit"
+    androidTestImplementation "androidx.test.ext:junit:$version_junit"
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+
     //Firebase
     implementation platform("com.google.firebase:firebase-bom:$version_firebase")
     implementation 'com.google.firebase:firebase-auth-ktx'

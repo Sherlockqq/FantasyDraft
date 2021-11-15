@@ -74,19 +74,25 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
         get() = _yearsEvents.asStateFlow()
 
     private val _firstName = MutableStateFlow("")
+    private var firstNameState = State.DEFAULT
 
+      
     private val _lastName = MutableStateFlow("")
+   
+      private val _email = MutableStateFlow("")
 
-    private val _email = MutableStateFlow("")
 
+    private var lastNameState = State.DEFAULT
     private val _password = MutableStateFlow("")
 
     private var gender: Gender = Gender.UNSPECIFIED
 
+    private var emailState = State.DEFAULT
     private val _dateDays = MutableStateFlow(0)
 
     private val _dateMonthes = MutableStateFlow(0)
 
+    private var passwordState = State.DEFAULT
     private val _dateYears = MutableStateFlow(0)
 
     private var firstNameState = State.DEFAULT
@@ -99,6 +105,7 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
 
     private var genderState: State = State.DEFAULT
 
+    var gender: Gender = Gender.UNSPECIFIED
     var dateState: State = State.DEFAULT
 
     init {
@@ -123,7 +130,7 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
             firstNameState = State.ERROR
             _firstNameEvents.value = FirstNameUiEvent.OnTextEmpty
         } else {
-            if (text.toString().length >= 2) {
+            if (text.toString().length == 2) {
                 firstNameState = State.CORRECT
                 _firstNameEvents.value = FirstNameUiEvent.OnTextValid
             }
@@ -148,7 +155,7 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
             lastNameState = State.ERROR
             _lastNameEvents.value = LastNameUiEvent.OnTextEmpty
         } else {
-            if (text.toString().length >= 2) {
+            if (text.toString().length == 2) {
                 lastNameState = State.CORRECT
                 _lastNameEvents.value = LastNameUiEvent.OnTextValid
             }
@@ -215,19 +222,19 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
         }
 
         override fun afterTextChanged(text: Editable?) {
-            daysHandler(text)
+            daysHandler(text.toString())
         }
     }
 
-    private fun daysHandler(text: Editable?) {
+    private fun daysHandler(text: String?) {
 
-        if (text.toString().isEmpty()) {
+        if (text?.isEmpty() == true) {
             _daysEvents.value = DaysUiEvent.OnTextEmpty
         } else {
             try {
-                val daysNum: Int = text.toString().toInt()
+                val daysNum = text?.toInt()
                 _dateDays.value = daysNum
-                if (text.toString().length == DAYS_INT_SIZE) {
+                if (text?.length == DAYS_INT_SIZE) {
                     isDate()
                     _daysEvents.value = DaysUiEvent.OnTextValid
                 }
@@ -251,19 +258,20 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
         }
 
         override fun afterTextChanged(text: Editable?) {
-            monthesHandler(text)
+            monthesHandler(text.toString())
         }
     }
 
-    private fun monthesHandler(text: Editable?) {
 
-        if (text.toString().isEmpty()) {
+    private fun monthesHandler(text: String?) {
+
+        if (text?.isEmpty() == true) {
             _monthesEvents.value = MonthesUiEvent.OnTextEmpty
         } else {
             try {
-                val monthesNum: Int = text.toString().toInt()
+                val monthesNum = text?.toInt()
                 _dateMonthes.value = monthesNum
-                if (text.toString().length == MONTHES_INT_SIZE) {
+                if (text?.length == MONTHES_INT_SIZE) {
                     isDate()
                     _monthesEvents.value = MonthesUiEvent.OnTextValid
                 }
@@ -287,20 +295,19 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
         }
 
         override fun afterTextChanged(text: Editable?) {
-            yearsHandler(text)
+            yearsHandler(text.toString())
         }
     }
 
+    private fun yearsHandler(text: String?) {
 
-    private fun yearsHandler(text: Editable?) {
-
-        if (text.toString().isEmpty()) {
+        if (text?.isEmpty() == true) {
             _yearsEvents.value = YearsUiEvent.OnTextEmpty
         } else {
             try {
-                val yearsNum: Int = text.toString().toInt()
+                val yearsNum = text?.toInt()
                 _dateYears.value = yearsNum
-                if (text.toString().length == YEARS_INT_SIZE) {
+                if (text?.length == YEARS_INT_SIZE) {
                     isDate()
                     _yearsEvents.value = YearsUiEvent.OnTextValid
                 }
@@ -341,7 +348,6 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
         } catch (e: NullPointerException) {
             State.ERROR
         }
-
     }
 
     private fun checkDaysInMonth(): Boolean {
@@ -386,6 +392,8 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
                     //TODO Exception
                 }
             }
+        } else {
+            Log.d("FDSF","FSDFDS")
         }
     }
 
@@ -398,16 +406,19 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
     fun maleClicked() {
         genderState = State.CORRECT
         gender = Gender.MALE
+        genderState = State.CORRECT
     }
 
     fun femaleClicked() {
         genderState = State.CORRECT
         gender = Gender.FEMALE
+        genderState = State.CORRECT
     }
 
     fun unspecifiedClicked() {
         genderState = State.CORRECT
         gender = Gender.UNSPECIFIED
+        genderState = State.CORRECT
     }
 
 }

@@ -18,10 +18,6 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel: MainActivityViewModel by viewModels { viewModelFactory }
     private lateinit var binding: ActivityMainBinding
 
     override fun onResume() {
@@ -30,7 +26,6 @@ class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
