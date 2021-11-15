@@ -11,13 +11,16 @@ import com.midina.core_ui.ui.State
 import android.view.inputmethod.EditorInfo
 
 import android.widget.TextView.OnEditorActionListener
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnBottomNavHideListener
 import com.midina.registration_ui.databinding.RegistrationFragmentBinding
+import kotlinx.coroutines.flow.collect
 
 //TODO Make CustomView correct size( test on physical device)
 
@@ -57,7 +60,9 @@ class RegistrationFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+
+        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title)
 
         binding = DataBindingUtil.inflate(
             inflater,
@@ -70,14 +75,61 @@ class RegistrationFragment : BaseFragment() {
 
         binding.viewModel = viewModel
 
-        viewModel.firstNameEvents.observe(viewLifecycleOwner, { handleFirstNameEvents(it) })
-        viewModel.lastNameEvents.observe(viewLifecycleOwner, { handleLastNameEvents(it) })
-        viewModel.emailEvents.observe(viewLifecycleOwner, { handleEmailEvents(it) })
-        viewModel.passwordEvents.observe(viewLifecycleOwner, { handlePasswordEvents(it) })
-        viewModel.daysEvents.observe(viewLifecycleOwner, { handleDaysEvents(it) })
-        viewModel.monthesEvents.observe(viewLifecycleOwner, { handleMonthesEvents(it) })
-        viewModel.yearsEvents.observe(viewLifecycleOwner, { handleYearsEvents(it) })
-        viewModel.registerEvents.observe(viewLifecycleOwner, { handleRegistrationEvents(it) })
+        lifecycleScope.launchWhenCreated {
+            viewModel.firstNameEvents
+                .collect {
+                    handleFirstNameEvents(it)
+                }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.lastNameEvents
+                .collect {
+                    handleLastNameEvents(it)
+                }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.emailEvents
+                .collect {
+                    handleEmailEvents(it)
+                }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.passwordEvents
+                .collect {
+                    handlePasswordEvents(it)
+                }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.daysEvents
+                .collect {
+                    handleDaysEvents(it)
+                }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.monthesEvents
+                .collect {
+                    handleMonthesEvents(it)
+                }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.yearsEvents
+                .collect {
+                    handleYearsEvents(it)
+                }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.registerEvents
+                .collect {
+                    handleRegistrationEvents(it)
+                }
+        }
 
         //todo move to VM
         binding.etDateDays.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
@@ -126,7 +178,7 @@ class RegistrationFragment : BaseFragment() {
         when (event) {
             is FirstNameUiEvent.OnTextEmpty -> {
                 binding.tvNameRequest.isVisible = true
-                binding.cvFirstName.setState(State.ERROR)
+                binding.cvFirstName.setState(State.DEFAULT)
             }
             is FirstNameUiEvent.OnTextValid -> {
                 binding.tvNameRequest.isGone = true
@@ -143,7 +195,7 @@ class RegistrationFragment : BaseFragment() {
         when (event) {
             is LastNameUiEvent.OnTextEmpty -> {
                 binding.tvLastNameRequest.isVisible = true
-                binding.cvLastname.setState(State.ERROR)
+                binding.cvLastname.setState(State.DEFAULT)
             }
             is LastNameUiEvent.OnTextValid -> {
                 binding.tvLastNameRequest.isGone = true
@@ -160,7 +212,7 @@ class RegistrationFragment : BaseFragment() {
         when (event) {
             is EmailUiEvent.OnTextEmpty -> {
                 binding.tvEmailRequest.isVisible = true
-                binding.cvEmail.setState(State.ERROR)
+                binding.cvEmail.setState(State.DEFAULT)
             }
             is EmailUiEvent.OnTextValid -> {
                 binding.tvEmailRequest.isGone = true
@@ -178,7 +230,7 @@ class RegistrationFragment : BaseFragment() {
             is PasswordUiEvent.OnTextEmpty -> {
                 binding.passProgressBar.isGone = true
                 binding.tvPassRequirements.isVisible = true
-                binding.cvPassword.setState(State.ERROR)
+                binding.cvPassword.setState(State.DEFAULT)
             }
             is PasswordUiEvent.OnTextValid -> {
                 binding.tvPassRequirements.isGone = true
@@ -205,7 +257,7 @@ class RegistrationFragment : BaseFragment() {
         when (event) {
             is DaysUiEvent.OnTextEmpty -> {
                 binding.tvDateRq.isVisible = true
-                binding.cvDate.setState(State.ERROR)
+                binding.cvDate.setState(State.DEFAULT)
             }
             is DaysUiEvent.OnTextValid -> {
                 binding.cvDate.setState(viewModel.dateState)
@@ -227,7 +279,7 @@ class RegistrationFragment : BaseFragment() {
         when (event) {
             is MonthesUiEvent.OnTextEmpty -> {
                 binding.tvDateRq.isVisible = true
-                binding.cvDate.setState(State.ERROR)
+                binding.cvDate.setState(State.DEFAULT)
             }
             is MonthesUiEvent.OnTextValid -> {
                 if (binding.etDateMonthes.text.toString().length == 2) {
@@ -256,7 +308,7 @@ class RegistrationFragment : BaseFragment() {
         when (event) {
             is YearsUiEvent.OnTextEmpty -> {
                 binding.tvDateRq.isVisible = true
-                binding.cvDate.setState(State.ERROR)
+                binding.cvDate.setState(State.DEFAULT)
             }
             is YearsUiEvent.OnTextValid -> {
                 binding.cvDate.setState(viewModel.dateState)

@@ -1,5 +1,6 @@
 package com.midina.matches_ui
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
 
     private var list: List<MatchSchedule> = emptyList()
     private lateinit var mListener: OnItemClickListener
+    private lateinit var swipeListener: OnSwipeListener
 
     interface OnItemClickListener {
         fun onItemClick(position: Int, match: MatchSchedule)
@@ -25,6 +27,14 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
         mListener = listener
     }
 
+    interface OnSwipeListener {
+        fun onLeftSwipe()
+        fun onRightSwipe()
+    }
+
+    fun setOnSwipeListener(listener: OnSwipeListener) {
+        swipeListener = listener
+    }
 
     fun updateMatches(updatedList: List<MatchSchedule>) {
         list = updatedList
@@ -48,7 +58,12 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
                     parent,
                     false
                 )
-                return FixturesHolder.MatchViewHolder(itemView, mListener)
+                return FixturesHolder.MatchViewHolder(
+                    itemView,
+                    mListener,
+                    parent.context,
+                    swipeListener
+                )
             }
         }
     }
@@ -62,7 +77,7 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when (list[position]?.isHeader) {
+        return when (list[position].isHeader) {
             true -> HEADER_VIEW_TYPE
             else -> ITEM_VIEW_TYPE
         }
@@ -81,8 +96,12 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
             }
         }
 
-        class MatchViewHolder(itemView: View, listener: OnItemClickListener) :
-            FixturesHolder(itemView) {
+        class MatchViewHolder(
+            itemView: View,
+            listener: OnItemClickListener,
+            context: Context,
+            swipeListener: OnSwipeListener
+        ) : FixturesHolder(itemView) {
             private val home: TextView = itemView.findViewById(R.id.home_team)
             private val score: TextView = itemView.findViewById(R.id.match_score)
             private val guest: TextView = itemView.findViewById(R.id.guest_team)
@@ -92,8 +111,20 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
 
             init {
                 itemView.setOnClickListener {
-                    this?.match?.let { match -> listener.onItemClick(adapterPosition, match) }
+                    this.match?.let { match -> listener.onItemClick(adapterPosition, match) }
                 }
+
+                itemView.setOnTouchListener(object : OnSwipeTouchListener(context) {
+                    override fun onSwipeLeft() {
+                        swipeListener.onLeftSwipe()
+                        super.onSwipeLeft()
+                    }
+
+                    override fun onSwipeRight() {
+                        swipeListener.onRightSwipe()
+                        super.onSwipeRight()
+                    }
+                })
             }
 
             override fun bind(item: MatchSchedule) {

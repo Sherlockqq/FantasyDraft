@@ -1,24 +1,19 @@
 package com.midina.android.match_ui
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.midina.android.match_domain.model.MatchWeather
 import com.midina.android.match_ui.databinding.FragmentMatchBinding
 import com.midina.core_ui.ui.BaseFragment
-import dagger.android.AndroidInjection
-import dagger.android.support.AndroidSupportInjection
-import java.util.*
-import javax.inject.Inject
-import javax.inject.Named
+import kotlinx.coroutines.flow.collect
 
 private const val DAYS_INDEX = 2
 private const val HOURS_INDEX = 1
@@ -33,20 +28,10 @@ class MatchFragment : BaseFragment() {
         ViewModelProvider(this, viewmodelFactory)[MatchViewModel::class.java]
     }
 
-    override fun onAttach(context: Context) {
-        AndroidSupportInjection.inject(this)
-        super.onAttach(context)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        lifecycle.addObserver(viewModel)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = DataBindingUtil.inflate(
             inflater,
@@ -62,8 +47,19 @@ class MatchFragment : BaseFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        viewModel.events.observe(viewLifecycleOwner, { handleEvents(it) })
-        viewModel.scoreOrDateEvents.observe(viewLifecycleOwner, { handleScoreOrDateEvents(it) })
+        lifecycleScope.launchWhenCreated {
+            viewModel.events
+                .collect {
+                    handleEvents(it)
+                }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.scoreOrDateEvents
+                .collect {
+                    handleScoreOrDateEvents(it)
+                }
+        }
 
         return binding.root
     }
@@ -80,13 +76,14 @@ class MatchFragment : BaseFragment() {
     private fun handleScoreOrDateEvents(event: UiScoreOrDateEvent) {
         when (event) {
             is UiScoreOrDateEvent.HasScore -> {
-                binding.tvScore.text = viewModel.score
+                binding.tvScore.text = viewModel.score.value
                 binding.tvScore.setBackgroundColor(R.color.design_default_color_primary)
             }
             is UiScoreOrDateEvent.HasDate -> {
-                binding.tvScore.text = "Days: ${viewModel.dateArr.value?.get(DAYS_INDEX)} " +
-                        "Hours: ${viewModel.dateArr.value?.get(HOURS_INDEX)} " +
-                        "Minutes: ${viewModel.dateArr.value?.get(MINUTES_INDEX)}"
+                Log.d("MatchFragment", "Check dateArr ; ${viewModel.dateArr.value}")
+                binding.tvScore.text = "Days: ${viewModel.dateArr.value[DAYS_INDEX]} " +
+                        "Hours: ${viewModel.dateArr.value[HOURS_INDEX]} " +
+                        "Minutes: ${viewModel.dateArr.value[MINUTES_INDEX]}"
             }
         }
     }
@@ -111,10 +108,10 @@ class MatchFragment : BaseFragment() {
     private fun setView() {
         binding.tvHomeTeam.text = viewModel.getHomeTeamName()
         binding.tvGuestTeam.text = viewModel.getGuestTeamName()
-        binding.tvDate.text = viewModel.date
-        Glide.with(this).load(getImage(viewModel.homeTeam)).into(binding.ivHomeTeam)
-        Glide.with(this).load(getImage(viewModel.guestTeam)).into(binding.ivGuestTeam)
-        Glide.with(this).load(getStadium(viewModel.homeTeam)).into(binding.ivStadium)
+        binding.tvDate.text = viewModel.date.value
+        Glide.with(this).load(getImage(viewModel.homeTeam.value)).into(binding.ivHomeTeam)
+        Glide.with(this).load(getImage(viewModel.guestTeam.value)).into(binding.ivGuestTeam)
+        Glide.with(this).load(getStadium(viewModel.homeTeam.value)).into(binding.ivStadium)
     }
 
     private fun getWeatherImage(weather: String): Int {
@@ -170,6 +167,3 @@ class MatchFragment : BaseFragment() {
         return R.drawable.connection_error
     }
 }
-
-
-// Clear, clouds, rain

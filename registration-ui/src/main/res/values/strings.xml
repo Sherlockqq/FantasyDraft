@@ -22,4 +22,5 @@
     <string name="slash">/</string>
     <string name="mm">MM</string>
     <string name="yyyy">ГГГГ</string>
+    <string name="title">Регистрация</string>
 </resources>

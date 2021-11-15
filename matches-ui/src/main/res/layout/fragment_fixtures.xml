@@ -6,13 +6,20 @@
     <data>
         <variable
             name="viewModel"
-            type="com.midina.matches_ui.fixtures.FixturesViewModel" />
+            type="com.midina.matches_ui.FixturesViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/constraint_layout"
         tools:context="com.midina.matches_ui.FixturesFragment">
+
+        <View
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:id="@+id/view">
+        </View>
 
         <TextView
             android:id="@+id/gameweek_text"

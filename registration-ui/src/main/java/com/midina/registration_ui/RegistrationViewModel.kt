@@ -5,17 +5,17 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import androidx.core.text.isDigitsOnly
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.midina.core_ui.ui.State
-import com.midina.core_ui.ui.SingleLiveEvent
 import com.midina.registration_domain.model.Gender
 import com.midina.registration_domain.model.User
 import com.midina.registration_domain.model.ResultEvent
 import com.midina.registration_domain.usecase.RegisterUserUsecase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.lang.NumberFormatException
 import javax.inject.Inject
@@ -41,93 +41,83 @@ private const val YEARS_INT_SIZE = 4
 class RegistrationViewModel @Inject constructor(private val registerUserUsecase: RegisterUserUsecase) :
     ViewModel() {
 
-    private val _registerEvents = SingleLiveEvent<RegistrationEvent>()
-    val registerEvents: LiveData<RegistrationEvent>
-        get() = _registerEvents
+    private val _registerEvents = MutableStateFlow<RegistrationEvent>(RegistrationEvent.NotRegistered)
+    val registerEvents: StateFlow<RegistrationEvent>
+        get() = _registerEvents.asStateFlow()
 
-    private val _firstNameEvents = SingleLiveEvent<FirstNameUiEvent>()
-    val firstNameEvents: LiveData<FirstNameUiEvent>
-        get() = _firstNameEvents
+    private val _firstNameEvents = MutableStateFlow<FirstNameUiEvent>(FirstNameUiEvent.OnTextEmpty)
+    val firstNameEvents: StateFlow<FirstNameUiEvent>
+        get() = _firstNameEvents.asStateFlow()
 
-    private val _lastNameEvents = SingleLiveEvent<LastNameUiEvent>()
-    val lastNameEvents: LiveData<LastNameUiEvent>
-        get() = _lastNameEvents
+    private val _lastNameEvents = MutableStateFlow<LastNameUiEvent>(LastNameUiEvent.OnTextEmpty)
+    val lastNameEvents: StateFlow<LastNameUiEvent>
+        get() = _lastNameEvents.asStateFlow()
 
-    private val _emailEvents = SingleLiveEvent<EmailUiEvent>()
-    val emailEvents: LiveData<EmailUiEvent>
-        get() = _emailEvents
+    private val _emailEvents = MutableStateFlow<EmailUiEvent>(EmailUiEvent.OnTextEmpty)
+    val emailEvents: StateFlow<EmailUiEvent>
+        get() = _emailEvents.asStateFlow()
 
-    private val _passwordEvents = SingleLiveEvent<PasswordUiEvent>()
-    val passwordEvents: LiveData<PasswordUiEvent>
-        get() = _passwordEvents
+    private val _passwordEvents = MutableStateFlow<PasswordUiEvent>(PasswordUiEvent.OnTextEmpty)
+    val passwordEvents: StateFlow<PasswordUiEvent>
+        get() = _passwordEvents.asStateFlow()
 
-    private val _daysEvents = SingleLiveEvent<DaysUiEvent>()
-    val daysEvents: LiveData<DaysUiEvent>
-        get() = _daysEvents
+    private val _daysEvents = MutableStateFlow<DaysUiEvent>(DaysUiEvent.OnTextEmpty)
+    val daysEvents: StateFlow<DaysUiEvent>
+        get() = _daysEvents.asStateFlow()
 
-    private val _monthesEvents = SingleLiveEvent<MonthesUiEvent>()
-    val monthesEvents: LiveData<MonthesUiEvent>
-        get() = _monthesEvents
+    private val _monthesEvents = MutableStateFlow<MonthesUiEvent>(MonthesUiEvent.OnTextEmpty)
+    val monthesEvents: StateFlow<MonthesUiEvent>
+        get() = _monthesEvents.asStateFlow()
 
-    private val _yearsEvents = SingleLiveEvent<YearsUiEvent>()
-    val yearsEvents: LiveData<YearsUiEvent>
-        get() = _yearsEvents
+    private val _yearsEvents = MutableStateFlow<YearsUiEvent>(YearsUiEvent.OnTextEmpty)
+    val yearsEvents: StateFlow<YearsUiEvent>
+        get() = _yearsEvents.asStateFlow()
 
-    private val _firstName = MutableLiveData<String>()
-    val firstName: LiveData<String>
-        get() = _firstName
+    private val _firstName = MutableStateFlow("")
+    private var firstNameState = State.DEFAULT
+
+      
+    private val _lastName = MutableStateFlow("")
+   
+      private val _email = MutableStateFlow("")
+
+
+    private var lastNameState = State.DEFAULT
+    private val _password = MutableStateFlow("")
+
+    private var gender: Gender = Gender.UNSPECIFIED
+
+    private var emailState = State.DEFAULT
+    private val _dateDays = MutableStateFlow(0)
+
+    private val _dateMonthes = MutableStateFlow(0)
+
+    private var passwordState = State.DEFAULT
+    private val _dateYears = MutableStateFlow(0)
 
     private var firstNameState = State.DEFAULT
 
-    private val _lastName = MutableLiveData<String>()
-    val lastName: LiveData<String>
-        get() = _lastName
-
     private var lastNameState = State.DEFAULT
-
-    private val _email = MutableLiveData<String>()
-    val email: LiveData<String>
-        get() = _email
 
     private var emailState = State.DEFAULT
 
-    private val _password = MutableLiveData<String>()
-    val password: LiveData<String>
-        get() = _password
-
     private var passwordState = State.DEFAULT
 
-    private val _dateDays = MutableLiveData<Int>()
-    val dateDays: LiveData<Int>
-        get() = _dateDays
-
-    private val _dateMonthes = MutableLiveData<Int>()
-    val dateMonthes: LiveData<Int>
-        get() = _dateMonthes
-
-    private val _dateYears = MutableLiveData<Int>()
-    val dateYears: LiveData<Int>
-        get() = _dateYears
-
-    var dateState: State = State.DEFAULT
-
-    var genderState: State = State.DEFAULT
+    private var genderState: State = State.DEFAULT
 
     var gender: Gender = Gender.UNSPECIFIED
+    var dateState: State = State.DEFAULT
 
     init {
-        _firstName.value = ""
-        _lastName.value = ""
-        _email.value = ""
-        _password.value = ""
+
     }
 
     val firstNameOnFocusListener = View.OnFocusChangeListener { _, hasFocus ->
-        if (!hasFocus && _firstName.value?.isEmpty() == true) {
+        if (!hasFocus && _firstName.value.isEmpty()) {
             firstNameState = State.ERROR
             _firstNameEvents.value = FirstNameUiEvent.OnTextEmpty
         } else {
-            if (!hasFocus && _firstName.value.toString().length < 2) {
+            if (!hasFocus && _firstName.value.length < 2) {
                 firstNameState = State.ERROR
                 _firstNameEvents.value = FirstNameUiEvent.OnTextInvalid
             }
@@ -148,11 +138,11 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
     }
 
     val lastNameOnFocusListener = View.OnFocusChangeListener { _, hasFocus ->
-        if (!hasFocus && _lastName.value?.isEmpty() == true) {
+        if (!hasFocus && _lastName.value.isEmpty()) {
             lastNameState = State.ERROR
             _lastNameEvents.value = LastNameUiEvent.OnTextEmpty
         } else {
-            if (!hasFocus && _lastName.value.toString().length < 2) {
+            if (!hasFocus && _lastName.value.length < 2) {
                 lastNameState = State.ERROR
                 _lastNameEvents.value = LastNameUiEvent.OnTextInvalid
             }
@@ -173,7 +163,7 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
     }
 
     val emailOnFocusListener = View.OnFocusChangeListener { _, hasFocus ->
-        if (!hasFocus && (_email.value?.isEmpty() == true || _email.value?.let { !isEmail(it) }!!)) {
+        if (!hasFocus && (_email.value.isEmpty() || _email.value.let { !isEmail(it) })) {
             emailState = State.ERROR
             _emailEvents.value = EmailUiEvent.OnTextInvalid
         }
@@ -193,12 +183,10 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
 
     val passwordOnFocusListener = View.OnFocusChangeListener { _, hasFocus ->
         val passStr = _password.value
-        val size = passStr?.length
-        if (size != null) {
-            if (!hasFocus && size < MIN_CHARS_IN_PASS) {
-                passwordState = State.ERROR
-                _passwordEvents.value = PasswordUiEvent.OnTextInvalid
-            }
+        val size = passStr.length
+        if (!hasFocus && size < MIN_CHARS_IN_PASS) {
+            passwordState = State.ERROR
+            _passwordEvents.value = PasswordUiEvent.OnTextInvalid
         }
     }
 
@@ -344,23 +332,18 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
 
     private fun isDate() {
         try {
-            if (dateDays.value != null || dateDays.value.toString().isNotEmpty() &&
-                dateMonthes.value != null || dateMonthes.value.toString().isNotEmpty() &&
-                dateYears.value != null || dateYears.value.toString().isNotEmpty()
-            ) {
-                dateState = if (dateYears.value!! in 1901..2020) { //range of valid year
-                    if (dateMonthes.value!! in JANUARY..DECEMBER) {
-                        if (checkDaysInMonth()) {
-                            State.CORRECT
-                        } else {
-                            State.ERROR
-                        }
+            dateState = if (_dateYears.value in 1901..2020) { //range of valid year
+                if (_dateMonthes.value in JANUARY..DECEMBER) {
+                    if (checkDaysInMonth()) {
+                        State.CORRECT
                     } else {
                         State.ERROR
                     }
                 } else {
                     State.ERROR
                 }
+            } else {
+                State.ERROR
             }
         } catch (e: NullPointerException) {
             State.ERROR
@@ -368,18 +351,18 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
     }
 
     private fun checkDaysInMonth(): Boolean {
-        when (dateMonthes.value) {
+        when (_dateMonthes.value) {
             JANUARY, MARCH, MAY, JULY, AUGUST, OCTOBER, DECEMBER -> {
-                return dateDays.value in 1..31 //possible days in these monthes
+                return _dateDays.value in 1..31 //possible days in these monthes
             }
             APRIL, JUNE, SEPTEMBER, NOVEMBER -> {
-                return dateDays.value in 1..30 //possible days in these monthes
+                return _dateDays.value in 1..30 //possible days in these monthes
             }
             FEBRUARY -> {
-                return if (dateYears.value!! % 4 == 0) {
-                    dateDays.value in 1..29 //possible days in this month if it is leap year
+                return if (_dateYears.value % 4 == 0) {
+                    _dateDays.value in 1..29 //possible days in this month if it is leap year
                 } else {
-                    dateDays.value in 1..28 //possible days in this month if it is not leap year
+                    _dateDays.value in 1..28 //possible days in this month if it is not leap year
                 }
             }
         }
@@ -388,18 +371,18 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
 
     private suspend fun registerUser() {
         if (checkingAllIsCorrect()) {
-            val date = dateYears.value.toString() + "-" +
-                    dateMonthes.value.toString() + "-" + dateDays.value.toString()
+            val date = _dateYears.value.toString() + "-" +
+                    _dateMonthes.value.toString() + "-" + _dateDays.value.toString()
             val user = User(
-                _firstName.value.toString(),
-                _lastName.value.toString(),
-                _email.value.toString(),
+                _firstName.value,
+                _lastName.value,
+                _email.value,
                 gender,
                 date
             )
-            val result = registerUserUsecase.execute(user, _password.value.toString())
+            val result = registerUserUsecase.execute(user, _password.value)
             when (result) {
-                ResultEvent.Success -> _registerEvents.postValue(RegistrationEvent.OnRegistered)
+                ResultEvent.Success -> _registerEvents.value = RegistrationEvent.OnRegistered
                 ResultEvent.InvalidData -> {
                     Log.d("RegistrationVM", "Invalid Data")
                     //TODO Exception
@@ -421,16 +404,19 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
     }
 
     fun maleClicked() {
+        genderState = State.CORRECT
         gender = Gender.MALE
         genderState = State.CORRECT
     }
 
     fun femaleClicked() {
+        genderState = State.CORRECT
         gender = Gender.FEMALE
         genderState = State.CORRECT
     }
 
     fun unspecifiedClicked() {
+        genderState = State.CORRECT
         gender = Gender.UNSPECIFIED
         genderState = State.CORRECT
     }
@@ -485,4 +471,5 @@ sealed class YearsUiEvent {
 
 sealed class RegistrationEvent {
     object OnRegistered : RegistrationEvent()
+    object NotRegistered : RegistrationEvent()
 }

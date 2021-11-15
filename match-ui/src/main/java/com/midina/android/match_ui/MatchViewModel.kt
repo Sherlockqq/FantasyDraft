@@ -7,8 +7,10 @@ import androidx.lifecycle.*
 import com.midina.android.match_domain.model.MatchWeather
 import com.midina.android.match_domain.model.ResultEvent
 import com.midina.android.match_domain.usecase.GetWeatherUsecase
-import com.midina.core_ui.ui.SingleLiveEvent
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -22,24 +24,35 @@ private const val MINUTE = 60000L
 class MatchViewModel @Inject constructor(
     private val getWeatherUsecase: GetWeatherUsecase,
     bundle: Bundle?
-) : ViewModel(), LifecycleObserver {
+) : ViewModel() {
 
-    private val _dateArr = MutableLiveData<ArrayList<Int>>()
-    val dateArr: LiveData<ArrayList<Int>>
-        get() = _dateArr
+    private val _dateArr = MutableStateFlow<ArrayList<Int>>(ArrayList())
+    val dateArr: StateFlow<ArrayList<Int>>
+        get() = _dateArr.asStateFlow()
 
-    private val _scoreOrDateEvents = SingleLiveEvent<UiScoreOrDateEvent>()
-    val scoreOrDateEvents: LiveData<UiScoreOrDateEvent>
-        get() = _scoreOrDateEvents
+    private val _scoreOrDateEvents = MutableStateFlow<UiScoreOrDateEvent>(UiScoreOrDateEvent.Default)
+    val scoreOrDateEvents: StateFlow<UiScoreOrDateEvent>
+        get() = _scoreOrDateEvents.asStateFlow()
 
-    private val _events = SingleLiveEvent<UiEvent>()
-    val events: LiveData<UiEvent>
-        get() = _events
+    private val _events = MutableStateFlow<UiEvent>(UiEvent.EmptyState)
+    val events: StateFlow<UiEvent>
+        get() = _events.asStateFlow()
 
-    var homeTeam: String = ""
-    var guestTeam: String = ""
-    var score: String = ""
-    var date: String = ""
+    private val _homeTeam = MutableStateFlow("")
+    val homeTeam: StateFlow<String>
+        get() = _homeTeam.asStateFlow()
+
+    private val _guestTeam = MutableStateFlow("")
+    val guestTeam: StateFlow<String>
+        get() = _guestTeam.asStateFlow()
+
+    private val _score = MutableStateFlow("")
+    val score: StateFlow<String>
+        get() = _score.asStateFlow()
+
+    private val _date = MutableStateFlow("")
+    val date: StateFlow<String>
+        get() = _date.asStateFlow()
 
     private var lat = 0.0F
     private var lon = 0.0F
@@ -49,17 +62,16 @@ class MatchViewModel @Inject constructor(
     private val sdf by lazy { SimpleDateFormat(DATE_PATTERN) }
 
     init {
-        _dateArr.value = ArrayList()
-        homeTeam = bundle?.getString("HomeTeam").toString()
-        guestTeam = bundle?.getString("GuestTeam").toString()
-        score = bundle?.getString("Score").toString()
-        date = bundle?.getString("Date").toString()
+        _homeTeam.value = bundle?.getString("HomeTeam").toString()
+        _guestTeam.value = bundle?.getString("GuestTeam").toString()
+        _score.value = bundle?.getString("Score").toString()
+        _date.value = bundle?.getString("Date").toString()
+        getData()
         getScoreOrTime()
     }
 
-
     private fun getCoordinates() {
-        when (homeTeam) {
+        when (_homeTeam.value) {
             "Львов" -> {
                 lat = 49.84F
                 lon = 24.02F
@@ -128,48 +140,45 @@ class MatchViewModel @Inject constructor(
 
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     private fun getData() {
         getCoordinates()
         viewModelScope.launch(Dispatchers.IO) {
-            val result = getWeatherUsecase.execute(lat, lon, date)
+            val result = getWeatherUsecase.execute(lat, lon, date.value)
             when (result) {
                 is ResultEvent.Success -> {
-                    _events.postValue(UiEvent.Success(result.value))
+                    _events.value = UiEvent.Success(result.value)
                 }
                 is ResultEvent.EmptyState -> {
-                    _events.postValue(UiEvent.EmptyState)
+                    _events.value = UiEvent.EmptyState
                 }
-                is ResultEvent.Error -> _events.postValue(UiEvent.Error)
+                is ResultEvent.Error -> _events.value = UiEvent.Error
             }
             Log.d("VM", "RESULT")
         }
     }
 
     private fun getScoreOrTime() {
-        if (score == "? : ?") {
+        if (score.value == "? : ?") {
             timer.scheduleAtFixedRate(
-                object : TimerTask() {
+                object  : TimerTask() {
                     override fun run() {
-                        _dateArr.postValue(getTimeTillMatch())
-                        Log.d("MatchViewModel", "Date Arr Check ${_dateArr.value}")
-                        _scoreOrDateEvents.postValue(UiScoreOrDateEvent.HasDate)
+                        getTimeTillMatch()
                     }
                 },
                 0,
                 MINUTE
             )
         } else {
-            _scoreOrDateEvents.postValue(UiScoreOrDateEvent.HasScore)
+            _scoreOrDateEvents.value = UiScoreOrDateEvent.HasScore
         }
     }
 
     @SuppressLint("SimpleDateFormat")
-    private fun getTimeTillMatch(): ArrayList<Int> {
+    private fun getTimeTillMatch() {
         val dateFormat = SimpleDateFormat(DATE_PATTERN)
         val currentDateStr = sdf.format(Date())
         val currentDate = dateFormat.parse(currentDateStr)
-        val matchDate = dateFormat.parse(date)
+        val matchDate = dateFormat.parse(date.value)
 
         val milliseconds: Long = matchDate.time - currentDate.time
 
@@ -185,17 +194,16 @@ class MatchViewModel @Inject constructor(
         val minutes = ((milliseconds / (60 * 1000)).toInt() - (days * 24 * 60)) % 60
         Log.d("MatchViewModel", "Разница между датами в минутах: $minutes")
 
-        val date = ArrayList<Int>()
+        _dateArr.value.add(minutes)
+        _dateArr.value.add(hours)
+        _dateArr.value.add(days)
 
-        date.add(minutes)
-        date.add(hours)
-        date.add(days)
-
-        return date
+        Log.d("MatchViewModel", "Date Arr Check ${_dateArr.value}")
+        _scoreOrDateEvents.value = UiScoreOrDateEvent.HasDate
     }
 
     fun getHomeTeamName(): String {
-        when (homeTeam) {
+        when (homeTeam.value) {
             "Львов" -> return "ЛЬВ"
             "Верес" -> return "ВЕР"
             "Шахтер Донецк" -> return "ШАХ"
@@ -217,7 +225,7 @@ class MatchViewModel @Inject constructor(
     }
 
     fun getGuestTeamName(): String {
-        when (guestTeam) {
+        when (guestTeam.value) {
             "Львов" -> return "ЛЬВ"
             "Верес" -> return "ВЕР"
             "Шахтер Донецк" -> return "ШАХ"
@@ -241,12 +249,14 @@ class MatchViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         timer.cancel()
+        Log.d("MatchViewModel", "On Cleared")
     }
 }
 
 sealed class UiScoreOrDateEvent {
     object HasScore : UiScoreOrDateEvent()
     object HasDate : UiScoreOrDateEvent()
+    object Default : UiScoreOrDateEvent()
 }
 
 sealed class UiEvent {

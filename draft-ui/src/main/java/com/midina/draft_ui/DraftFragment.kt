@@ -5,14 +5,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isGone
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.draft_ui.databinding.FragmentDraftBinding
+import kotlinx.coroutines.flow.collect
 
 class DraftFragment : BaseFragment() {
 
@@ -31,8 +33,8 @@ class DraftFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-
+    ): View {
+        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title)
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_draft,
@@ -43,15 +45,20 @@ class DraftFragment : BaseFragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        viewModel.signEvents.observe(viewLifecycleOwner, { handleSignsEvents(it) })
+        lifecycleScope.launchWhenCreated {
+            viewModel.signEvents
+                .collect {
+                    handleSignsEvents(it)
+                }
+        }
 
-        binding.registerButton.setOnClickListener { view ->
+        binding.registerButton.setOnClickListener {
             findNavController().navigate(R.id.action_registration_navigation, null)
         }
-        binding.signInButton.setOnClickListener { view ->
+        binding.signInButton.setOnClickListener {
             findNavController().navigate(R.id.action_login_navigation, null)
         }
-        binding.signOutButton.setOnClickListener { view ->
+        binding.signOutButton.setOnClickListener {
             viewModel.signedOutClicked()
         }
         return binding.root

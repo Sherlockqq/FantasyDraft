@@ -3,7 +3,7 @@ package com.midina.matches_ui.di
 import androidx.lifecycle.ViewModel
 import com.midina.core_ui.di.ViewModelKey
 import com.midina.matches_ui.FixturesFragment
-import com.midina.matches_ui.fixtures.FixturesViewModel
+import com.midina.matches_ui.FixturesViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -27,3 +27,4 @@ abstract class FixturesViewModelModule {
     @ViewModelKey(FixturesViewModel::class)
     abstract fun bindFixturesViewModel(viewModel: FixturesViewModel): ViewModel
 }
+

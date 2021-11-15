@@ -4,4 +4,5 @@
     <string name="password_hint">Ваш пароль</string>
     <string name="sign_in">Войти</string>
     <string name="requirements">Введите правильный пароль и email!</string>
+    <string name="title">Авторизация</string>
 </resources>

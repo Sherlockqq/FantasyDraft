@@ -1,19 +1,26 @@
 package com.midina.matches_ui
 
+import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.*
+import androidx.annotation.RequiresApi
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.matches_domain.model.MatchSchedule
 import com.midina.matches_ui.databinding.FragmentFixturesBinding
-import com.midina.matches_ui.fixtures.FixturesViewModel
-import com.midina.matches_ui.fixtures.UiEvent
-import javax.inject.Inject
+import kotlinx.coroutines.flow.collect
 
 class FixturesFragment : BaseFragment() {
 
@@ -26,11 +33,11 @@ class FixturesFragment : BaseFragment() {
         ViewModelProvider(this, viewmodelFactory)[FixturesViewModel::class.java]
     }
 
-
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         binding = DataBindingUtil.inflate(
             inflater,
@@ -49,11 +56,27 @@ class FixturesFragment : BaseFragment() {
 
         setGameText()
 
-        viewModel.events.observe(viewLifecycleOwner, { handleEvents(it) })
+        lifecycleScope.launchWhenCreated {
+            viewModel.events
+                .collect {
+                    handleEvents(it)
+                }
+        }
+
         binding.fixturesList.adapter = adapter
         adapter.setOnItemClickListener(object : MatchAdapter.OnItemClickListener {
             override fun onItemClick(position: Int, match: MatchSchedule) {
                 findNavController().navigate(R.id.action_match_navigation, match.toBundle())
+            }
+        })
+
+        adapter.setOnSwipeListener(object: MatchAdapter.OnSwipeListener {
+            override fun onLeftSwipe() {
+                viewModel.nextArrowClicked()
+            }
+
+            override fun onRightSwipe() {
+                viewModel.backArrowClicked()
             }
         })
 
@@ -68,6 +91,7 @@ class FixturesFragment : BaseFragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setGameText() {
         if (viewModel.tours.value != 0) {
             binding.gameweekText.text = "Тур ${viewModel.tours.value}"
@@ -76,6 +100,7 @@ class FixturesFragment : BaseFragment() {
         }
     }
 
+    @SuppressLint("NewApi")
     private fun handleEvents(event: UiEvent) {
         when (event) {
             is UiEvent.Success -> onSuccess(event.matches)
@@ -85,10 +110,11 @@ class FixturesFragment : BaseFragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun onSuccess(event: List<MatchSchedule>) {
         if (event.isNotEmpty()) {
             setGameText()
-
+            Log.d("MainActivity", "list size : ${event.size}")
             binding.progressBar.isVisible = false
             binding.nonSuccessText.isVisible = false
             binding.gameweekText.isVisible = true
@@ -107,6 +133,7 @@ class FixturesFragment : BaseFragment() {
                 }
             }
             adapter.updateMatches(event)
+            createAlarm(event)
         }
     }
 
@@ -154,6 +181,7 @@ class FixturesFragment : BaseFragment() {
         return true
     }
 
+    //TODO ASK TO DO IT PARCEBLE?
     private fun MatchSchedule.toBundle() =
         Bundle().also {
             it.putString("HomeTeam", this.homeTeam)
@@ -161,4 +189,65 @@ class FixturesFragment : BaseFragment() {
             it.putString("Score", this.score)
             it.putString("Date", this.date)
         }
+
+    private fun MatchSchedule.toIntent(
+        tour: Int,
+        homeTeam: String,
+        guestTeam: String) =
+        Intent().also {
+            val intent = Intent(activity?.applicationContext, AlarmReceiver::class.java)
+
+            val bundle = Bundle()
+
+            bundle.putInt("tour", tour)
+            bundle.putString("homeTeam", homeTeam)
+            bundle.putString("guestTeam", guestTeam)
+
+            intent.putExtras(bundle)
+    }
+
+    private fun createAlarm(matchesList: List<MatchSchedule>) {
+        val alarmManager =
+            activity?.applicationContext?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        for (index in matchesList.indices) {
+
+            val intent = matchesList[index].toIntent(
+                matchesList[index].tour,
+                matchesList[index].homeTeam,
+                matchesList[index].guestTeam
+            )
+
+            val pendingIntent = PendingIntent.getBroadcast(
+                activity?.applicationContext,
+                index,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    viewModel.getTimeInMillis(matchesList[index].date),
+                    pendingIntent
+                )
+            } else {
+                alarmManager.setExact(
+                    AlarmManager.RTC_WAKEUP,
+                    viewModel.getTimeInMillis(matchesList[index].date),
+                    pendingIntent
+                    )
+            }
+        }
+    }
+
+    override fun onDestroyView() {
+        Log.d("Fixture","OnDestroyView")
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        Log.d("Fixture", "OnDestroy")
+        super.onDestroy()
+    }
 }
