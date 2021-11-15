@@ -70,16 +70,6 @@ class FixturesFragment : BaseFragment() {
             }
         })
 
-        adapter.setOnSwipeListener(object: MatchAdapter.OnSwipeListener {
-            override fun onLeftSwipe() {
-                viewModel.nextArrowClicked()
-            }
-
-            override fun onRightSwipe() {
-                viewModel.backArrowClicked()
-            }
-        })
-
         binding.backArrow.setOnClickListener {
             viewModel.backArrowClicked()
         }
@@ -181,7 +171,6 @@ class FixturesFragment : BaseFragment() {
         return true
     }
 
-    //TODO ASK TO DO IT PARCEBLE?
     private fun MatchSchedule.toBundle() =
         Bundle().also {
             it.putString("HomeTeam", this.homeTeam)

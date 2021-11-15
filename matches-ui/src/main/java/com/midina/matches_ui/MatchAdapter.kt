@@ -17,7 +17,6 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
 
     private var list: List<MatchSchedule> = emptyList()
     private lateinit var mListener: OnItemClickListener
-    private lateinit var swipeListener: OnSwipeListener
 
     interface OnItemClickListener {
         fun onItemClick(position: Int, match: MatchSchedule)
@@ -25,15 +24,6 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
         mListener = listener
-    }
-
-    interface OnSwipeListener {
-        fun onLeftSwipe()
-        fun onRightSwipe()
-    }
-
-    fun setOnSwipeListener(listener: OnSwipeListener) {
-        swipeListener = listener
     }
 
     fun updateMatches(updatedList: List<MatchSchedule>) {
@@ -61,8 +51,6 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
                 return FixturesHolder.MatchViewHolder(
                     itemView,
                     mListener,
-                    parent.context,
-                    swipeListener
                 )
             }
         }
@@ -98,9 +86,7 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
 
         class MatchViewHolder(
             itemView: View,
-            listener: OnItemClickListener,
-            context: Context,
-            swipeListener: OnSwipeListener
+            listener: OnItemClickListener
         ) : FixturesHolder(itemView) {
             private val home: TextView = itemView.findViewById(R.id.home_team)
             private val score: TextView = itemView.findViewById(R.id.match_score)
@@ -113,18 +99,6 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
                 itemView.setOnClickListener {
                     this.match?.let { match -> listener.onItemClick(adapterPosition, match) }
                 }
-
-                itemView.setOnTouchListener(object : OnSwipeTouchListener(context) {
-                    override fun onSwipeLeft() {
-                        swipeListener.onLeftSwipe()
-                        super.onSwipeLeft()
-                    }
-
-                    override fun onSwipeRight() {
-                        swipeListener.onRightSwipe()
-                        super.onSwipeRight()
-                    }
-                })
             }
 
             override fun bind(item: MatchSchedule) {
