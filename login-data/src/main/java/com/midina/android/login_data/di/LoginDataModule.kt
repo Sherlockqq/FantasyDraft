@@ -1,16 +1,18 @@
 package com.midina.android.login_data.di
 
 import com.midina.android.login_data.SigningInRepository
-import com.midina.android.login_data.usecaseimpl.SigningInImpl
-import com.midina.login_domain.usecase.SigningIn
+import com.midina.android.login_data.usecaseimpl.SigningInUsecaseImpl
+import com.midina.login_domain.usecase.SigningInUsecase
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-@Module(includes = [
-    LoginDataUseCaseModule::class
-])
+@Module(
+    includes = [
+        LoginDataUseCaseModule::class
+    ]
+)
 class LoginDataModule {
     @Provides
     @Singleton
@@ -20,5 +22,5 @@ class LoginDataModule {
 @Module
 interface LoginDataUseCaseModule {
     @Binds
-    fun bindSigningInImpl(registrUser: SigningInImpl): SigningIn
+    fun bindSigningInImpl(registrUser: SigningInUsecaseImpl): SigningInUsecase
 }

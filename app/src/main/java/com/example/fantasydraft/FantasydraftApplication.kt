@@ -8,7 +8,7 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-class FantasydraftApplication : Application(), HasAndroidInjector{
+class FantasydraftApplication : Application(), HasAndroidInjector {
     override fun androidInjector(): AndroidInjector<Any> = androidInjector
 
     @Inject

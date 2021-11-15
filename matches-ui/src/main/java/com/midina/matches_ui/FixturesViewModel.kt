@@ -1,21 +1,17 @@
 package com.midina.matches_ui
 
-
-import android.os.Build
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.midina.core_ui.ui.SingleLiveEvent
-
 import com.midina.matches_domain.model.MatchSchedule
 import com.midina.matches_domain.model.ResultEvent
-import com.midina.matches_domain.usecase.GetMatchesSchedule
+import com.midina.matches_domain.usecase.GetMatchesScheduleUsecase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.inject.Inject
 
@@ -24,77 +20,70 @@ import javax.inject.Inject
 private const val DATE_PATTERN = "dd.MM.yyyy HH:mm"
 private const val TOUR_SIZE = 30
 private const val MATCHES_IN_TOUR = 8
-private const val FIRST_MATCH_IN_TOUR  = 0
+private const val FIRST_MATCH_IN_TOUR = 0
 private const val MATCHES_COUNT = 240
 
-class FixturesViewModel @Inject constructor(private val getMatchesSchedule: GetMatchesSchedule):
-    ViewModel() {
+class FixturesViewModel @Inject constructor(
+    private val getMatchesScheduleUsecase: GetMatchesScheduleUsecase
+) : ViewModel() {
 
-    enum class TourFilter{
+    enum class TourFilter {
         SHOW_FIRST,
         SHOW_SECOND,
         SHOW_ALL
     }
 
-    private var matchesMap : Map<Int,List<MatchSchedule>> = mutableMapOf()
-    private var dateMap : MutableMap<Int,Pair<LocalDateTime,LocalDateTime>> = mutableMapOf()
+    private var matchesMap: Map<Int, List<MatchSchedule>> = mutableMapOf()
+    private var dateMap: MutableMap<Int, Pair<String, String>> = mutableMapOf()
 
     private val sdf by lazy { SimpleDateFormat(DATE_PATTERN) }
 
-    private val _tours = MutableLiveData<Int>()
-    val tours : LiveData<Int>
-        get() = _tours
+    private val _tours = MutableStateFlow(0)
+    val tours: StateFlow<Int>
+        get() = _tours.asStateFlow()
 
-    private val _events = SingleLiveEvent<UiEvent>()
-    val events: LiveData<UiEvent>
-        get() = _events
+    private val _events = MutableStateFlow<UiEvent>(UiEvent.Loading)
+    val events: StateFlow<UiEvent>
+        get() = _events.asStateFlow()
 
     init {
-        _tours.value = 0
         dataLoading()
     }
 
-    private fun dataLoading(){
-        _events.postValue(UiEvent.Loading)
+    private fun dataLoading() {
 
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
 
-            val result = getMatchesSchedule.execute()
+            val result = getMatchesScheduleUsecase.execute()
 
-            when(result){
+            when (result) {
                 is ResultEvent.Success -> {
                     matchesMap = result.value
                     getDateMap()
-                    //TODO CHECK IF IT IS WORK
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        val tourByDate = getTourByDate()
-                        _tours.postValue(tourByDate)
-                        _events.postValue(matchesMap[tourByDate]?.let { UiEvent.Success(it) })
-                    }else{
-                        _tours.postValue(0)
-                        _events.postValue(matchesMap[0]?.let { UiEvent.Success(it) })
-                    }
-
+                    val tourByDate = getTourByDate()
+                    _tours.value = tourByDate
+                    _events.value = matchesMap[tourByDate]?.let { UiEvent.Success(it) }!!
                 }
-                is ResultEvent.Error -> _events.postValue(UiEvent.Error)
+                is ResultEvent.Error -> _events.value = UiEvent.Error
             }
-
         }
     }
 
-    private fun showList(filter: TourFilter){
-        when(filter){
+
+    private fun showList(filter: TourFilter) {
+
+        when (filter) {
             TourFilter.SHOW_FIRST -> {
                 _tours.value = 1
-                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }
+                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }!!
             }
             TourFilter.SHOW_SECOND -> {
                 _tours.value = 2
-                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }
+                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }!!
             }
             else -> {
                 _tours.value = 0
-                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }
+                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }!!
             }
         }
     }
@@ -103,74 +92,73 @@ class FixturesViewModel @Inject constructor(private val getMatchesSchedule: GetM
         showList(filter)
     }
 
-    fun backArrowClicked(){
-        _tours.value = _tours.value?.minus(1)
-        _tours.value?.let {
-            if(it > 0){
-                _events.value = matchesMap[it]?.let { mapList -> UiEvent.Success(mapList) }
-            }else{
-                _events.value = matchesMap[0]?.let { mapList -> UiEvent.Success(mapList) }
+    fun backArrowClicked() {
+        _tours.value = _tours.value.minus(1)
+        _tours.value.let {
+            if (it > 0) {
+                _events.value = matchesMap[it]?.let { mapList -> UiEvent.Success(mapList) }!!
+            } else if (it == 0) {
+                _events.value = matchesMap[0]?.let { mapList -> UiEvent.Success(mapList) }!!
             }
         }
     }
 
-    fun nextArrowClicked(){
-        _tours.value = _tours.value?.plus(1)
-        _events.value = matchesMap[_tours.value]?.let {mapList -> UiEvent.Success(mapList) }
+    fun nextArrowClicked() {
+        if (_tours.value < 30) {
+            _tours.value = _tours.value.plus(1)
+            _events.value = matchesMap[_tours.value]?.let { mapList -> UiEvent.Success(mapList) }!!
+        }
     }
 
 
-    private fun getTourByDate() : Int{
-        val currentDate = sdf.format(Date())
-        val date = LocalDateTime.parse(
-            currentDate,
-            DateTimeFormatter.ofPattern(DATE_PATTERN))
+    private fun getTourByDate(): Int {
+
+        val currentDateString = sdf.format(Date())
 
         var tourCount = 1
-        for(index in 1 ..TOUR_SIZE){
-            if(date.isAfter(dateMap[index]?.second)){
+        for (index in 1..TOUR_SIZE) {
+
+            if ((getTimeInMillis(currentDateString) -
+                        getTimeInMillis(dateMap[index]?.second.toString()) > 0)
+            ) {
                 tourCount = index
-            }else{
-                if (date.isAfter(dateMap[index]?.first) && date.isBefore(dateMap[index]?.second)){
+            } else {
+                if ((getTimeInMillis(currentDateString) -
+                            getTimeInMillis(dateMap[index]?.first.toString()) > 0) &&
+                    (getTimeInMillis(currentDateString) -
+                            getTimeInMillis(dateMap[index]?.second.toString()) < 0)
+                ) {
                     return index
                 }
             }
         }
 
-        return if(tourCount == TOUR_SIZE){
+        return if (tourCount == TOUR_SIZE) {
             tourCount
-        }else{
+        } else {
             tourCount + 1
         }
 
     }
 
-    private fun getLocaleDateTimePair(first: String, last:String) :
-            Pair<LocalDateTime,LocalDateTime>{
-
-        val localFirst = LocalDateTime.parse(
-            first,
-            DateTimeFormatter.ofPattern(DATE_PATTERN))
-
-        val localLast = LocalDateTime.parse(
-            last,
-            DateTimeFormatter.ofPattern(DATE_PATTERN))
-
-        return Pair(localFirst,localLast)
+    private fun getStringPair(first: String, last: String):
+            Pair<String, String> {
+        return Pair(first, last)
     }
 
-    private fun getDateMap(){
+    private fun getDateMap() {
 
         var matchCount = FIRST_MATCH_IN_TOUR
         var tourCount = 1
-        for (index in 0 until MATCHES_COUNT){
+        for (index in 0 until MATCHES_COUNT) {
             matchCount++
-            if(matchCount == MATCHES_IN_TOUR){
+            if (matchCount == MATCHES_IN_TOUR) {
                 matchesMap[tourCount]?.get(FIRST_MATCH_IN_TOUR)?.let { first ->
-                        matchesMap[tourCount]?.get(MATCHES_IN_TOUR-1)?.let { second ->
-                            dateMap[tourCount] = getLocaleDateTimePair(
+                    matchesMap[tourCount]?.get(MATCHES_IN_TOUR - 1)?.let { second ->
+                        dateMap[tourCount] = getStringPair(
                             first.date,
-                            second.date)
+                            second.date
+                        )
                     }
                 }
                 matchCount = FIRST_MATCH_IN_TOUR
@@ -178,12 +166,19 @@ class FixturesViewModel @Inject constructor(private val getMatchesSchedule: GetM
             }
         }
     }
+
+    fun getTimeInMillis(matchTime: String): Long {
+        val matchDate = sdf.parse(matchTime)
+
+        Log.d("FixturesViewModel", "Current Date: $matchDate")
+
+        return matchDate.time
+    }
 }
 
 
 sealed class UiEvent {
     class Success(val matches: List<MatchSchedule>) : UiEvent()
-//    class OnTourChanged(val matches: List<MatchSchedule>) : UiEvent()
     object Error : UiEvent()
     object Loading : UiEvent()
     object EmptyState : UiEvent()

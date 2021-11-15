@@ -42,6 +42,11 @@ dependencies {
     implementation "com.google.dagger:dagger:$version_dagger"
     kapt "com.google.dagger:dagger-compiler:$version_dagger"
 
+    // Room components
+    api "androidx.room:room-runtime:$roomVersion"
+    implementation "androidx.room:room-ktx:$roomVersion"
+    kapt "androidx.room:room-compiler:$roomVersion"
+
     //Firebase
     implementation platform("com.google.firebase:firebase-bom:$version_firebase")
     implementation 'com.google.firebase:firebase-auth-ktx'

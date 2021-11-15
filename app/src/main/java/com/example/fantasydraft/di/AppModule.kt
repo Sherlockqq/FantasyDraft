@@ -15,6 +15,7 @@ abstract class MainActivityModule {
         MainActivityViewModelModule::class
     ])
     abstract fun providesMainActivity(): MainActivity
+
 }
 
 @Module
@@ -24,4 +25,5 @@ interface MainActivityViewModelModule {
     @IntoMap
     @ViewModelKey(MainActivityViewModel::class)
     fun postMainActivityViewModel(viewModel: MainActivityViewModel): ViewModel
+
 }

@@ -9,6 +9,7 @@
     <include app:graph="@navigation/draft_navigation"/>
     <include app:graph="@navigation/registration_navigation"/>
     <include app:graph="@navigation/login_navigation"/>
+    <include app:graph="@navigation/match_navigation"/>
 
     <action
         android:id="@+id/action_registration_navigation"
@@ -38,5 +39,14 @@
         app:popExitAnim="@anim/slide_out_right"
         app:popUpTo="@id/draft_navigation"
         app:popUpToInclusive="false" />
+
+    <action
+        android:id="@+id/action_match_navigation"
+        app:destination="@+id/match_navigation"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:launchSingleTop="true"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
 
 </navigation>

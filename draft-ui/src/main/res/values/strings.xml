@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="sign_in">Sign In</string>
-    <string name="register">I need to register</string>
-    <string name="upl">Ukrainian Premier League</string>
-    <string name="welcome_to_fantasy">Welcome to Fantasy</string>
-    <string name="start">Start Game</string>
-    <string name="sign_out">Sign Out</string>
+    <string name="sign_in">Войти</string>
+    <string name="register">Регистрация</string>
+    <string name="upl">Украинская Премьер Лига</string>
+    <string name="welcome_to_fantasy">Добро пожаловать</string>
+    <string name="start">Начать Игру</string>
+    <string name="sign_out">Выйти</string>
+    <string name="title">Драфт</string>
 </resources>

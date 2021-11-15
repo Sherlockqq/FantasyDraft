@@ -11,21 +11,19 @@ import kotlin.coroutines.suspendCoroutine
 @Singleton
 class SigningInRepository {
 
-    suspend fun getIsSigned(email: String, password: String) : ResultEvent {
+    suspend fun getIsSigned(email: String, password: String): ResultEvent {
 
-        return suspendCoroutine {
-                continuation ->
-            try{
+        return suspendCoroutine { continuation ->
+            try {
                 val fAuth = Firebase.auth
-                fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
-                        task ->
-                    if(task.isSuccessful){
+                fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
                         continuation.resume(ResultEvent.Success)
-                    }else{
+                    } else {
                         continuation.resume(ResultEvent.InvalidateData)
                     }
                 }
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 continuation.resume(ResultEvent.Error)
             }
         }

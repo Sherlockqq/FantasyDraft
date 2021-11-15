@@ -1,25 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="first_name">First Name</string>
-    <string name="required">*Required</string>
-    <string name="name_request">Please enter your first name!</string>
-    <string name="last_name">Last Name</string>
-    <string name="lastName_request">Please enter your last name!</string>
-    <string name="email_address">Email Address</string>
-    <string name="email_request">Please enter your e-mail address!</string>
-    <string name="confirmation">We will send you a confirmation email to this address</string>
-    <string name="password">Password</string>
-    <string name="pass_requirements">Password must be at least 8 characters long</string>
-    <string name="gender">Gender</string>
-    <string name="male">Male</string>
-    <string name="female">Female</string>
-    <string name="unspecified">Unspecified</string>
-    <string name="date">Date of Birth</string>
-    <string name="to_regist">Register</string>
+    <string name="first_name">Имя</string>
+    <string name="required">*Небоходимо</string>
+    <string name="name_request">Введите ваше имя!</string>
+    <string name="last_name">Фамилия</string>
+    <string name="lastName_request">Введите вашу фамилию!</string>
+    <string name="email_address">E-mail адрес</string>
+    <string name="email_request">Введите ваш e-mail адрес!</string>
+    <string name="confirmation">Мы пришлем подтверждение вам на почту</string>
+    <string name="password">Пароль</string>
+    <string name="pass_requirements">Пароль должен состоять не менее 8 символов в длину</string>
+    <string name="gender">Пол</string>
+    <string name="male">Мужчина</string>
+    <string name="female">Женщина</string>
+    <string name="unspecified">Неопределенный</string>
+    <string name="date">Дата рождения</string>
+    <string name="to_regist">Регистрация</string>
     <string name="email_example">example@gmail.com</string>
-    <string name="password_hint">Your password</string>
-    <string name="dd">DD</string>
+    <string name="password_hint">Ваш пароль</string>
+    <string name="dd">ДД</string>
     <string name="slash">/</string>
     <string name="mm">MM</string>
-    <string name="yyyy">YYYY</string>
+    <string name="yyyy">ГГГГ</string>
+    <string name="title">Регистрация</string>
 </resources>

@@ -1,18 +1,20 @@
 package com.midina.draft_data.di
 
 import com.midina.draft_data.SignedRepository
-import com.midina.draft_data.usecaseimpl.IsSignedImpl
-import com.midina.draft_data.usecaseimpl.SignedOutImpl
-import com.midina.draft_domain.usecase.IsSigned
-import com.midina.draft_domain.usecase.SignedOut
+import com.midina.draft_data.usecaseimpl.IsSignedUsecaseImpl
+import com.midina.draft_data.usecaseimpl.SignedOutUseCaseImpl
+import com.midina.draft_domain.usecase.IsSignedUsecase
+import com.midina.draft_domain.usecase.SignedOutUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
 
-@Module(includes = [
-    DraftDataUseCaseModule::class
-])
+@Module(
+    includes = [
+        DraftDataUseCaseModule::class
+    ]
+)
 class DraftDataModule {
     @Provides
     @Singleton
@@ -22,7 +24,8 @@ class DraftDataModule {
 @Module
 interface DraftDataUseCaseModule {
     @Binds
-    fun bindIsSignedImpl(isSignedImpl: IsSignedImpl): IsSigned
+    fun bindIsSignedImpl(isSignedImpl: IsSignedUsecaseImpl): IsSignedUsecase
+
     @Binds
-    fun bindSignedOutImpl(signedOutImpl: SignedOutImpl): SignedOut
+    fun bindSignedOutImpl(signedOutImpl: SignedOutUseCaseImpl): SignedOutUseCase
 }

@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
 
-@Inject
+    @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel: MainActivityViewModel by viewModels { viewModelFactory }
@@ -49,14 +49,19 @@ class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
         navView.setupWithNavController(navController)
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment)
+        return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
     override fun onHideBottomNavView() {
-        val anim = AnimationUtils.loadAnimation(this,R.anim.slide_in_bottom)
+        val anim = AnimationUtils.loadAnimation(this, R.anim.slide_in_bottom)
         binding.bottomNavigation.startAnimation(anim)
         binding.bottomNavigation.isVisible = false
     }
 
     override fun onShowBottomNavView() {
-        val anim = AnimationUtils.loadAnimation(this,R.anim.slide_in_top)
+        val anim = AnimationUtils.loadAnimation(this, R.anim.slide_in_top)
         binding.bottomNavigation.startAnimation(anim)
         binding.bottomNavigation.isVisible = true
     }

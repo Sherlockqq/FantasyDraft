@@ -1,5 +1,6 @@
 package com.midina.matches_ui
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,27 +16,54 @@ const val ITEM_VIEW_TYPE = 222
 class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
 
     private var list: List<MatchSchedule> = emptyList()
+    private lateinit var mListener: OnItemClickListener
+    private lateinit var swipeListener: OnSwipeListener
 
-    fun updateMatches(updatedList: List<MatchSchedule>){
+    interface OnItemClickListener {
+        fun onItemClick(position: Int, match: MatchSchedule)
+    }
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        mListener = listener
+    }
+
+    interface OnSwipeListener {
+        fun onLeftSwipe()
+        fun onRightSwipe()
+    }
+
+    fun setOnSwipeListener(listener: OnSwipeListener) {
+        swipeListener = listener
+    }
+
+    fun updateMatches(updatedList: List<MatchSchedule>) {
         list = updatedList
         notifyDataSetChanged()
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FixturesHolder {
 
-        when(viewType){
+        when (viewType) {
             HEADER_VIEW_TYPE -> {
-                val itemView: View =LayoutInflater.from(parent.context).inflate(
+                val itemView: View = LayoutInflater.from(parent.context).inflate(
                     R.layout.fixture_header,
                     parent,
-                    false)
+                    false
+                )
                 return FixturesHolder.HeaderViewHolder(itemView)
             }
             else -> {
-                val itemView: View =LayoutInflater.from(parent.context).inflate(
+                val itemView: View = LayoutInflater.from(parent.context).inflate(
                     R.layout.fixture_item,
                     parent,
-                    false)
-                return FixturesHolder.MatchViewHolder(itemView)
+                    false
+                )
+                return FixturesHolder.MatchViewHolder(
+                    itemView,
+                    mListener,
+                    parent.context,
+                    swipeListener
+                )
             }
         }
     }
@@ -49,23 +77,31 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when(list[position]?.isHeader){
+        return when (list[position].isHeader) {
             true -> HEADER_VIEW_TYPE
             else -> ITEM_VIEW_TYPE
         }
     }
 
-    sealed class FixturesHolder (itemView : View) : RecyclerView.ViewHolder(itemView) {
-        open fun bind(item: MatchSchedule){}
+    sealed class FixturesHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        class HeaderViewHolder(itemView : View) : FixturesHolder(itemView){
-            private val tour : TextView = itemView.findViewById(R.id.tour_header)
-            override fun bind(item: MatchSchedule){
+        var match: MatchSchedule? = null
+
+        open fun bind(item: MatchSchedule) {}
+
+        class HeaderViewHolder(itemView: View) : FixturesHolder(itemView) {
+            private val tour: TextView = itemView.findViewById(R.id.tour_header)
+            override fun bind(item: MatchSchedule) {
                 tour.text = "Tour : " + item.tour.toString()
             }
         }
 
-        class MatchViewHolder(itemView: View) : FixturesHolder(itemView) {
+        class MatchViewHolder(
+            itemView: View,
+            listener: OnItemClickListener,
+            context: Context,
+            swipeListener: OnSwipeListener
+        ) : FixturesHolder(itemView) {
             private val home: TextView = itemView.findViewById(R.id.home_team)
             private val score: TextView = itemView.findViewById(R.id.match_score)
             private val guest: TextView = itemView.findViewById(R.id.guest_team)
@@ -73,7 +109,26 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
             private val homeImage: ImageView = itemView.findViewById(R.id.home_logo)
             private val guestImage: ImageView = itemView.findViewById(R.id.guest_logo)
 
-            override fun bind(item: MatchSchedule){
+            init {
+                itemView.setOnClickListener {
+                    this.match?.let { match -> listener.onItemClick(adapterPosition, match) }
+                }
+
+                itemView.setOnTouchListener(object : OnSwipeTouchListener(context) {
+                    override fun onSwipeLeft() {
+                        swipeListener.onLeftSwipe()
+                        super.onSwipeLeft()
+                    }
+
+                    override fun onSwipeRight() {
+                        swipeListener.onRightSwipe()
+                        super.onSwipeRight()
+                    }
+                })
+            }
+
+            override fun bind(item: MatchSchedule) {
+                match = item
                 date.text = item.date
                 home.text = item.homeTeam
                 guest.text = item.guestTeam
@@ -83,8 +138,9 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
                 Glide.with(itemView).load(getImage(item.guestTeam)).into(guestImage)
 
             }
-            private fun getImage(team : String): Int{
-                when(team){
+
+            private fun getImage(team: String): Int {
+                when (team) {
                     "Львов" -> return R.drawable.lviv_logo
                     "Верес" -> return R.drawable.veres_logo
                     "Шахтер Донецк" -> return R.drawable.shakhtar_logo
@@ -106,6 +162,5 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
             }
         }
     }
-
 }
 
