@@ -211,7 +211,7 @@ class FixturesFragment : BaseFragment() {
                 activity?.applicationContext,
                 index,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                PendingIntent.FLAG_IMMUTABLE
             )
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
