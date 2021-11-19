@@ -51,6 +51,8 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$version_glide"
     kapt "com.github.bumptech.glide:compiler:$version_glide"
 
+    
+
     // Modules
     implementation project(path: ':match-domain')
     implementation project(path: ':core-ui')

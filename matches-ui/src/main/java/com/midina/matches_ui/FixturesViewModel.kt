@@ -38,6 +38,10 @@ class FixturesViewModel @Inject constructor(
 
     private val sdf by lazy { SimpleDateFormat(DATE_PATTERN) }
 
+    private val _currentTour = MutableStateFlow(0)
+    val currentTour: StateFlow<Int>
+        get() = _currentTour.asStateFlow()
+
     private val _tours = MutableStateFlow(0)
     val tours: StateFlow<Int>
         get() = _tours.asStateFlow()
@@ -61,6 +65,7 @@ class FixturesViewModel @Inject constructor(
                     matchesMap = result.value
                     getDateMap()
                     val tourByDate = getTourByDate()
+                    _currentTour.value = tourByDate
                     _tours.value = tourByDate
                     _events.value = matchesMap[tourByDate]?.let { UiEvent.Success(it) }!!
                 }

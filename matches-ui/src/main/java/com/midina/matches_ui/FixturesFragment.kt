@@ -101,10 +101,10 @@ class FixturesFragment : BaseFragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun onSuccess(event: List<MatchSchedule>) {
-        if (event.isNotEmpty()) {
+    private fun onSuccess(list: List<MatchSchedule>) {
+        if (list.isNotEmpty()) {
             setGameText()
-            Log.d("MainActivity", "list size : ${event.size}")
+            Log.d("MainActivity", "list size : ${list.size}")
             binding.progressBar.isVisible = false
             binding.nonSuccessText.isVisible = false
             binding.gameweekText.isVisible = true
@@ -116,14 +116,15 @@ class FixturesFragment : BaseFragment() {
                 30 -> {
                     binding.nextArrow.isInvisible = true
                     binding.backArrow.isVisible = true
+                    isCurrentTour(list)
                 }
                 else -> {
                     binding.backArrow.isVisible = true
                     binding.nextArrow.isVisible = true
+                    isCurrentTour(list)
                 }
             }
-            adapter.updateMatches(event)
-            createAlarm(event)
+            adapter.updateMatches(list)
         }
     }
 
@@ -230,13 +231,10 @@ class FixturesFragment : BaseFragment() {
         }
     }
 
-    override fun onDestroyView() {
-        Log.d("Fixture","OnDestroyView")
-        super.onDestroyView()
+    private fun isCurrentTour(list: List<MatchSchedule>) {
+        if(viewModel.tours.value == viewModel.currentTour.value) {
+             createAlarm(list)
+        }
     }
 
-    override fun onDestroy() {
-        Log.d("Fixture", "OnDestroy")
-        super.onDestroy()
-    }
 }
