@@ -22,7 +22,7 @@ class DraftFragment : BaseFragment() {
 
     private lateinit var binding: FragmentDraftBinding
     val viewModel: DraftViewModel by lazy {
-        ViewModelProvider(this, viewmodelFactory)[DraftViewModel::class.java]
+        ViewModelProvider(this, viewModelFactory)[DraftViewModel::class.java]
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

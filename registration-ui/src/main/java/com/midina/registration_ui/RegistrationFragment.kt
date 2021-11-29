@@ -31,7 +31,7 @@ class RegistrationFragment : BaseFragment() {
     private lateinit var binding: RegistrationFragmentBinding
 
     private val viewModel: RegistrationViewModel by lazy {
-        ViewModelProvider(this, viewmodelFactory)[RegistrationViewModel::class.java]
+        ViewModelProvider(this, viewModelFactory)[RegistrationViewModel::class.java]
     }
 
     private var listener: OnBottomNavHideListener? = null

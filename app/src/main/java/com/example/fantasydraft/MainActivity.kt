@@ -3,9 +3,7 @@ package com.example.fantasydraft
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.animation.AnimationUtils
-import androidx.activity.viewModels
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -13,8 +11,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.fantasydraft.databinding.ActivityMainBinding
 import com.midina.core_ui.ui.OnBottomNavHideListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import dagger.android.AndroidInjection
-import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
 
@@ -63,4 +59,5 @@ class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
         binding.bottomNavigation.startAnimation(anim)
         binding.bottomNavigation.isVisible = true
     }
+
 }

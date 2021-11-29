@@ -25,7 +25,7 @@ class MatchFragment : BaseFragment() {
     private lateinit var binding: FragmentMatchBinding
 
     val viewModel: MatchViewModel by lazy {
-        ViewModelProvider(this, viewmodelFactory)[MatchViewModel::class.java]
+        ViewModelProvider(this, viewModelFactory)[MatchViewModel::class.java]
     }
 
     override fun onCreateView(

@@ -63,19 +63,19 @@ class WeatherRepository @Inject constructor(private val weatherApi: WeatherApiIn
     @SuppressLint("SimpleDateFormat")
     private fun dateConverting(retroDate: String): String {
 
-            val parser = SimpleDateFormat(API_DATE_PATTERN)
-            val formatter = SimpleDateFormat(DATE_PATTERN)
-            return formatter.format(parser.parse(retroDate))
+        val parser = SimpleDateFormat(API_DATE_PATTERN)
+        val formatter = SimpleDateFormat(DATE_PATTERN)
+        return formatter.format(parser.parse(retroDate))
     }
 
     private fun getIndex(matchDate: String, list: List<String>): Int? {
 
-            for (index in list.indices) {
-                if(getTimeInMillis(list[index]) - getTimeInMillis(matchDate) > 0) {
-                    Log.d("WeatherRepo", "SUCCESS")
-                    return index
-                }
+        for (index in list.indices) {
+            if (getTimeInMillis(list[index]) - getTimeInMillis(matchDate) > 0) {
+                Log.d("WeatherRepo", "SUCCESS")
+                return index
             }
+        }
         Log.d("WeatherRepo", "NULL")
         return null
     }

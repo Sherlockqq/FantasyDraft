@@ -30,7 +30,7 @@ class FixturesFragment : BaseFragment() {
     private val adapter = MatchAdapter()
 
     val viewModel: FixturesViewModel by lazy {
-        ViewModelProvider(this, viewmodelFactory)[FixturesViewModel::class.java]
+        ViewModelProvider(this, viewModelFactory)[FixturesViewModel::class.java]
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -183,17 +183,18 @@ class FixturesFragment : BaseFragment() {
     private fun MatchSchedule.toIntent(
         tour: Int,
         homeTeam: String,
-        guestTeam: String) =
-        Intent().also {
-            val intent = Intent(activity?.applicationContext, AlarmReceiver::class.java)
+        guestTeam: String
+    ): Intent {
+        val intent = Intent(activity?.applicationContext, AlarmReceiver::class.java)
 
-            val bundle = Bundle()
+        val bundle = Bundle()
 
-            bundle.putInt("tour", tour)
-            bundle.putString("homeTeam", homeTeam)
-            bundle.putString("guestTeam", guestTeam)
+        bundle.putInt("tour", tour)
+        bundle.putString("homeTeam", homeTeam)
+        bundle.putString("guestTeam", guestTeam)
 
-            intent.putExtras(bundle)
+        intent.putExtras(bundle)
+        return intent
     }
 
     private fun createAlarm(matchesList: List<MatchSchedule>) {
@@ -202,39 +203,43 @@ class FixturesFragment : BaseFragment() {
 
         for (index in matchesList.indices) {
 
-            val intent = matchesList[index].toIntent(
-                matchesList[index].tour,
-                matchesList[index].homeTeam,
-                matchesList[index].guestTeam
-            )
-
-            val pendingIntent = PendingIntent.getBroadcast(
-                activity?.applicationContext,
-                index,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    viewModel.getTimeInMillis(matchesList[index].date),
-                    pendingIntent
+            if (matchesList[index].score == "? : ?") {
+                val intent = matchesList[index].toIntent(
+                    matchesList[index].tour,
+                    matchesList[index].homeTeam,
+                    matchesList[index].guestTeam
                 )
-            } else {
-                alarmManager.setExact(
-                    AlarmManager.RTC_WAKEUP,
-                    viewModel.getTimeInMillis(matchesList[index].date),
-                    pendingIntent
+
+                val pendingIntent = PendingIntent.getBroadcast(
+                    activity?.applicationContext,
+                    index,
+                    intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                )
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    alarmManager.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        viewModel.getTimeInMillis(matchesList[index].date),
+                        pendingIntent
                     )
+                    Log.d("FixtureFragment", "while idle")
+                } else {
+                    alarmManager.setExact(
+                        AlarmManager.RTC_WAKEUP,
+                        viewModel.getTimeInMillis(matchesList[index].date),
+                        pendingIntent
+                    )
+                    Log.d("FixtureFragment", "not idle")
+
+                }
             }
         }
     }
 
     private fun isCurrentTour(list: List<MatchSchedule>) {
-        if(viewModel.tours.value == viewModel.currentTour.value) {
-             createAlarm(list)
+        if (viewModel.tours.value == viewModel.currentTour.value) {
+            createAlarm(list)
         }
     }
-
 }
