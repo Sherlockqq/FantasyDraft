@@ -2,6 +2,7 @@ package com.example.fantasydraft
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import androidx.navigation.findNavController
@@ -14,6 +15,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
 
+    val TAG = "MainActivity"
     private lateinit var binding: ActivityMainBinding
 
     override fun onResume() {
@@ -22,10 +24,8 @@ class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        setTheme(R.style.Theme_FantasyDraft)
         super.onCreate(savedInstanceState)
-
+        Log.d(TAG, "onCreate: ")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
