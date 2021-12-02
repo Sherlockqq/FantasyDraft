@@ -6,6 +6,5 @@ import dagger.Module
 @Module
 abstract class MainActivityModule {
     abstract fun providesMainActivity(): MainActivity
-
 }
 

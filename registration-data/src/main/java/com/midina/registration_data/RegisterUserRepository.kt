@@ -7,8 +7,7 @@ import com.midina.registration_data.database.UserDao
 import com.midina.registration_data.database.UserEntity
 import com.midina.registration_domain.model.User
 import com.midina.registration_domain.model.ResultEvent
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.EOFException
 import java.sql.Date
 import javax.inject.Inject

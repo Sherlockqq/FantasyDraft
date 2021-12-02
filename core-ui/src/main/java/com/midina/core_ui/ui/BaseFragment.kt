@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 abstract class BaseFragment : Fragment() {
     @Inject
-    lateinit var viewmodelFactory: ViewModelProvider.Factory
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     abstract val layoutId: Int
 
     override fun onAttach(context: Context) {

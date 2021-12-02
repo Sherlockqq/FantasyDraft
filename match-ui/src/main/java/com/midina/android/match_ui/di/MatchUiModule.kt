@@ -19,9 +19,7 @@ interface MatchUiModule {
             MatchViewModelModule::class,
             BundleProvidersModule::class]
     )
-
     fun providesMatchFragment(): MatchFragment
-
 }
 
 @Module

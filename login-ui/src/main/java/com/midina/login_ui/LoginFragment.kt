@@ -24,7 +24,7 @@ class LoginFragment : BaseFragment() {
     private lateinit var binding: FragmentLoginBinding
 
     private val viewModel: LoginViewModel by lazy {
-        ViewModelProvider(this, viewmodelFactory)[LoginViewModel::class.java]
+        ViewModelProvider(this, viewModelFactory)[LoginViewModel::class.java]
     }
 
     private var listener: OnBottomNavHideListener? = null
