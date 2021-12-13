@@ -1,6 +1,7 @@
 package com.midina.android.match_ui
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,11 +14,14 @@ import com.bumptech.glide.Glide
 import com.midina.android.match_domain.model.MatchWeather
 import com.midina.android.match_ui.databinding.FragmentMatchBinding
 import com.midina.core_ui.ui.BaseFragment
+import io.reactivex.rxjava3.core.Observer
 import kotlinx.coroutines.flow.collect
+import io.reactivex.rxjava3.disposables.Disposable
 
 private const val DAYS_INDEX = 2
 private const val HOURS_INDEX = 1
 private const val MINUTES_INDEX = 0
+private const val TAG = "MatchFragment"
 
 class MatchFragment : BaseFragment() {
 
@@ -28,6 +32,7 @@ class MatchFragment : BaseFragment() {
         ViewModelProvider(this, viewmodelFactory)[MatchViewModel::class.java]
     }
 
+    @SuppressLint("ResourceAsColor")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,6 +51,10 @@ class MatchFragment : BaseFragment() {
         }
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        viewModel.subjectUiScoreEvent.subscribe(getObserverUiScore())
+        viewModel.subjectWeatherEvent.subscribe(getObserverUiWeather())
+
+        viewModel.getScoreOrTime()
 
         lifecycleScope.launchWhenCreated {
             viewModel.events
@@ -53,14 +62,6 @@ class MatchFragment : BaseFragment() {
                     handleEvents(it)
                 }
         }
-
-        lifecycleScope.launchWhenCreated {
-            viewModel.scoreOrDateEvents
-                .collect {
-                    handleScoreOrDateEvents(it)
-                }
-        }
-
         return binding.root
     }
 
@@ -91,8 +92,15 @@ class MatchFragment : BaseFragment() {
     @SuppressLint("SetTextI18n")
     private fun onSuccess(weather: MatchWeather) {
         Log.d("MatchFragment", "Retrofit Success")
-        Glide.with(this).load(getWeatherImage(weather.weather)).into(binding.ivWeather)
-        binding.tvTemperature.text = weather.temperature.toString() + "°C"
+
+        activity?.runOnUiThread(java.lang.Runnable {
+            Glide.with(this).
+            load(getWeatherImage(weather.weather)).
+            into(binding.ivWeather)
+
+            binding.tvTemperature.text = weather.temperature.toString() + "°C"
+        })
+
     }
 
     private fun onEmptyState() {
@@ -166,4 +174,45 @@ class MatchFragment : BaseFragment() {
         }
         return R.drawable.connection_error
     }
+
+    private fun getObserverUiScore(): Observer<UiScoreOrDateEvent> {
+        return object : Observer<UiScoreOrDateEvent> {
+            override fun onSubscribe(d: Disposable) {
+                Log.d(TAG, " First onSubscribe : " + d.isDisposed)
+            }
+            override fun onError(e: Throwable) {
+                Log.d(TAG, " First onError : " + e.message)
+            }
+
+            override fun onComplete() {
+                Log.d(TAG, " First onComplete")
+            }
+
+            override fun onNext(event: UiScoreOrDateEvent) {
+                handleScoreOrDateEvents(event)
+                Log.d(TAG, " onNext()")
+            }
+        }
+    }
+
+    private fun getObserverUiWeather(): Observer<UiEvent> {
+        return object : Observer<UiEvent> {
+            override fun onSubscribe(d: Disposable) {
+                Log.d(TAG, " First onSubscribe : " + d.isDisposed)
+            }
+            override fun onError(e: Throwable) {
+                Log.d(TAG, " First onError : " + e.message)
+            }
+
+            override fun onComplete() {
+                Log.d(TAG, " First onComplete")
+            }
+
+            override fun onNext(event: UiEvent) {
+                handleEvents(event)
+                Log.d(TAG, " onNext()")
+            }
+        }
+    }
+
 }
