@@ -41,7 +41,7 @@ private const val YEARS_INT_SIZE = 4
 class RegistrationViewModel @Inject constructor(private val registerUserUsecase: RegisterUserUsecase) :
     ViewModel() {
 
-    private val _registerEvents = MutableStateFlow<RegistrationEvent>(RegistrationEvent.NotRegistered)
+    private val _registerEvents = MutableStateFlow<RegistrationEvent>(RegistrationEvent.OnDefault)
     val registerEvents: StateFlow<RegistrationEvent>
         get() = _registerEvents.asStateFlow()
 
@@ -87,15 +87,15 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
 
     private val _dateYears = MutableStateFlow(0)
 
-    private var firstNameState = State.DEFAULT
+     var firstNameState = State.DEFAULT
 
-    private var lastNameState = State.DEFAULT
+     var lastNameState = State.DEFAULT
 
-    private var emailState = State.DEFAULT
+     var emailState = State.DEFAULT
 
-    private var passwordState = State.DEFAULT
+     var passwordState = State.DEFAULT
 
-    private var genderState: State = State.DEFAULT
+     var genderState: State = State.DEFAULT
 
     private var gender: Gender = Gender.UNSPECIFIED
     var dateState: State = State.DEFAULT
@@ -377,9 +377,9 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
             val result = registerUserUsecase.execute(user, _password.value)
             when (result) {
                 ResultEvent.Success -> _registerEvents.value = RegistrationEvent.OnRegistered
-                ResultEvent.InvalidData -> {
+                ResultEvent.UserExist -> {
+                    _registerEvents.value = RegistrationEvent.OnUserExist
                     Log.d("RegistrationVM", "Invalid Data")
-                    //TODO Exception
                 }
                 ResultEvent.Error -> {
                     Log.d("RegistrationVM", "Error")
@@ -387,7 +387,7 @@ class RegistrationViewModel @Inject constructor(private val registerUserUsecase:
                 }
             }
         } else {
-            Log.d("RegistrationViewModel","Not Correct")
+            _registerEvents.value = RegistrationEvent.OnInvalidData
         }
     }
 
@@ -465,5 +465,7 @@ sealed class YearsUiEvent {
 
 sealed class RegistrationEvent {
     object OnRegistered : RegistrationEvent()
-    object NotRegistered : RegistrationEvent()
+    object OnUserExist : RegistrationEvent()
+    object OnInvalidData : RegistrationEvent()
+    object OnDefault : RegistrationEvent()
 }

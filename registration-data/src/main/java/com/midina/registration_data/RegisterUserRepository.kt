@@ -38,7 +38,7 @@ class RegisterUserRepository @Inject constructor(
                                 }
                             }
                         } else {
-                            continuation.resume(ResultEvent.InvalidData)
+                            continuation.resume(ResultEvent.UserExist)
                         }
                     }
             } catch (e: Exception) {

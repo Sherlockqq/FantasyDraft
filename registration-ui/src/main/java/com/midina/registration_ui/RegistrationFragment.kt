@@ -11,6 +11,7 @@ import com.midina.core_ui.ui.State
 import android.view.inputmethod.EditorInfo
 
 import android.widget.TextView.OnEditorActionListener
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -156,15 +157,15 @@ class RegistrationFragment : BaseFragment() {
 
 
         binding.cbMale.setOnClickListener {
-            MaleChecked()
+            maleChecked()
         }
 
         binding.cbFemale.setOnClickListener {
-            FemaleChecked()
+            femaleChecked()
         }
 
         binding.cbUnspecified.setOnClickListener {
-            UnspecifiedChecked()
+            unspecifiedChecked()
         }
 
         binding.btRegist.setOnClickListener {
@@ -291,7 +292,7 @@ class RegistrationFragment : BaseFragment() {
             is MonthesUiEvent.OnNotFocus -> {
                 if (binding.etDateMonthes.text.toString().length == 1) {
                     //TODO Unsubscribe
-                    //todo share textWatcher (note OnNotFocus doesnt use TextWatcher)
+                    //todo share textWatcher (note OnNotFocus doesn`t use TextWatcher)
                     //binding.etDateMonthes.removeTextChangedListener()
                     binding.etDateMonthes.setText("0${binding.etDateMonthes.text}")
                     //TODO Subscribe
@@ -328,10 +329,22 @@ class RegistrationFragment : BaseFragment() {
             is RegistrationEvent.OnRegistered -> {
                 findNavController().navigate(R.id.action_draft_navigation, null)
             }
+            is RegistrationEvent.OnUserExist -> {
+                binding.cvEmail.setState(State.ERROR)
+                viewModel.emailState = State.ERROR
+
+                Toast.makeText(activity?.applicationContext,
+                    "Email is already used", Toast.LENGTH_SHORT).show()
+            }
+            is RegistrationEvent.OnInvalidData -> {
+                setErrorCustomView()
+                Toast.makeText(activity?.applicationContext,
+                    "Data is incorrect", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
-    private fun MaleChecked() {
+    private fun maleChecked() {
         binding.cbMale.isClickable = false
 
         binding.cbFemale.isClickable = true
@@ -344,7 +357,7 @@ class RegistrationFragment : BaseFragment() {
         viewModel.maleClicked()
     }
 
-    private fun FemaleChecked() {
+    private fun femaleChecked() {
         binding.cbFemale.isClickable = false
 
         binding.cbMale.isClickable = true
@@ -356,7 +369,7 @@ class RegistrationFragment : BaseFragment() {
         viewModel.femaleClicked()
     }
 
-    private fun UnspecifiedChecked() {
+    private fun unspecifiedChecked() {
         binding.cbUnspecified.isClickable = false
 
         binding.cbMale.isClickable = true
@@ -366,5 +379,32 @@ class RegistrationFragment : BaseFragment() {
         binding.cbFemale.isChecked = false
         binding.cvGender.setState(State.CORRECT)
         viewModel.unspecifiedClicked()
+    }
+
+    private fun setErrorCustomView() {
+        if (viewModel.firstNameState == State.DEFAULT) {
+            binding.cvFirstName.setState(State.ERROR)
+            viewModel.firstNameState = State.ERROR
+        }
+        if (viewModel.lastNameState == State.DEFAULT) {
+            binding.cvLastname.setState(State.ERROR)
+            viewModel.lastNameState = State.ERROR
+        }
+        if (viewModel.emailState == State.DEFAULT) {
+            binding.cvEmail.setState(State.ERROR)
+            viewModel.emailState = State.ERROR
+        }
+        if (viewModel.passwordState == State.DEFAULT) {
+            binding.cvPassword.setState(State.ERROR)
+            viewModel.passwordState = State.ERROR
+        }
+        if (viewModel.genderState == State.DEFAULT) {
+            binding.cvGender.setState(State.ERROR)
+            viewModel.genderState = State.ERROR
+        }
+        if (viewModel.dateState == State.DEFAULT) {
+            binding.cvDate.setState(State.ERROR)
+            viewModel.dateState = State.ERROR
+        }
     }
 }
