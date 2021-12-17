@@ -30,7 +30,8 @@ class MatchViewModel @Inject constructor(
     val dateArr: StateFlow<ArrayList<Int>>
         get() = _dateArr.asStateFlow()
 
-    private val _scoreOrDateEvents = MutableStateFlow<UiScoreOrDateEvent>(UiScoreOrDateEvent.Default)
+    private val _scoreOrDateEvents =
+        MutableStateFlow<UiScoreOrDateEvent>(UiScoreOrDateEvent.Default)
     val scoreOrDateEvents: StateFlow<UiScoreOrDateEvent>
         get() = _scoreOrDateEvents.asStateFlow()
 
@@ -160,7 +161,7 @@ class MatchViewModel @Inject constructor(
     private fun getScoreOrTime() {
         if (score.value == "? : ?") {
             timer.scheduleAtFixedRate(
-                object  : TimerTask() {
+                object : TimerTask() {
                     override fun run() {
                         getTimeTillMatch()
                     }
@@ -194,11 +195,18 @@ class MatchViewModel @Inject constructor(
         val minutes = ((milliseconds / (60 * 1000)).toInt() - (days * 24 * 60)) % 60
         Log.d("MatchViewModel", "Разница между датами в минутах: $minutes")
 
-        _dateArr.value.add(minutes)
-        _dateArr.value.add(hours)
-        _dateArr.value.add(days)
-
-        Log.d("MatchViewModel", "Date Arr Check ${_dateArr.value}")
+        if (_dateArr.value.size == 3) {
+            _dateArr.value[0] = minutes
+            _dateArr.value[1] = hours
+            _dateArr.value[2] = days
+            Log.d("MatchViewModel", "Size 3 ${_dateArr.value}")
+            _scoreOrDateEvents.value = UiScoreOrDateEvent.Default
+        } else {
+            _dateArr.value.add(minutes)
+            _dateArr.value.add(hours)
+            _dateArr.value.add(days)
+            Log.d("MatchViewModel", "Date Arr Check ${_dateArr.value}")
+        }
         _scoreOrDateEvents.value = UiScoreOrDateEvent.HasDate
     }
 

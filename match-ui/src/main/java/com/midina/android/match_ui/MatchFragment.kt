@@ -84,6 +84,9 @@ class MatchFragment : BaseFragment() {
                 binding.tvScore.text = "Days: ${viewModel.dateArr.value[DAYS_INDEX]} " +
                         "Hours: ${viewModel.dateArr.value[HOURS_INDEX]} " +
                         "Minutes: ${viewModel.dateArr.value[MINUTES_INDEX]}"
+                Log.d("MatchFragment", "Days: ${viewModel.dateArr.value[DAYS_INDEX]} " +
+                        "Hours: ${viewModel.dateArr.value[HOURS_INDEX]} " +
+                        "Minutes: ${viewModel.dateArr.value[MINUTES_INDEX]}")
             }
         }
     }
