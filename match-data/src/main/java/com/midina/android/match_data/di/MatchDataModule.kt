@@ -11,6 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import javax.inject.Named
 
 
 //api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}
@@ -26,6 +27,7 @@ class MatchDataModule {
 
     @Singleton
     @Provides
+    @Named("Weather")
     fun getRetrofitInstance(): Retrofit {
 
         val interceptor = HttpLoggingInterceptor()
@@ -41,7 +43,7 @@ class MatchDataModule {
 
     @Singleton
     @Provides
-    fun getWeatherApiInterface(retrofit: Retrofit): WeatherApiInterface {
+    fun getWeatherApiInterface(@Named("Weather")retrofit: Retrofit): WeatherApiInterface {
         return retrofit.create(WeatherApiInterface::class.java)
     }
 }

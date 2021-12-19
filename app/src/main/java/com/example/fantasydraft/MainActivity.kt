@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.fixturesFragment, R.id.draftFragment
+                R.id.fixturesFragment, R.id.draftFragment,R.id.leagueStatFragment
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

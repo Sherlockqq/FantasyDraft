@@ -13,6 +13,8 @@ import com.midina.matches_data.di.MatchesDataModule
 import com.midina.matches_ui.di.MatchesUiModule
 import com.midina.registration_data.di.RegistrationDataModule
 import com.midina.registration_ui.di.RegistrationUiModule
+import com.midina.stat_data.di.StatisticsDataModule
+import com.midina.stat_ui.di.LeagueStatUiModule
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -32,7 +34,9 @@ import dagger.android.AndroidInjectionModule
     LoginUiModule::class,
     LoginDataModule::class,
     MatchUiModule::class,
-    MatchDataModule::class])
+    MatchDataModule::class,
+    LeagueStatUiModule::class,
+    StatisticsDataModule::class])
 
 interface AppComponent {
     @Component.Builder

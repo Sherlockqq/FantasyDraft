@@ -30,6 +30,10 @@ ext {
     version_okhttp = '4.9.0'
 //Junit
     version_junit = '4.13.2'
+//RxJava2
+    version_rxjava2 = '2.2.21'
+    version_rxjava2_android = '2.1.1'
+    version_rxjava2_retrofit = '2.5.0'
 
     androidXTestCoreVersion = '1.4.0'
     androidXTestExtKotlinRunnerVersion = '1.1.3'

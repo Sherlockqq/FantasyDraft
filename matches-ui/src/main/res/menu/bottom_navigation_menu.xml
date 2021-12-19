@@ -8,4 +8,8 @@
         android:id="@+id/draftFragment"
         android:enabled="true"
         android:title="@string/text_label_2"/>
+    <item
+        android:id="@+id/leagueStatFragment"
+        android:enabled="true"
+        android:title="@string/text_label_3"/>
 </menu>

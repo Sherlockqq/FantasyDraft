@@ -41,7 +41,7 @@ class FixturesFragment : BaseFragment() {
 
         binding = DataBindingUtil.inflate(
             inflater,
-            R.layout.fragment_fixtures,
+            layoutId,
             container,
             false
         )
