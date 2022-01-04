@@ -1,4 +1,4 @@
-package com.midina.stat_data.data
+package com.midina.stat_data.seasonData
 
 data class League(
     val id: Int,

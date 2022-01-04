@@ -48,6 +48,12 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$version_dagger"
     kapt "com.google.dagger:dagger-android-processor:$version_dagger"
 
+    //RxJava2
+    implementation "io.reactivex.rxjava2:rxjava:$version_rxjava2"
+
+    //Glide
+    implementation "com.github.bumptech.glide:glide:$version_glide"
+
     //Module
     implementation project(path: ':core-ui')
     implementation project(path: ':stat-domain')

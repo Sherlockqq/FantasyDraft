@@ -1,20 +1,22 @@
 package com.midina.stat_data.di
 
 import com.midina.stat_data.api.StatisticsApiInterface
-import com.midina.stat_data.usecaseimpl.GetSeasonUsecaseImpl
-import com.midina.stat_domain.GetSeasonUseCase
+import com.midina.stat_data.usecaseimpl.GetDataUsecaseImpl
+import com.midina.stat_domain.GetDataUsecase
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
 import javax.inject.Singleton
 
-const val BASE_URL = "https://v3.football.api-sports.io/"
+const val BASE_URL = "https://v3.football.api-sports.io"
 
 @Module(
     includes = [
@@ -29,14 +31,29 @@ class StatisticsDataModule {
     fun getRetrofitInstance(): Retrofit {
 
         val interceptor = HttpLoggingInterceptor()
-        interceptor.apply { interceptor.level = HttpLoggingInterceptor.Level.BODY }
-        val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
+            .apply {
+                this.level = HttpLoggingInterceptor.Level.BODY
+            }
+
+        val client = OkHttpClient.Builder()
+            .addInterceptor(Interceptor { chain ->
+            val request: Request = chain
+                .request()
+                .newBuilder()
+                .addHeader("x-rapidapi-key", "40220fc8e6a6886380a261bcaea348c8")
+                .addHeader("x-apisports-key", "40220fc8e6a6886380a261bcaea348c8")
+                .addHeader("x-rapidapi-host","v3.football.api-sports.io")
+                .build()
+            chain.proceed(request)
+        })
+            .addInterceptor(interceptor)
+            .build()
 
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
     }
 
@@ -50,5 +67,5 @@ class StatisticsDataModule {
 @Module
 interface StatisticsDataUseCaseModule {
     @Binds
-    fun bindSeasonImpl(getSeason: GetSeasonUsecaseImpl): GetSeasonUseCase
+    fun bindDataImpl(getData: GetDataUsecaseImpl): GetDataUsecase
 }

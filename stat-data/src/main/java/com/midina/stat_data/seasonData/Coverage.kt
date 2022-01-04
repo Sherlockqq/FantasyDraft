@@ -1,4 +1,4 @@
-package com.midina.stat_data.data
+package com.midina.stat_data.seasonData
 
 data class Coverage(
     val fixtures: Fixtures,

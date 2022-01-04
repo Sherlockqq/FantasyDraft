@@ -1,6 +1,6 @@
-package com.midina.stat_data.data
+package com.midina.stat_data.seasonData
 
-data class LeaguePreferences(
+data class Response(
     val country: Country,
     val league: League,
     val seasons: List<Season>
