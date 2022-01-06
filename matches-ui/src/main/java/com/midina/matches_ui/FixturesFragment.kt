@@ -18,6 +18,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.midina.core_ui.ui.BaseFragment
+import com.midina.core_ui.ui.OnBottomNavItemSelectListener
+import com.midina.core_ui.ui.OnStartActivityListener
 import com.midina.matches_domain.model.MatchSchedule
 import com.midina.matches_ui.databinding.FragmentFixturesBinding
 import kotlinx.coroutines.flow.collect
@@ -28,6 +30,7 @@ class FixturesFragment : BaseFragment() {
 
     private lateinit var binding: FragmentFixturesBinding
     private val adapter = MatchAdapter()
+    private var listener: OnBottomNavItemSelectListener? = null
 
     val viewModel: FixturesViewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[FixturesViewModel::class.java]
@@ -77,8 +80,12 @@ class FixturesFragment : BaseFragment() {
         binding.nextArrow.setOnClickListener {
             viewModel.nextArrowClicked()
         }
-
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        highlightIcon()
     }
 
     @SuppressLint("SetTextI18n")
@@ -240,6 +247,13 @@ class FixturesFragment : BaseFragment() {
     private fun isCurrentTour(list: List<MatchSchedule>) {
         if (viewModel.tours.value == viewModel.currentTour.value) {
             createAlarm(list)
+        }
+    }
+
+    private fun highlightIcon() {
+        if (context is OnBottomNavItemSelectListener) {
+            listener = context as OnBottomNavItemSelectListener
+            listener?.highlightItem(R.id.fixtures_navigation)
         }
     }
 }

@@ -3,7 +3,10 @@
     <string name="fixtures_label">Матчи</string>
     <string name="text_label_1">Матчи</string>
     <string name="text_label_2">Драфт</string>
+    <string name="text_label_3">Клуб</string>
     <string name="title_home">Домой</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Уведомления</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

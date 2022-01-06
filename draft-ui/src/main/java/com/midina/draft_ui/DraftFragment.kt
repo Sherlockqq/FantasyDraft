@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.midina.core_ui.ui.BaseFragment
+import com.midina.core_ui.ui.OnBottomNavItemSelectListener
 import com.midina.draft_ui.databinding.FragmentDraftBinding
 import kotlinx.coroutines.flow.collect
 
@@ -24,6 +25,7 @@ class DraftFragment : BaseFragment() {
     val viewModel: DraftViewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[DraftViewModel::class.java]
     }
+    private var listener: OnBottomNavItemSelectListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,6 +66,11 @@ class DraftFragment : BaseFragment() {
         return binding.root
     }
 
+    override fun onStart() {
+        super.onStart()
+        highlightIcon()
+    }
+
     private fun handleSignsEvents(event: SigningUiEvent) {
         when (event) {
             is SigningUiEvent.onSignIn -> {
@@ -78,9 +85,10 @@ class DraftFragment : BaseFragment() {
             }
         }
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("Draft", "OnDestroy")
+    private fun highlightIcon() {
+        if (context is OnBottomNavItemSelectListener) {
+            listener = context as OnBottomNavItemSelectListener
+            listener?.highlightItem(R.id.draft_navigation)
+        }
     }
 }

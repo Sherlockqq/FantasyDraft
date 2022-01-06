@@ -8,4 +8,6 @@
     <item name="action_draft_navigation" type="id"/>
     <!-- match -->
     <item name="action_match_navigation" type="id"/>
+    <!-- favourite -->
+    <item name="action_favourite_navigation" type="id"/>
 </resources>

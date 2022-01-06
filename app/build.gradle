@@ -77,4 +77,8 @@ dependencies {
     implementation project(path: ':match-domain')
     implementation project(path: ':match-ui')
     implementation project(path: ':core-ui')
+    implementation project(path: ':splash-ui')
+    implementation project(path: ':favourite-ui')
+    implementation project(path: ':club-ui')
+
 }

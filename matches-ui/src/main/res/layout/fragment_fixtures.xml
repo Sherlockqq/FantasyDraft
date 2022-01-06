@@ -15,12 +15,6 @@
         android:id="@+id/constraint_layout"
         tools:context="com.midina.matches_ui.FixturesFragment">
 
-        <View
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:id="@+id/view">
-        </View>
-
         <TextView
             android:id="@+id/gameweek_text"
             android:layout_width="wrap_content"
