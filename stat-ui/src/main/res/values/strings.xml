@@ -1,6 +1,12 @@
 <resources>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="statistics">Statistics</string>
-    <string name="season">Top Statistics</string>
+    <string name="top_statistics">Top Statistics</string>
+    <string name="season_statistics">%1$d - %2$d Top Statistics</string>
+    <string name="goals">%1$d Goals</string>
+    <string name="assists">%1$d Assists</string>
+    <string name="clean_sheets">%1$d Clean Sheets</string>
+    <string name="season_stats">Season Stats</string>
+    <string name="all_time_stats">All-time Stats</string>
+    <string name="records">Records</string>
+    <string name="player_comparison">Player Comparison</string>
 </resources>

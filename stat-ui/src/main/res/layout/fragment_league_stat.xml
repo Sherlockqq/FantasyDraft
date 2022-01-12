@@ -4,89 +4,136 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.midina.stat_ui.LeagueStatViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/ic_background"
-        android:id="@+id/leagueStat_id">
+        android:fillViewport="true">
 
-        <TextView
-            android:id="@+id/tv_statistics"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:fontFamily="sans-serif-black"
-            android:text="@string/statistics"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/tv_StatisticsSize"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/leagueStat_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/tv_season"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/season"
-            android:textColor="@android:color/white"
-            android:textSize="@dimen/tv_SeasonSize"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_statistics" />
+            <TextView
+                android:id="@+id/tv_statistics"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_start_textView"
+                android:layout_marginTop="@dimen/mt_tv_stat"
+                android:fontFamily="sans-serif-black"
+                android:text="@string/statistics"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/tv_StatisticsSize"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <View
-            android:id="@+id/view_stat_background"
-            android:layout_width="@dimen/backgroundView_width"
-            android:layout_height="@dimen/backgroundView_height"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/ic_stat_background"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_season">
-        </View>
-
-        <View
-            android:id="@+id/view_tv_background"
-            android:layout_width="@dimen/backgroundTV_width"
-            android:layout_height="@dimen/backgroundTV_height"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/ic_tv_background"
-            app:layout_constraintBottom_toBottomOf="@+id/view_stat_background"
-            app:layout_constraintEnd_toEndOf="@+id/view_stat_background"
-            app:layout_constraintStart_toStartOf="@+id/view_stat_background">
-        </View>
-
-        <TextView
-            android:id="@+id/tv_playerGoals"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-smallcaps"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toBottomOf="@+id/view_tv_background"
-            app:layout_constraintEnd_toEndOf="@+id/view_tv_background"
-            app:layout_constraintStart_toStartOf="@+id/view_tv_background"
-            app:layout_constraintTop_toTopOf="@+id/view_tv_background"
-            tools:text="12 Goals">
-        </TextView>
-
-        <ImageView
-            android:id="@+id/iv_topScorer"
-            android:layout_width="@dimen/iv_photo_width"
-            android:layout_height="@dimen/iv_photo_height"
-            app:layout_constraintBottom_toTopOf="@+id/view_tv_background"
-            app:layout_constraintEnd_toEndOf="@+id/view_stat_background"
-            app:layout_constraintStart_toStartOf="@+id/view_stat_background"
-            app:layout_constraintTop_toTopOf="@+id/view_stat_background">
-        </ImageView>
+            <TextView
+                android:id="@+id/tv_season"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_start_textView"
+                android:layout_marginTop="@dimen/mt_tv_season"
+                android:text="@string/top_statistics"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/tv_SeasonSize"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_statistics" />
 
 
+            <include
+                android:id="@+id/scorer"
+                layout="@layout/stat_layout"
+                android:layout_width="@dimen/backgroundView_width"
+                android:layout_height="@dimen/backgroundView_height"
+                android:layout_marginStart="@dimen/margin_start_stat"
+                android:layout_marginTop="@dimen/margin_top_stat"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_season" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <include
+                android:id="@+id/assistant"
+                layout="@layout/stat_layout"
+                android:layout_width="@dimen/backgroundView_width"
+                android:layout_height="@dimen/backgroundView_height"
+                android:layout_marginTop="@dimen/margin_top_stat"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/scorer"
+                app:layout_constraintTop_toBottomOf="@+id/tv_season" />
+
+
+            <include
+                android:id="@+id/clean_sheets"
+                layout="@layout/stat_layout"
+                android:layout_width="@dimen/backgroundView_width"
+                android:layout_height="@dimen/backgroundView_height"
+                android:layout_marginStart="@dimen/margin_start_stat"
+                android:layout_marginTop="@dimen/margin_top_stat"
+                android:visibility="invisible"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/scorer" />
+
+            <include
+                android:id="@+id/team_goals"
+                layout="@layout/stat_layout"
+                android:layout_width="@dimen/backgroundView_width"
+                android:layout_height="@dimen/backgroundView_height"
+                android:layout_marginTop="@dimen/margin_top_stat"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/clean_sheets"
+                app:layout_constraintTop_toBottomOf="@+id/assistant" />
+
+
+            <include
+                layout="@layout/button_layout"
+                android:id="@+id/bt_season_stat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:passedText="@{@string/season_stats}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/clean_sheets" />
+
+            <include
+                layout="@layout/button_layout"
+                android:id="@+id/bt_all_time_stat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:passedText="@{@string/all_time_stats}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bt_season_stat"/>
+
+            <include
+                layout="@layout/button_layout"
+                android:id="@+id/bt_records"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:passedText="@{@string/records}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bt_all_time_stat"/>
+
+            <include
+                layout="@layout/button_layout"
+                android:id="@+id/bt_player_comparison"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:passedText="@{@string/player_comparison}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bt_records"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 </layout>

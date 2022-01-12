@@ -8,4 +8,11 @@
     <dimen name="backgroundTV_height">56dp</dimen>
     <dimen name="backgroundView_width">176dp</dimen>
     <dimen name="backgroundView_height">192dp</dimen>
+    <dimen name="margin_start_stat">16dp</dimen>
+    <dimen name="margin_top_stat">16dp</dimen>
+    <dimen name="margin_start_textView">16dp</dimen>
+    <dimen name="mt_tv_stat">16dp</dimen>
+    <dimen name="mt_tv_season">8dp</dimen>
+    <dimen name="mb_vw_tv_background">8dp</dimen>
+    <dimen name="tv_text_size">20sp</dimen>
 </resources>
