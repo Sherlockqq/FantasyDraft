@@ -2,10 +2,14 @@ package com.midina.stat_ui
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.midina.stat_domain.GetAsyncUsecase
 import com.midina.stat_domain.GetDataUsecase
 import com.midina.stat_domain.model.*
+import io.reactivex.Observer
+import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +17,9 @@ import javax.inject.Inject
 
 const val TAG = "LeagueStatViewModel"
 
-class LeagueStatViewModel @Inject constructor(private val getDataUsecase: GetDataUsecase) :
+class LeagueStatViewModel @Inject constructor(
+    private val getDataUsecase: GetDataUsecase,
+    private val getAsyncUsecase: GetAsyncUsecase) :
     ViewModel() {
 
     private val _seasonEvents =
@@ -43,7 +49,86 @@ class LeagueStatViewModel @Inject constructor(private val getDataUsecase: GetDat
         get() = _topTeamGoalsEvents.asStateFlow()
 
     init {
-        getData()
+      //  getData()
+        getAsyncData()
+    }
+
+    private fun getAsyncData() {
+        var isNotErrorOrEmptyState = true
+        getAsyncUsecase.execute()
+            .subscribe(object : Observer<ResultEvent<AsyncTopData>> {
+            override fun onSubscribe(d: Disposable) {
+                Log.d(TAG, "Observer onSub")
+            }
+
+            override fun onNext(result: ResultEvent<AsyncTopData>) {
+                Log.d(TAG,"obs onNext $result")
+                if(isNotErrorOrEmptyState) {
+                    when(result) {
+                        is ResultEvent.Success<AsyncTopData> -> {
+                            when(result.value) {
+                                is AsyncTopData.AsyncSeason -> {
+                                    _seasonEvents.value = SeasonResultUiEvent.Success(
+                                        (result.value as AsyncTopData.AsyncSeason).season)
+                                }
+                                is AsyncTopData.AsyncTopScorer -> {
+                                    _topScorerEvents.value = TopScorerResultUiEvent
+                                        .Success(
+                                            (result.value as AsyncTopData.AsyncTopScorer).player
+                                        )
+                                }
+                                is AsyncTopData.AsyncTopAssistant -> {
+                                    _topAssistantEvents.value = TopAssistantResultUiEvent
+                                        .Success(
+                                            (result.value as AsyncTopData.AsyncTopAssistant).player
+                                        )
+                                }
+                                is AsyncTopData.AsyncTopTeams -> {
+                                    _topCleanSheetsEvents.value = (result.value
+                                            as AsyncTopData.AsyncTopTeams).teams.first?.let {
+                                        TopCleanSheetResultUiEvent
+                                            .Success(
+                                                it
+                                            )
+                                    }!!
+
+                                    _topTeamGoalsEvents.value = (result.value
+                                            as AsyncTopData.AsyncTopTeams).teams.second?.let {
+                                        TopTeamGoalsResultUiEvent.Success(
+                                            it
+                                        )
+                                    }!!
+                                }
+                            }
+                        }
+                        is ResultEvent.EmptyState -> {
+                            isNotErrorOrEmptyState = false
+                            _seasonEvents.value = SeasonResultUiEvent.EmptyState
+                            _topScorerEvents.value = TopScorerResultUiEvent.EmptyState
+                            _topAssistantEvents.value = TopAssistantResultUiEvent.EmptyState
+                            _topCleanSheetsEvents.value = TopCleanSheetResultUiEvent.EmptyState
+                            _topTeamGoalsEvents.value = TopTeamGoalsResultUiEvent.EmptyState
+                        }
+                        is ResultEvent.Error -> {
+                            isNotErrorOrEmptyState = false
+                            _seasonEvents.value = SeasonResultUiEvent.Error
+                            _topScorerEvents.value = TopScorerResultUiEvent.Error
+                            _topAssistantEvents.value = TopAssistantResultUiEvent.Error
+                            _topCleanSheetsEvents.value = TopCleanSheetResultUiEvent.Error
+                            _topTeamGoalsEvents.value = TopTeamGoalsResultUiEvent.Error
+                        }
+                    }
+                }
+            }
+
+            override fun onError(e: Throwable) {
+                Log.d(TAG, "Observer onErr $e")
+            }
+
+            override fun onComplete() {
+                Log.d(TAG, "Obs onCom")
+            }
+        })
     }
 
     private fun getData() {
@@ -109,7 +194,9 @@ class LeagueStatViewModel @Inject constructor(private val getDataUsecase: GetDat
                                 _topCleanSheetsEvents.value = TopCleanSheetResultUiEvent.EmptyState
                                 _topTeamGoalsEvents.value = TopTeamGoalsResultUiEvent.EmptyState
                             }
-                            ResultEvent.Error -> TODO()
+                            ResultEvent.Error -> {
+                                Log.d(TAG, "ResultEvent.Error")
+                            }
                         }
                     }
                     is ResultEvent.EmptyState -> {

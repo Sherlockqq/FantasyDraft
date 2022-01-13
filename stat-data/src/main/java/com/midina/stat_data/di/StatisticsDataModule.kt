@@ -1,7 +1,9 @@
 package com.midina.stat_data.di
 
 import com.midina.stat_data.api.StatisticsApiInterface
+import com.midina.stat_data.usecaseimpl.GetAsyncDataUsecaseImpl
 import com.midina.stat_data.usecaseimpl.GetDataUsecaseImpl
+import com.midina.stat_domain.GetAsyncUsecase
 import com.midina.stat_domain.GetDataUsecase
 import dagger.Binds
 import dagger.Module
@@ -68,4 +70,7 @@ class StatisticsDataModule {
 interface StatisticsDataUseCaseModule {
     @Binds
     fun bindDataImpl(getData: GetDataUsecaseImpl): GetDataUsecase
+
+    @Binds
+    fun bindAsyncDataImpl(getData: GetAsyncDataUsecaseImpl): GetAsyncUsecase
 }
