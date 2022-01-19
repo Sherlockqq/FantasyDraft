@@ -42,7 +42,7 @@ class FixturesViewModel @Inject constructor(
     val currentTour: StateFlow<Int>
         get() = _currentTour.asStateFlow()
 
-    private val _tours = MutableStateFlow(0)
+    private val _tours = MutableStateFlow(-1)
     val tours: StateFlow<Int>
         get() = _tours.asStateFlow()
 
@@ -66,8 +66,13 @@ class FixturesViewModel @Inject constructor(
                     getDateMap()
                     val tourByDate = getTourByDate()
                     _currentTour.value = tourByDate
-                    _tours.value = tourByDate
-                    _events.value = matchesMap[tourByDate]?.let { UiEvent.Success(it) }!!
+                    if (_tours.value == -1) {
+                        _tours.value = tourByDate
+                        _events.value = matchesMap[tourByDate]?.let { UiEvent.Success(it) }!!
+                    } else {
+                        _events.value = matchesMap[_tours.value]?.let {UiEvent.Success(it)}!!
+                    }
+
                 }
                 is ResultEvent.Error -> _events.value = UiEvent.Error
             }
@@ -178,6 +183,10 @@ class FixturesViewModel @Inject constructor(
         Log.d("FixturesViewModel", "Current Date: $matchDate")
 
         return matchDate.time
+    }
+
+    fun setTour(tour: Int) {
+        _tours.value = tour
     }
 }
 

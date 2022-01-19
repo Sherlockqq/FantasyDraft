@@ -5,11 +5,13 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
@@ -19,10 +21,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnBottomNavItemSelectListener
-import com.midina.core_ui.ui.OnStartActivityListener
 import com.midina.matches_domain.model.MatchSchedule
 import com.midina.matches_ui.databinding.FragmentFixturesBinding
 import kotlinx.coroutines.flow.collect
+
+private const val SAVED_TOUR = "SAVED_TOUR"
+private const val TAG = "FixturesFragment"
 
 class FixturesFragment : BaseFragment() {
 
@@ -34,6 +38,11 @@ class FixturesFragment : BaseFragment() {
 
     val viewModel: FixturesViewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[FixturesViewModel::class.java]
+    }
+
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        getSharedTour()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -83,9 +92,42 @@ class FixturesFragment : BaseFragment() {
         return binding.root
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        setSharedTour()
+    }
+
     override fun onStart() {
         super.onStart()
         highlightIcon()
+    }
+
+    private fun setSharedTour() {
+        val sharedPrefs: SharedPreferences? =
+            this.activity?.getSharedPreferences(
+                "FIXTURES_SHARED",
+                AppCompatActivity.MODE_PRIVATE
+            )
+        val editor = sharedPrefs?.edit()
+        editor?.putInt(SAVED_TOUR, viewModel.tours.value)
+        Log.d(TAG, "setSharedTour ${viewModel.tours.value}")
+        editor?.apply()
+    }
+
+    private fun getSharedTour() {
+
+        // Getting the last fragment:
+        val mSharedPrefs = this.activity?.getSharedPreferences(
+            "FIXTURES_SHARED",
+            AppCompatActivity.MODE_PRIVATE
+        )
+        val tour = mSharedPrefs?.getInt(SAVED_TOUR, -1)
+
+        Log.d(TAG, "getSharedTour Tour: $tour")
+
+        if (tour != null && tour != -1) {
+            viewModel.setTour(tour)
+        }
     }
 
     @SuppressLint("SetTextI18n")

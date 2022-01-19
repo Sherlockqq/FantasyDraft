@@ -10,4 +10,6 @@
     <item name="action_match_navigation" type="id"/>
     <!-- favourite -->
     <item name="action_favourite_navigation" type="id"/>
+    <!-- club -->
+    <item name="action_club_navigation" type="id"/>
 </resources>

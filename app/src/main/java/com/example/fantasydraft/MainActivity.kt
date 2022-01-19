@@ -1,13 +1,13 @@
 package com.example.fantasydraft
 
-import android.content.res.ColorStateList
-import android.os.Build
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
+import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -16,14 +16,34 @@ import com.example.fantasydraft.databinding.ActivityMainBinding
 import com.midina.core_ui.ui.OnBottomNavHideListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.midina.core_ui.ui.OnBottomNavItemSelectListener
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.preferencesKey
+import androidx.datastore.preferences.createDataStore
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
-
-const val TAG = "MainActivity"
+private const val LAST_FRAGMENT = "LAST_FRAGMENT"
+private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity(),
     OnBottomNavHideListener, OnBottomNavItemSelectListener {
 
+    private lateinit var dataStore: DataStore<Preferences>
+
     private lateinit var binding: ActivityMainBinding
+
+    private val fragments: ArrayList<Int> = arrayListOf(
+        R.id.fixturesFragment,
+        R.id.draftFragment,
+        R.id.matchFragment,
+        R.id.registrationFragment,
+        R.id.loginFragment,
+        R.id.clubFragment
+    )
 
     override fun onResume() {
         super.onResume()
@@ -32,15 +52,20 @@ class MainActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         Log.d(TAG, "onCreate: ")
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        dataStore = createDataStore("last_fragment")
 
         val navView: BottomNavigationView = binding.bottomNavigation.apply {
             itemIconTintList = null
         }
 
-        val navController = findNavController(R.id.nav_host_fragment)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+                as NavHostFragment
+        val navController = navHostFragment.navController
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
@@ -48,8 +73,21 @@ class MainActivity : AppCompatActivity(),
                 R.id.fixturesFragment, R.id.draftFragment, R.id.clubFragment
             )
         )
+
+        lifecycleScope.launch {
+            navToLastFragmentDataStore(navController)
+        }
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            val fragmentId = fragments.indexOf(destination.id)
+            lifecycleScope.launch {
+                saveToLastFragmentDataStore(fragmentId)
+            }
+        }
 
         openBundle()
     }
@@ -118,6 +156,38 @@ class MainActivity : AppCompatActivity(),
             R.id.club_navigation -> {
                 val item = menu.findItem(R.id.club_navigation)
             }
+        }
+    }
+
+    private suspend fun navToLastFragmentDataStore(navController: NavController) {
+        val dataStoreKey = preferencesKey<Int>(LAST_FRAGMENT)
+        val preferences = dataStore.data.first()
+        val result = preferences[dataStoreKey]
+
+        if (result != null) {
+            if (result >= 0 && result < fragments.size) {
+                // Navigate to this fragment
+                when (result) {
+                    1 -> navController.navigate(R.id.action_draft_navigation)
+                    2 -> navController.navigate(R.id.action_match_navigation)
+                    3 -> {
+                        navController.navigate(R.id.action_draft_navigation)
+                        navController.navigate(R.id.action_registration_navigation)
+                    }
+                    4 -> {
+                        navController.navigate(R.id.action_draft_navigation)
+                        navController.navigate(R.id.action_login_navigation)
+                    }
+                    5 -> navController.navigate(R.id.action_club_navigation)
+                }
+            }
+        }
+    }
+
+    private suspend fun saveToLastFragmentDataStore(fragmentId: Int) {
+        val dataStoreKey = preferencesKey<Int>(LAST_FRAGMENT)
+        dataStore.edit { fragments ->
+            fragments[dataStoreKey] = fragmentId
         }
     }
 
