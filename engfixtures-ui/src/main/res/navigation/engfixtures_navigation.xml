@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/engfixtures_navigation"
+    app:startDestination="@id/engfixturesFragment">
+
+    <fragment
+        android:id="@+id/engfixturesFragment"
+        android:name="com.midina.engfixtures_ui.EngFixturesFragment"
+        android:label="EngFixtureFragment"
+        tools:layout="@layout/fragment_eng_fixtures"/>
+</navigation>

@@ -8,6 +8,8 @@ import com.midina.android.match_ui.di.MatchUiModule
 import com.midina.core_ui.di.ViewModelBuilderModule
 import com.midina.draft_data.di.DraftDataModule
 import com.midina.draft_ui.di.DraftUiModule
+import com.midina.engfixtures_data.di.EngFixturesDataModule
+import com.midina.engfixtures_ui.di.EngFixturesUiModule
 import com.midina.login_ui.di.LoginUiModule
 import com.midina.matches_data.di.MatchesDataModule
 import com.midina.matches_ui.di.MatchesUiModule
@@ -32,7 +34,9 @@ import dagger.android.AndroidInjectionModule
     LoginUiModule::class,
     LoginDataModule::class,
     MatchUiModule::class,
-    MatchDataModule::class])
+    MatchDataModule::class,
+    EngFixturesUiModule::class,
+    EngFixturesDataModule::class])
 
 interface AppComponent {
     @Component.Builder

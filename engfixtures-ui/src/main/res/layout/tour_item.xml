@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_homeTeam"
+            android:layout_width="36dp"
+            android:layout_height="42dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_awayTeam"
+            android:layout_width="36dp"
+            android:layout_height="42dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_homeTeam"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Dynamo"
+            app:layout_constraintStart_toEndOf="@id/iv_homeTeam"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_awayTeam"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Real Madrid"
+            app:layout_constraintEnd_toStartOf="@id/iv_awayTeam"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="3 : 2"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_homeTeam"
+            app:layout_constraintEnd_toStartOf="@id/tv_awayTeam"/>
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="23.09.2021"
+            app:layout_constraintTop_toBottomOf="@id/tv_score"
+            app:layout_constraintStart_toEndOf="@id/tv_homeTeam"
+            app:layout_constraintEnd_toStartOf="@id/tv_awayTeam"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
