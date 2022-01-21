@@ -10,6 +10,7 @@
     <include app:graph="@navigation/registration_navigation"/>
     <include app:graph="@navigation/login_navigation"/>
     <include app:graph="@navigation/match_navigation"/>
+    <include app:graph="@navigation/engfixtures_navigation"/>
 
     <action
         android:id="@+id/action_registration_navigation"

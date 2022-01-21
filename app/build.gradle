@@ -76,5 +76,8 @@ dependencies {
     implementation project(path: ':match-data')
     implementation project(path: ':match-domain')
     implementation project(path: ':match-ui')
+    implementation project(path: ':engfixtures-ui')
+    implementation project(path: ':engfixtures-domain')
+    implementation project(path: ':engfixtures-data')
     implementation project(path: ':core-ui')
 }
