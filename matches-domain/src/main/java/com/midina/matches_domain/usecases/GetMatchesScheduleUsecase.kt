@@ -1,8 +1,8 @@
-package com.midina.matches_domain.usecase
+package com.midina.matches_domain.usecases
 
 import com.midina.matches_domain.model.MatchSchedule
 import com.midina.matches_domain.model.ResultEvent
 
 interface GetMatchesScheduleUsecase {
-    suspend fun execute(): ResultEvent<Map<Int, List<MatchSchedule>>>
+    suspend fun execute(): ResultEvent<Map<Int, ArrayList<MatchSchedule>>>
 }

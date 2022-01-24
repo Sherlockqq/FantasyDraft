@@ -17,7 +17,7 @@ object MatchParse {
 
     private var dateMap: MutableMap<Int, Pair<LocalDateTime, LocalDateTime>> = mutableMapOf()
 
-    fun parse(doc: Document): Map<Int, List<MatchSchedule>> {
+    fun parse(doc: Document): Map<Int, ArrayList<MatchSchedule>> {
 
         //Getting Home Teams
         val homeList = getListOfHome(doc)
@@ -31,16 +31,14 @@ object MatchParse {
         //Getting match score
         val scoreList = getListScore(doc)
 
-        //Gett
-
         val matchesList = getListMatch(homeList, guestList, dateList, scoreList)
 
         return getMapMatch(matchesList)
 
     }
 
-    private fun getMapMatch(matchesList: List<MatchSchedule>): Map<Int, List<MatchSchedule>> {
-        val matchesMap: MutableMap<Int, List<MatchSchedule>> = mutableMapOf()
+    private fun getMapMatch(matchesList: ArrayList<MatchSchedule>): Map<Int, ArrayList<MatchSchedule>> {
+        val matchesMap: MutableMap<Int, ArrayList<MatchSchedule>> = mutableMapOf()
         for (index in 0..TOUR_SIZE) {
             if (index == 0) {
                 matchesMap[index] = getFullMapMatch(matchesList)
@@ -53,10 +51,10 @@ object MatchParse {
 
     private fun getOneTourList(
         tour: Int?,
-        matchesList: List<MatchSchedule>
-    ): MutableList<MatchSchedule> {
+        matchesList: ArrayList<MatchSchedule>
+    ): ArrayList<MatchSchedule> {
         var index = 0
-        val tourList: MutableList<MatchSchedule> = mutableListOf()
+        val tourList: ArrayList<MatchSchedule> = arrayListOf()
         for (i in matchesList.indices) {
             if (matchesList[i].tour == tour) {
                 tourList.add(
@@ -75,13 +73,13 @@ object MatchParse {
     }
 
     private fun getListMatch(
-        home: MutableList<String>,
-        guest: MutableList<String>,
-        date: MutableList<String>,
-        score: MutableList<String>
-    ): List<MatchSchedule> {
+        home: ArrayList<String>,
+        guest: ArrayList<String>,
+        date: ArrayList<String>,
+        score: ArrayList<String>
+    ): ArrayList<MatchSchedule> {
 
-        val matchesList: MutableList<MatchSchedule> = mutableListOf()
+        val matchesList: ArrayList<MatchSchedule> = arrayListOf()
         var tourCount = 1
         var matchesCount = 0
 
@@ -102,33 +100,33 @@ object MatchParse {
         return matchesList
     }
 
-    private fun getListOfHome(doc: Document): MutableList<String> {
+    private fun getListOfHome(doc: Document): ArrayList<String> {
         val elements = doc.select(HOME_TEAM_HTML)
         val links = elements.select("a")
-        val homeTeam: MutableList<String> = mutableListOf()
+        val homeTeam: ArrayList<String> = arrayListOf()
         for (index in 0 until links.size) {
             homeTeam.add(index, links[index].html())
         }
         return homeTeam
     }
 
-    private fun getListOfGuest(doc: Document): MutableList<String> {
+    private fun getListOfGuest(doc: Document): ArrayList<String> {
         val elements = doc.select(GUEST_TEAM_HTML)
         val links = elements.select("a")
-        val guestTeam: MutableList<String> = mutableListOf()
+        val guestTeam: ArrayList<String> = arrayListOf()
         for (index in 0 until links.size) {
             guestTeam.add(index, links[index].html())
         }
         return guestTeam
     }
 
-    private fun getListDate(doc: Document): MutableList<String> {
+    private fun getListDate(doc: Document): ArrayList<String> {
         val elements = doc.select(DATE_HTML)
         val classes = elements.select("div")
         val img = classes.select("img")
         val src = img.attr("src")
         Log.i("DFDs", "FSDFDS")
-        val matchDate: MutableList<String> = mutableListOf()
+        val matchDate: ArrayList<String> = arrayListOf()
 //        var matchCount = FIRST_MATCH_IN_TOUR
 //        var tourCount = 1
         for (index in 0 until classes.size) {
@@ -144,10 +142,10 @@ object MatchParse {
         return matchDate
     }
 
-    private fun getListScore(doc: Document): MutableList<String> {
+    private fun getListScore(doc: Document): ArrayList<String> {
         val elements = doc.select(SCORE_HTML)
         var links = elements.select("a")
-        val matchScore: MutableList<String> = mutableListOf()
+        val matchScore: ArrayList<String> = arrayListOf()
 
         for (index in 0 until links.size) {
             matchScore.add(index, links[index].html()) // Ended matches
@@ -162,8 +160,8 @@ object MatchParse {
         return matchScore
     }
 
-    private fun getFullMapMatch(matches: List<MatchSchedule>): List<MatchSchedule> {
-        val matchesList: MutableList<MatchSchedule> = mutableListOf()
+    private fun getFullMapMatch(matches: ArrayList<MatchSchedule>): ArrayList<MatchSchedule> {
+        val matchesList: ArrayList<MatchSchedule> = arrayListOf()
         var tourCount = 0
         var matchesIndex = 0
         for (index in 0..268) {

@@ -1,11 +1,11 @@
-package com.midina.matches_ui
+package com.midina.matches_ui.fixtures
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.midina.matches_domain.model.MatchSchedule
 import com.midina.matches_domain.model.ResultEvent
-import com.midina.matches_domain.usecase.GetMatchesScheduleUsecase
+import com.midina.matches_domain.usecases.GetMatchesScheduleUsecase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 //TODO parse gif when match is going
 
@@ -33,7 +34,7 @@ class FixturesViewModel @Inject constructor(
         SHOW_ALL
     }
 
-    private var matchesMap: Map<Int, List<MatchSchedule>> = mutableMapOf()
+    private var matchesMap: Map<Int, ArrayList<MatchSchedule>> = mutableMapOf()
     private var dateMap: MutableMap<Int, Pair<String, String>> = mutableMapOf()
 
     private val sdf by lazy { SimpleDateFormat(DATE_PATTERN) }
@@ -63,11 +64,11 @@ class FixturesViewModel @Inject constructor(
             when (result) {
                 is ResultEvent.Success -> {
                     matchesMap = result.value
-                    getDateMap()
-                    val tourByDate = getTourByDate()
-                    _currentTour.value = tourByDate
-                    _tours.value = tourByDate
-                    _events.value = matchesMap[tourByDate]?.let { UiEvent.Success(it) }!!
+                   // getDateMap()
+                    //val tourByDate = getTourByDate()
+                   // _currentTour.value = tourByDate
+                   // _tours.value = tourByDate
+                    _events.value = UiEvent.Success(matchesMap)
                 }
                 is ResultEvent.Error -> _events.value = UiEvent.Error
             }
@@ -75,45 +76,45 @@ class FixturesViewModel @Inject constructor(
     }
 
 
-    private fun showList(filter: TourFilter) {
+//    private fun showList(filter: TourFilter) {
+//
+//        when (filter) {
+//            TourFilter.SHOW_FIRST -> {
+//                _tours.value = 1
+//                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }!!
+//            }
+//            TourFilter.SHOW_SECOND -> {
+//                _tours.value = 2
+//                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }!!
+//            }
+//            else -> {
+//                _tours.value = 0
+//                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }!!
+//            }
+//        }
+//    }
 
-        when (filter) {
-            TourFilter.SHOW_FIRST -> {
-                _tours.value = 1
-                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }!!
-            }
-            TourFilter.SHOW_SECOND -> {
-                _tours.value = 2
-                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }!!
-            }
-            else -> {
-                _tours.value = 0
-                _events.value = matchesMap[_tours.value]?.let { UiEvent.Success(it) }!!
-            }
-        }
-    }
+//    fun updateFilter(filter: TourFilter) {
+//        showList(filter)
+//    }
 
-    fun updateFilter(filter: TourFilter) {
-        showList(filter)
-    }
+//    fun backArrowClicked() {
+//        _tours.value = _tours.value.minus(1)
+//        _tours.value.let {
+//            if (it > 0) {
+//                _events.value = matchesMap[it]?.let { mapList -> UiEvent.Success(mapList) }!!
+//            } else if (it == 0) {
+//                _events.value = matchesMap[0]?.let { mapList -> UiEvent.Success(mapList) }!!
+//            }
+//        }
+//    }
 
-    fun backArrowClicked() {
-        _tours.value = _tours.value.minus(1)
-        _tours.value.let {
-            if (it > 0) {
-                _events.value = matchesMap[it]?.let { mapList -> UiEvent.Success(mapList) }!!
-            } else if (it == 0) {
-                _events.value = matchesMap[0]?.let { mapList -> UiEvent.Success(mapList) }!!
-            }
-        }
-    }
-
-    fun nextArrowClicked() {
-        if (_tours.value < 30) {
-            _tours.value = _tours.value.plus(1)
-            _events.value = matchesMap[_tours.value]?.let { mapList -> UiEvent.Success(mapList) }!!
-        }
-    }
+//    fun nextArrowClicked() {
+//        if (_tours.value < 30) {
+//            _tours.value = _tours.value.plus(1)
+//            _events.value = matchesMap[_tours.value]?.let { mapList -> UiEvent.Success(mapList) }!!
+//        }
+//    }
 
 
     private fun getTourByDate(): Int {
@@ -183,7 +184,7 @@ class FixturesViewModel @Inject constructor(
 
 
 sealed class UiEvent {
-    class Success(val matches: List<MatchSchedule>) : UiEvent()
+    class Success(val matches: Map<Int, ArrayList<MatchSchedule>>) : UiEvent()
     object Error : UiEvent()
     object Loading : UiEvent()
     object EmptyState : UiEvent()

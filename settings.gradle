@@ -8,7 +8,6 @@ dependencyResolutionManagement {
 rootProject.name = "FantasyDraft"
 include ':app'
 include ':matches-data'
-include ':matches-domain'
 include ':matches-ui'
 include ':core-ui'
 include ':draft-data'
@@ -24,3 +23,5 @@ include ':registration-domain'
 include ':match-ui'
 include ':match-domain'
 include ':match-data'
+include ':matches-domain'
+include ':matches-domain'

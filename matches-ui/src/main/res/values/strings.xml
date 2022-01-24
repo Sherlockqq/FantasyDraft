@@ -13,6 +13,6 @@
     <string name="connection_error">Ошибка соединения</string>
     <string name="loading">Загрузка..</string>
     <string name="schedule">Рассписание</string>
-    <string name="gameweek">Тур $d</string>
+    <string name="gameweek">Тур %1$d</string>
     <string name="empty_state">Что-то не так. Повторите позже!</string>
 </resources>

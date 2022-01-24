@@ -11,7 +11,7 @@ private const val BASE_URL = "https://sport.ua/football/results/ukraine/1/calend
 @Singleton
 class MatchRepository @Inject constructor() {
 
-    fun getMatchMap(): ResultEvent<Map<Int, List<MatchSchedule>>> {
+    fun getMatchMap(): ResultEvent<Map<Int, ArrayList<MatchSchedule>>> {
         return try {
             val doc = Jsoup.connect(BASE_URL).get()
             ResultEvent.Success(MatchParse.parse(doc))

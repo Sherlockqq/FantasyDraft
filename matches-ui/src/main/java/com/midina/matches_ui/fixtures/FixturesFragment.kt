@@ -1,4 +1,4 @@
-package com.midina.matches_ui
+package com.midina.matches_ui.fixtures
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
@@ -9,25 +9,26 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.annotation.RequiresApi
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.matches_domain.model.MatchSchedule
+import com.midina.matches_ui.AlarmReceiver
+import com.midina.matches_ui.R
+import com.midina.matches_ui.adapters.TourPageAdapter
 import com.midina.matches_ui.databinding.FragmentFixturesBinding
 import kotlinx.coroutines.flow.collect
 
 class FixturesFragment : BaseFragment() {
 
+    private val TAG = "FixturesFragment"
+
     override val layoutId = R.layout.fragment_fixtures
 
     private lateinit var binding: FragmentFixturesBinding
-    private val adapter = MatchAdapter()
+    private lateinit var adapter: TourPageAdapter
 
     val viewModel: FixturesViewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[FixturesViewModel::class.java]
@@ -41,7 +42,7 @@ class FixturesFragment : BaseFragment() {
 
         binding = DataBindingUtil.inflate(
             inflater,
-            R.layout.fragment_fixtures,
+            layoutId,
             container,
             false
         )
@@ -50,11 +51,8 @@ class FixturesFragment : BaseFragment() {
 
         binding.viewModel = viewModel
 
-        binding.fixturesList.layoutManager = LinearLayoutManager(this.context)
 
         setHasOptionsMenu(true)
-
-        setGameText()
 
         lifecycleScope.launchWhenCreated {
             viewModel.events
@@ -63,31 +61,13 @@ class FixturesFragment : BaseFragment() {
                 }
         }
 
-        binding.fixturesList.adapter = adapter
-        adapter.setOnItemClickListener(object : MatchAdapter.OnItemClickListener {
-            override fun onItemClick(position: Int, match: MatchSchedule) {
-                findNavController().navigate(R.id.action_match_navigation, match.toBundle())
-            }
-        })
-
-        binding.backArrow.setOnClickListener {
-            viewModel.backArrowClicked()
-        }
-
-        binding.nextArrow.setOnClickListener {
-            viewModel.nextArrowClicked()
-        }
+//        adapter.setOnItemClickListener(object : MatchAdapter.OnItemClickListener {
+//            override fun onItemClick(position: Int, match: MatchSchedule) {
+//                findNavController().navigate(R.id.action_match_navigation, match.toBundle())
+//            }
+//        })
 
         return binding.root
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun setGameText() {
-        if (viewModel.tours.value != 0) {
-            binding.gameweekText.text = "Тур ${viewModel.tours.value}"
-        } else {
-            binding.gameweekText.setText(R.string.schedule)
-        }
     }
 
     @SuppressLint("NewApi")
@@ -100,40 +80,23 @@ class FixturesFragment : BaseFragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun onSuccess(list: List<MatchSchedule>) {
+    private fun onSuccess(list: Map<Int, ArrayList<MatchSchedule>>) {
         if (list.isNotEmpty()) {
-            setGameText()
             Log.d("MainActivity", "list size : ${list.size}")
             binding.progressBar.isVisible = false
             binding.nonSuccessText.isVisible = false
-            binding.gameweekText.isVisible = true
-            when (viewModel.tours.value) {
-                0 -> {
-                    binding.backArrow.isInvisible = true
-                    binding.nextArrow.isVisible = true
-                }
-                30 -> {
-                    binding.nextArrow.isInvisible = true
-                    binding.backArrow.isVisible = true
-                    isCurrentTour(list)
-                }
-                else -> {
-                    binding.backArrow.isVisible = true
-                    binding.nextArrow.isVisible = true
-                    isCurrentTour(list)
-                }
-            }
-            adapter.updateMatches(list)
+
+            adapter = activity?.let {
+                TourPageAdapter(it, list)
+            }!!
+            Log.d(TAG," matches : $list")
+            binding.pager.adapter = adapter
         }
     }
 
     private fun onError() {
         binding.nonSuccessText.setText(R.string.connection_error)
         binding.progressBar.isVisible = false
-        binding.nextArrow.isVisible = false
-        binding.backArrow.isVisible = false
-        binding.gameweekText.isVisible = false
         binding.nonSuccessText.isVisible = true
         binding.ConnectionErrorView.isVisible = true
     }
@@ -142,17 +105,11 @@ class FixturesFragment : BaseFragment() {
         binding.nonSuccessText.setText(R.string.loading)
         binding.nonSuccessText.isVisible = true
         binding.progressBar.isVisible = true
-        binding.nextArrow.isVisible = false
-        binding.backArrow.isVisible = false
-        binding.gameweekText.isVisible = false
     }
 
     private fun onEmptyState() {
         binding.nonSuccessText.setText(R.string.empty_state)
         binding.progressBar.isVisible = false
-        binding.nextArrow.isVisible = false
-        binding.backArrow.isVisible = false
-        binding.gameweekText.isVisible = false
         binding.nonSuccessText.isVisible = true
     }
 
@@ -162,13 +119,13 @@ class FixturesFragment : BaseFragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        viewModel.updateFilter(
-            when (item.itemId) {
-                R.id.show_first_tour -> FixturesViewModel.TourFilter.SHOW_FIRST
-                R.id.show_second_tour -> FixturesViewModel.TourFilter.SHOW_SECOND
-                else -> FixturesViewModel.TourFilter.SHOW_ALL
-            }
-        )
+//        viewModel.updateFilter(
+//            when (item.itemId) {
+//                R.id.show_first_tour -> FixturesViewModel.TourFilter.SHOW_FIRST
+//                R.id.show_second_tour -> FixturesViewModel.TourFilter.SHOW_SECOND
+//                else -> FixturesViewModel.TourFilter.SHOW_ALL
+//            }
+//        )
         return true
     }
 
@@ -242,4 +199,12 @@ class FixturesFragment : BaseFragment() {
             createAlarm(list)
         }
     }
+//
+//    override fun onArrowNextClicked() {
+//        binding.pager.currentItem + 1
+//    }
+//
+//    override fun onArrowBackClicked() {
+//        binding.pager.currentItem - 1
+//    }
 }
