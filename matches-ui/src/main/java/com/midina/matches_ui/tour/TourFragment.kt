@@ -8,12 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.matches_domain.model.MatchSchedule
 import com.midina.matches_ui.OnArrowClickListener
 import com.midina.matches_ui.R
 import com.midina.matches_ui.adapters.MatchAdapter
+import com.midina.matches_ui.adapters.TourPageAdapter.Companion.KEY
 import com.midina.matches_ui.databinding.FragmentTourBinding
 
 class TourFragment : BaseFragment() {
@@ -27,15 +29,17 @@ class TourFragment : BaseFragment() {
 
     private var listener: OnArrowClickListener? = null
 
+    private val matchesInTour = 8
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         Log.d(TAG, "context $context")
         Log.d(TAG, "parentFragment $parentFragment")
-//        if (context is OnArrowClickListener) {
-//            listener = context
-//        } else {
-//            throw IllegalArgumentException()
-//        }
+        if (context is OnArrowClickListener) {
+            listener = context
+        } else {
+            throw IllegalArgumentException()
+        }
     }
 
     override fun onCreateView(
@@ -55,24 +59,25 @@ class TourFragment : BaseFragment() {
 
         binding.rvTourList.adapter = adapter
 
-        arguments?.takeIf { it.containsKey("r") }?.apply {
-            val matches = getParcelableArrayList<MatchSchedule>("r")
+        arguments?.takeIf { it.containsKey(KEY) }?.apply {
+            val matches = getParcelableArrayList<MatchSchedule>(KEY)
             Log.d(TAG,"Matches: $matches")
             if (matches != null) {
                 adapter.updateMatches(matches)
-                if (matches.size == 10) {
+                if (matches.size == matchesInTour) {
                     binding.gameweekText.text = getString(R.string.gameweek, matches[1].tour)
+                    checkTour(matches[1].tour)
                 } else {
                     binding.gameweekText.text = getString(R.string.schedule)
+                    checkTour(0)
                 }
-                checkTour(matches[1].tour)
             }
         }
 
 
         adapter.setOnItemClickListener(object : MatchAdapter.OnItemClickListener {
             override fun onItemClick(position: Int, match: MatchSchedule) {
-              //  findNavController().navigate(R.id.action_match_navigation, match.toBundle())
+                findNavController().navigate(R.id.action_match_navigation, match.toBundle())
             }
         })
 
@@ -86,6 +91,14 @@ class TourFragment : BaseFragment() {
 
         return binding.root
     }
+
+    private fun MatchSchedule.toBundle() =
+        Bundle().also {
+            it.putString("HomeTeam", this.homeTeam)
+            it.putString("GuestTeam", this.guestTeam)
+            it.putString("Score", this.score)
+            it.putString("Date", this.date)
+        }
 
     private fun checkTour(tour: Int) {
         when (tour) {

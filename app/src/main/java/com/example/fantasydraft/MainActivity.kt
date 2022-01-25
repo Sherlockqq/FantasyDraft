@@ -6,16 +6,19 @@ import android.util.Log
 import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.fantasydraft.databinding.ActivityMainBinding
 import com.midina.core_ui.ui.OnBottomNavHideListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.midina.matches_ui.OnArrowClickListener
+import com.midina.matches_ui.fixtures.FixturesFragment
 
-class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
+class MainActivity : AppCompatActivity(), OnBottomNavHideListener, OnArrowClickListener {
 
-    val TAG = "MainActivity"
+    private val TAG = "MainActivity"
     private lateinit var binding: ActivityMainBinding
 
     override fun onResume() {
@@ -39,6 +42,7 @@ class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
                 R.id.fixturesFragment, R.id.draftFragment
             )
         )
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
     }
@@ -60,4 +64,17 @@ class MainActivity : AppCompatActivity(), OnBottomNavHideListener {
         binding.bottomNavigation.isVisible = true
     }
 
+    override fun onArrowNextClicked() {
+        val navHostFragment: NavHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val fragment = navHostFragment.childFragmentManager.fragments[0] as FixturesFragment
+        fragment.nextPage()
+    }
+
+    override fun onArrowBackClicked() {
+        val navHostFragment: NavHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val fragment = navHostFragment.childFragmentManager.fragments[0] as FixturesFragment
+        fragment.previousPage()
+    }
 }

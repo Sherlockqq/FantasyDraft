@@ -51,21 +51,12 @@ class FixturesFragment : BaseFragment() {
 
         binding.viewModel = viewModel
 
-
-        setHasOptionsMenu(true)
-
         lifecycleScope.launchWhenCreated {
             viewModel.events
                 .collect {
                     handleEvents(it)
                 }
         }
-
-//        adapter.setOnItemClickListener(object : MatchAdapter.OnItemClickListener {
-//            override fun onItemClick(position: Int, match: MatchSchedule) {
-//                findNavController().navigate(R.id.action_match_navigation, match.toBundle())
-//            }
-//        })
 
         return binding.root
     }
@@ -80,17 +71,22 @@ class FixturesFragment : BaseFragment() {
         }
     }
 
-    private fun onSuccess(list: Map<Int, ArrayList<MatchSchedule>>) {
-        if (list.isNotEmpty()) {
-            Log.d("MainActivity", "list size : ${list.size}")
+    private fun onSuccess(matchesMap: Map<Int, ArrayList<MatchSchedule>>) {
+        if (matchesMap.isNotEmpty()) {
+            Log.d("MainActivity", "list size : ${matchesMap.size}")
             binding.progressBar.isVisible = false
             binding.nonSuccessText.isVisible = false
 
+            setHasOptionsMenu(true)
+
             adapter = activity?.let {
-                TourPageAdapter(it, list)
+                TourPageAdapter(it, matchesMap)
             }!!
-            Log.d(TAG," matches : $list")
+            Log.d(TAG, " matches : $matchesMap")
             binding.pager.adapter = adapter
+            binding.pager.setCurrentItem(viewModel.currentTour.value, false)
+            matchesMap[viewModel.currentTour.value]?.let { createAlarm(it) }
+
         }
     }
 
@@ -119,23 +115,18 @@ class FixturesFragment : BaseFragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        viewModel.updateFilter(
-//            when (item.itemId) {
-//                R.id.show_first_tour -> FixturesViewModel.TourFilter.SHOW_FIRST
-//                R.id.show_second_tour -> FixturesViewModel.TourFilter.SHOW_SECOND
-//                else -> FixturesViewModel.TourFilter.SHOW_ALL
-//            }
-//        )
+        when (item.itemId) {
+            R.id.show_first_tour -> binding.pager.setCurrentItem(1, false)
+
+            R.id.show_current_tour -> binding.pager.setCurrentItem(
+                viewModel.currentTour.value,
+                false
+            )
+            else -> binding.pager.setCurrentItem(0, false)
+        }
+
         return true
     }
-
-    private fun MatchSchedule.toBundle() =
-        Bundle().also {
-            it.putString("HomeTeam", this.homeTeam)
-            it.putString("GuestTeam", this.guestTeam)
-            it.putString("Score", this.score)
-            it.putString("Date", this.date)
-        }
 
     private fun MatchSchedule.toIntent(
         tour: Int,
@@ -154,13 +145,13 @@ class FixturesFragment : BaseFragment() {
         return intent
     }
 
-    private fun createAlarm(matchesList: List<MatchSchedule>) {
+    private fun createAlarm(matchesList: ArrayList<MatchSchedule>) {
         val alarmManager =
             activity?.applicationContext?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         for (index in matchesList.indices) {
 
-            if (matchesList[index].score == "? : ?") {
+            if (matchesList[index].score == getString(R.string.emptyScore)) {
                 val intent = matchesList[index].toIntent(
                     matchesList[index].tour,
                     matchesList[index].homeTeam,
@@ -174,37 +165,34 @@ class FixturesFragment : BaseFragment() {
                     PendingIntent.FLAG_UPDATE_CURRENT
                 )
 
+                Log.d(TAG, "time: ${matchesList[index].date}")
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     alarmManager.setExactAndAllowWhileIdle(
                         AlarmManager.RTC_WAKEUP,
                         viewModel.getTimeInMillis(matchesList[index].date),
                         pendingIntent
                     )
-                    Log.d("FixtureFragment", "while idle")
+                    Log.d(TAG, "while idle")
                 } else {
                     alarmManager.setExact(
                         AlarmManager.RTC_WAKEUP,
                         viewModel.getTimeInMillis(matchesList[index].date),
                         pendingIntent
                     )
-                    Log.d("FixtureFragment", "not idle")
+                    Log.d(TAG, "not idle")
 
                 }
             }
         }
     }
 
-    private fun isCurrentTour(list: List<MatchSchedule>) {
-        if (viewModel.tours.value == viewModel.currentTour.value) {
-            createAlarm(list)
-        }
+    fun nextPage() {
+        binding.pager.setCurrentItem(binding.pager.currentItem + 1, true)
+
     }
-//
-//    override fun onArrowNextClicked() {
-//        binding.pager.currentItem + 1
-//    }
-//
-//    override fun onArrowBackClicked() {
-//        binding.pager.currentItem - 1
-//    }
+
+    fun previousPage() {
+        binding.pager.setCurrentItem(binding.pager.currentItem - 1, true)
+    }
+
 }
