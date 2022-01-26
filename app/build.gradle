@@ -53,6 +53,14 @@ dependencies {
     androidTestImplementation 'org.junit.jupiter:junit-jupiter'
     androidTestImplementation 'org.junit.jupiter:junit-jupiter'
 
+    //DataStore Preferences
+    implementation "androidx.datastore:datastore-preferences:1.0.0-alpha04"
+
+    //Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0'
+
+
     //Dagger
     kapt "com.google.dagger:dagger-compiler:$version_dagger"
     kapt "com.google.dagger:dagger-android-processor:$version_dagger"
@@ -77,4 +85,8 @@ dependencies {
     implementation project(path: ':match-domain')
     implementation project(path: ':match-ui')
     implementation project(path: ':core-ui')
+    implementation project(path: ':splash-ui')
+    implementation project(path: ':favourite-ui')
+    implementation project(path: ':club-ui')
+
 }

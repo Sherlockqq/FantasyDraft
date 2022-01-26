@@ -8,11 +8,14 @@ import com.midina.android.match_ui.di.MatchUiModule
 import com.midina.core_ui.di.ViewModelBuilderModule
 import com.midina.draft_data.di.DraftDataModule
 import com.midina.draft_ui.di.DraftUiModule
+import com.midina.favourite_ui.di.FavouriteUiModule
 import com.midina.login_ui.di.LoginUiModule
 import com.midina.matches_data.di.MatchesDataModule
 import com.midina.matches_ui.di.MatchesUiModule
 import com.midina.registration_data.di.RegistrationDataModule
 import com.midina.registration_ui.di.RegistrationUiModule
+import com.midina.splash_ui.di.SplashUiModule
+import com.midina.team_ui.di.ClubUiModule
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -32,7 +35,10 @@ import dagger.android.AndroidInjectionModule
     LoginUiModule::class,
     LoginDataModule::class,
     MatchUiModule::class,
-    MatchDataModule::class])
+    MatchDataModule::class,
+    SplashUiModule::class,
+    FavouriteUiModule::class,
+    ClubUiModule::class])
 
 interface AppComponent {
     @Component.Builder

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="item_back_height">56dp</dimen>
+    <dimen name="item_back_margin_bottom">8dp</dimen>
+    <dimen name="item_logo_back_width">88dp</dimen>
+    <dimen name="item_logo_back_height">56dp</dimen>
+    <dimen name="item_logo_width">40dp</dimen>
+    <dimen name="item_logo_height">40dp</dimen>
+    <dimen name="item_logo_margin_end">24dp</dimen>
+    <dimen name="item_name_margin_start">16dp</dimen>
+    <dimen name="item_name_size">20sp</dimen>
+</resources>

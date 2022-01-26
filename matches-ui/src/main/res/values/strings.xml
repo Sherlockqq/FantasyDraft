@@ -1,10 +1,5 @@
 <resources>
-    <string name="app_name">Fantasy Draft</string>
-    <string name="fixtures_label">Рассписание</string>
     <string name="text_label_1">Матчи</string>
-    <string name="text_label_2">Драфт</string>
-    <string name="title_home">Домой</string>
-    <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Уведомления</string>
     <string name="fixtures">Матчи</string>
     <string name="show_all">Показать все</string>
