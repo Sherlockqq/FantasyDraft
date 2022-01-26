@@ -1,4 +1,4 @@
-package com.midina.matches_ui
+package com.midina.matches_ui.fixtures
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
@@ -17,11 +17,12 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnBottomNavItemSelectListener
 import com.midina.matches_domain.model.MatchSchedule
+import com.midina.matches_ui.AlarmReceiver
+import com.midina.matches_ui.R
+import com.midina.matches_ui.adapters.TourPageAdapter
 import com.midina.matches_ui.databinding.FragmentFixturesBinding
 import kotlinx.coroutines.flow.collect
 import android.view.LayoutInflater
@@ -30,23 +31,18 @@ import android.view.LayoutInflater
 
 
 private const val SAVED_TOUR = "SAVED_TOUR"
-private const val TAG = "FixturesFragment"
 
 class FixturesFragment : BaseFragment() {
+
+    private val TAG = "FixturesFragment"
 
     override val layoutId = R.layout.fragment_fixtures
 
     private lateinit var binding: FragmentFixturesBinding
-    private val adapter = MatchAdapter()
-    private var listener: OnBottomNavItemSelectListener? = null
+    private lateinit var adapter: TourPageAdapter
 
     val viewModel: FixturesViewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[FixturesViewModel::class.java]
-    }
-
-    override fun onViewStateRestored(savedInstanceState: Bundle?) {
-        super.onViewStateRestored(savedInstanceState)
-        getSharedTour()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -71,12 +67,6 @@ class FixturesFragment : BaseFragment() {
 
         binding.viewModel = viewModel
 
-        binding.fixturesList.layoutManager = LinearLayoutManager(this.context)
-
-        setHasOptionsMenu(true)
-
-        setGameText()
-
         lifecycleScope.launchWhenCreated {
             viewModel.events
                 .collect {
@@ -84,68 +74,7 @@ class FixturesFragment : BaseFragment() {
                 }
         }
 
-        binding.fixturesList.adapter = adapter
-        adapter.setOnItemClickListener(object : MatchAdapter.OnItemClickListener {
-            override fun onItemClick(position: Int, match: MatchSchedule) {
-                findNavController().navigate(R.id.action_match_navigation, match.toBundle())
-            }
-        })
-
-        binding.backArrow.setOnClickListener {
-            viewModel.backArrowClicked()
-        }
-
-        binding.nextArrow.setOnClickListener {
-            viewModel.nextArrowClicked()
-        }
         return binding.root
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        setSharedTour()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        highlightIcon()
-    }
-
-    private fun setSharedTour() {
-        val sharedPrefs: SharedPreferences? =
-            this.activity?.getSharedPreferences(
-                "FIXTURES_SHARED",
-                AppCompatActivity.MODE_PRIVATE
-            )
-        val editor = sharedPrefs?.edit()
-        editor?.putInt(SAVED_TOUR, viewModel.tours.value)
-        Log.d(TAG, "setSharedTour ${viewModel.tours.value}")
-        editor?.apply()
-    }
-
-    private fun getSharedTour() {
-
-        // Getting the last fragment:
-        val mSharedPrefs = this.activity?.getSharedPreferences(
-            "FIXTURES_SHARED",
-            AppCompatActivity.MODE_PRIVATE
-        )
-        val tour = mSharedPrefs?.getInt(SAVED_TOUR, -1)
-
-        Log.d(TAG, "getSharedTour Tour: $tour")
-
-        if (tour != null && tour != -1) {
-            viewModel.setTour(tour)
-        }
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun setGameText() {
-        if (viewModel.tours.value != 0) {
-            binding.gameweekText.text = "Тур ${viewModel.tours.value}"
-        } else {
-            binding.gameweekText.setText(R.string.schedule)
-        }
     }
 
     @SuppressLint("NewApi")
@@ -158,40 +87,28 @@ class FixturesFragment : BaseFragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun onSuccess(list: List<MatchSchedule>) {
-        if (list.isNotEmpty()) {
-            setGameText()
-            Log.d("MainActivity", "list size : ${list.size}")
+    private fun onSuccess(matchesMap: Map<Int, ArrayList<MatchSchedule>>) {
+        if (matchesMap.isNotEmpty()) {
+            Log.d("MainActivity", "list size : ${matchesMap.size}")
             binding.progressBar.isVisible = false
             binding.nonSuccessText.isVisible = false
-            binding.gameweekText.isVisible = true
-            when (viewModel.tours.value) {
-                0 -> {
-                    binding.backArrow.isInvisible = true
-                    binding.nextArrow.isVisible = true
-                }
-                30 -> {
-                    binding.nextArrow.isInvisible = true
-                    binding.backArrow.isVisible = true
-                    isCurrentTour(list)
-                }
-                else -> {
-                    binding.backArrow.isVisible = true
-                    binding.nextArrow.isVisible = true
-                    isCurrentTour(list)
-                }
-            }
-            adapter.updateMatches(list)
+
+            setHasOptionsMenu(true)
+
+            adapter = activity?.let {
+                TourPageAdapter(it, matchesMap)
+            }!!
+            Log.d(TAG, " matches : $matchesMap")
+            binding.pager.adapter = adapter
+            binding.pager.setCurrentItem(viewModel.currentTour.value, false)
+            matchesMap[viewModel.currentTour.value]?.let { createAlarm(it) }
+
         }
     }
 
     private fun onError() {
         binding.nonSuccessText.setText(R.string.connection_error)
         binding.progressBar.isVisible = false
-        binding.nextArrow.isVisible = false
-        binding.backArrow.isVisible = false
-        binding.gameweekText.isVisible = false
         binding.nonSuccessText.isVisible = true
         binding.ConnectionErrorView.isVisible = true
     }
@@ -200,17 +117,11 @@ class FixturesFragment : BaseFragment() {
         binding.nonSuccessText.setText(R.string.loading)
         binding.nonSuccessText.isVisible = true
         binding.progressBar.isVisible = true
-        binding.nextArrow.isVisible = false
-        binding.backArrow.isVisible = false
-        binding.gameweekText.isVisible = false
     }
 
     private fun onEmptyState() {
         binding.nonSuccessText.setText(R.string.empty_state)
         binding.progressBar.isVisible = false
-        binding.nextArrow.isVisible = false
-        binding.backArrow.isVisible = false
-        binding.gameweekText.isVisible = false
         binding.nonSuccessText.isVisible = true
     }
 
@@ -220,23 +131,18 @@ class FixturesFragment : BaseFragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        viewModel.updateFilter(
-            when (item.itemId) {
-                R.id.show_first_tour -> FixturesViewModel.TourFilter.SHOW_FIRST
-                R.id.show_second_tour -> FixturesViewModel.TourFilter.SHOW_SECOND
-                else -> FixturesViewModel.TourFilter.SHOW_ALL
-            }
-        )
+        when (item.itemId) {
+            R.id.show_first_tour -> binding.pager.setCurrentItem(1, false)
+
+            R.id.show_current_tour -> binding.pager.setCurrentItem(
+                viewModel.currentTour.value,
+                false
+            )
+            else -> binding.pager.setCurrentItem(0, false)
+        }
+
         return true
     }
-
-    private fun MatchSchedule.toBundle() =
-        Bundle().also {
-            it.putString("HomeTeam", this.homeTeam)
-            it.putString("GuestTeam", this.guestTeam)
-            it.putString("Score", this.score)
-            it.putString("Date", this.date)
-        }
 
     private fun MatchSchedule.toIntent(
         tour: Int,
@@ -255,13 +161,13 @@ class FixturesFragment : BaseFragment() {
         return intent
     }
 
-    private fun createAlarm(matchesList: List<MatchSchedule>) {
+    private fun createAlarm(matchesList: ArrayList<MatchSchedule>) {
         val alarmManager =
             activity?.applicationContext?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         for (index in matchesList.indices) {
 
-            if (matchesList[index].score == "? : ?") {
+            if (matchesList[index].score == getString(R.string.emptyScore)) {
                 val intent = matchesList[index].toIntent(
                     matchesList[index].tour,
                     matchesList[index].homeTeam,
@@ -281,25 +187,29 @@ class FixturesFragment : BaseFragment() {
                         viewModel.getTimeInMillis(matchesList[index].date),
                         pendingIntent
                     )
-                    Log.d("FixtureFragment", "while idle")
+                    Log.d(TAG, "while idle")
                 } else {
                     alarmManager.setExact(
                         AlarmManager.RTC_WAKEUP,
                         viewModel.getTimeInMillis(matchesList[index].date),
                         pendingIntent
                     )
-                    Log.d("FixtureFragment", "not idle")
+                    Log.d(TAG, "not idle")
 
                 }
             }
         }
     }
 
-    private fun isCurrentTour(list: List<MatchSchedule>) {
-        if (viewModel.tours.value == viewModel.currentTour.value) {
-            createAlarm(list)
-        }
+    fun nextPage() {
+        binding.pager.setCurrentItem(binding.pager.currentItem + 1, true)
+
     }
+
+    fun previousPage() {
+        binding.pager.setCurrentItem(binding.pager.currentItem - 1, true)
+    }
+
 
     private fun highlightIcon() {
         if (context is OnBottomNavItemSelectListener) {

@@ -6,40 +6,24 @@
     <data>
         <variable
             name="viewModel"
-            type="com.midina.matches_ui.FixturesViewModel" />
+            type="com.midina.matches_ui.fixtures.FixturesViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/constraint_layout"
-        tools:context="com.midina.matches_ui.FixturesFragment">
+        tools:context="com.midina.matches_ui.fixtures.FixturesFragment">
 
-        <TextView
-            android:id="@+id/gameweek_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text = ""
-            tools:text="GameWeek 1 "
-            tools:visibility="visible"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toStartOf="@+id/next_arrow"
-            app:layout_constraintStart_toEndOf="@+id/back_arrow"
-            app:layout_constraintTop_toTopOf="parent">
-
-        </TextView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/fixtures_list"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/gameweek_text"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -47,10 +31,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/fixtures_list"
+            app:layout_constraintBottom_toBottomOf="@+id/pager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/gameweek_text" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/ConnectionErrorView"
@@ -74,32 +58,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/gameweek_text"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.9"
             tools:text="Loading.. "
-            tools:visibility="visible" />
-
-        <ImageView
-            android:id="@+id/back_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_baseline_arrow_back_ios_new_24"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@+id/gameweek_text"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible" />
-
-        <ImageView
-            android:id="@+id/next_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:rotationY="-180"
-            android:src="@drawable/ic_baseline_arrow_back_ios_new_24"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="@+id/gameweek_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

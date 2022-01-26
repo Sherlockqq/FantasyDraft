@@ -9,6 +9,7 @@ import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
@@ -29,9 +30,11 @@ import kotlinx.coroutines.launch
 
 private const val LAST_FRAGMENT = "LAST_FRAGMENT"
 private const val TAG = "MainActivity"
+import com.midina.matches_ui.OnArrowClickListener
+import com.midina.matches_ui.fixtures.FixturesFragment
 
 class MainActivity : AppCompatActivity(),
-    OnBottomNavHideListener, OnBottomNavItemSelectListener {
+    OnBottomNavHideListener, OnBottomNavItemSelectListener, OnArrowClickListener {
 
     private lateinit var dataStore: DataStore<Preferences>
 
@@ -212,4 +215,17 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    override fun onArrowNextClicked() {
+        val navHostFragment: NavHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val fragment = navHostFragment.childFragmentManager.fragments[0] as FixturesFragment
+        fragment.nextPage()
+    }
+
+    override fun onArrowBackClicked() {
+        val navHostFragment: NavHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val fragment = navHostFragment.childFragmentManager.fragments[0] as FixturesFragment
+        fragment.previousPage()
+    }
 }

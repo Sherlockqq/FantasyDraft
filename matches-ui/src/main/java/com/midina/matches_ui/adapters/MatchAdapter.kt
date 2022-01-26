@@ -1,4 +1,4 @@
-package com.midina.matches_ui
+package com.midina.matches_ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.midina.matches_domain.model.MatchSchedule
+import com.midina.matches_ui.R
 
 const val HEADER_VIEW_TYPE = 111
 const val ITEM_VIEW_TYPE = 222
