@@ -1,6 +1,5 @@
 package com.example.fantasydraft
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +8,6 @@ import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
@@ -27,11 +25,12 @@ import androidx.navigation.fragment.NavHostFragment
 import com.midina.core_ui.ui.BaseFragment
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import com.midina.matches_ui.OnArrowClickListener
+import com.midina.matches_ui.fixtures.FixturesFragment
 
 private const val LAST_FRAGMENT = "LAST_FRAGMENT"
 private const val TAG = "MainActivity"
-import com.midina.matches_ui.OnArrowClickListener
-import com.midina.matches_ui.fixtures.FixturesFragment
+
 
 class MainActivity : AppCompatActivity(),
     OnBottomNavHideListener, OnBottomNavItemSelectListener, OnArrowClickListener {
@@ -46,7 +45,8 @@ class MainActivity : AppCompatActivity(),
         R.id.matchFragment,
         R.id.registrationFragment,
         R.id.loginFragment,
-        R.id.clubFragment
+        R.id.clubFragment,
+        R.id.leagueStatFragment
     )
 
     override fun onResume() {
@@ -156,7 +156,7 @@ class MainActivity : AppCompatActivity(),
     private fun getTeamTheme(): Int {
         val sPref =  this.getSharedPreferences(
             "SplashActivity",
-            AppCompatActivity.MODE_PRIVATE
+            MODE_PRIVATE
         )
         val team = sPref?.getString(BaseFragment.SAVED_TEAM, "")
         if (team != null) {
@@ -179,6 +179,9 @@ class MainActivity : AppCompatActivity(),
             }
             R.id.club_navigation -> {
                 val item = menu.findItem(R.id.club_navigation)
+            }
+            R.id.stat_navigation -> {
+                val item = menu.findItem(R.id.stat_navigation)
             }
         }
     }
@@ -203,6 +206,7 @@ class MainActivity : AppCompatActivity(),
                         navController.navigate(R.id.action_login_navigation)
                     }
                     5 -> navController.navigate(R.id.action_club_navigation)
+                    6 -> navController.navigate(R.id.action_statistics_navigation)
                 }
             }
         }

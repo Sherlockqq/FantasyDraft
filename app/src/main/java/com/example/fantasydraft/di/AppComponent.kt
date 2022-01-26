@@ -14,9 +14,9 @@ import com.midina.matches_data.di.MatchesDataModule
 import com.midina.matches_ui.di.MatchesUiModule
 import com.midina.registration_data.di.RegistrationDataModule
 import com.midina.registration_ui.di.RegistrationUiModule
+import com.midina.splash_ui.di.SplashUiModule
 import com.midina.stat_data.di.StatisticsDataModule
 import com.midina.stat_ui.di.LeagueStatUiModule
-import com.midina.splash_ui.di.SplashUiModule
 import com.midina.team_ui.di.ClubUiModule
 import dagger.BindsInstance
 import dagger.Component
@@ -39,8 +39,7 @@ import dagger.android.AndroidInjectionModule
     MatchUiModule::class,
     MatchDataModule::class,
     LeagueStatUiModule::class,
-    StatisticsDataModule::class])
-    MatchDataModule::class,
+    StatisticsDataModule::class,
     SplashUiModule::class,
     FavouriteUiModule::class,
     ClubUiModule::class])

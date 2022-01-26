@@ -12,4 +12,6 @@
     <item name="action_favourite_navigation" type="id"/>
     <!-- club -->
     <item name="action_club_navigation" type="id"/>
+    <!-- statistics -->
+    <item name="action_statistics_navigation" type="id"/>
 </resources>

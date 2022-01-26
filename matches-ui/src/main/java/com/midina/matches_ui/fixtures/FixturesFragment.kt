@@ -40,6 +40,7 @@ class FixturesFragment : BaseFragment() {
 
     private lateinit var binding: FragmentFixturesBinding
     private lateinit var adapter: TourPageAdapter
+    private var listener: OnBottomNavItemSelectListener? = null
 
     val viewModel: FixturesViewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[FixturesViewModel::class.java]
