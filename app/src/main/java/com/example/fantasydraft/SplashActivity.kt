@@ -4,14 +4,14 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.animation.AnimationUtils
-import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.example.fantasydraft.databinding.ActivitySplashBinding
+import com.midina.core_ui.ui.OnStartActivityListener
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : AppCompatActivity(), OnStartActivityListener {
+
     private val TAG = "SplashActivity"
     private lateinit var binding: ActivitySplashBinding
 
@@ -23,24 +23,18 @@ class SplashActivity : AppCompatActivity() {
         setTheme(R.style.Theme_FantasyDraft)
         supportActionBar?.hide()
         setContentView(binding.root)
-        hidingAnimation()
-        startMainActivity(2800)
     }
 
-    private fun hidingAnimation() {
-        Log.d(TAG, "hidingAnimation: ")
-        val anim = AnimationUtils.loadAnimation(this, R.anim.to_invisible)
-        binding.ivUplLogo.startAnimation(anim)
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
     }
 
-    private fun startMainActivity(time: Int) {
-        Log.d(TAG, "startMainActivity: ")
+
+    override fun startMainActivity(team: String) {
         val intent = Intent(this, MainActivity::class.java)
-        lifecycleScope.launch {
-            delay(time.toLong())
-            binding.ivUplLogo.isVisible = false
-            startActivity(intent)
-            finish()
-        }
+            .putExtra("Team", team)
+        startActivity(intent)
+        finish()
     }
 }

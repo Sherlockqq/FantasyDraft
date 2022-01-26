@@ -12,6 +12,12 @@
         android:title="@string/text_label_2"/>
 
     <item
+        android:id="@+id/club_navigation"
+        android:enabled="true"
+        android:title="@string/text_label_3" />
+
+
+    <item
         android:id="@+id/stat_navigation"
         android:icon="@drawable/ic_dashboard_black_24dp"
         android:enabled="true"

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <View
+        android:id="@+id/vw_event_item_back"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/item_back_height"
+        android:layout_marginBottom="@dimen/item_back_margin_bottom"
+        android:background="@drawable/ic_item_odd_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"/>
+
+    <View
+        android:id="@+id/vw_even_item_logo_back"
+        android:layout_width="@dimen/item_logo_back_width"
+        android:layout_height="@dimen/item_logo_back_height"
+        android:background="@drawable/ic_item_logo_background"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="@+id/vw_event_item_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/vw_event_item_back"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/iv_team_logo"
+        android:layout_width="@dimen/item_logo_width"
+        android:layout_height="@dimen/item_logo_height"
+        android:layout_marginEnd="@dimen/item_logo_margin_end"
+        app:layout_constraintBottom_toBottomOf="@+id/vw_even_item_logo_back"
+        app:layout_constraintEnd_toEndOf="@+id/vw_even_item_logo_back"
+        app:layout_constraintStart_toStartOf="@+id/vw_event_item_back"
+        app:layout_constraintTop_toTopOf="@+id/vw_even_item_logo_back"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/dynamo_logo" />
+
+    <TextView
+        android:id="@+id/tv_team_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/item_name_margin_start"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/white"
+        android:textSize="@dimen/item_name_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/vw_even_item_logo_back"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Динамо"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
