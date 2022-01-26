@@ -1,7 +1,9 @@
 package com.midina.draft_ui
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,9 +38,13 @@ class DraftFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title)
+
+        val contextThemeWrapper: Context = ContextThemeWrapper(activity, getTeamTheme())
+
+        val localInflater = inflater.cloneInContext(contextThemeWrapper)
+
         binding = DataBindingUtil.inflate(
-            inflater,
+            localInflater,
             R.layout.fragment_draft,
             container,
             false

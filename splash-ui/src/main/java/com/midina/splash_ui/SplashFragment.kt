@@ -18,7 +18,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 const val TAG = "SplashFragment"
-const val SAVED_TEAM = "TEAM" //TODO HOW TO AVOID THIS?
 const val ANIMATION_DURATION = 3000L
 
 class SplashFragment : BaseFragment() {

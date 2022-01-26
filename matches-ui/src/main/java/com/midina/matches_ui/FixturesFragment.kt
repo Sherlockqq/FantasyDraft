@@ -24,6 +24,10 @@ import com.midina.core_ui.ui.OnBottomNavItemSelectListener
 import com.midina.matches_domain.model.MatchSchedule
 import com.midina.matches_ui.databinding.FragmentFixturesBinding
 import kotlinx.coroutines.flow.collect
+import android.view.LayoutInflater
+
+
+
 
 private const val SAVED_TOUR = "SAVED_TOUR"
 private const val TAG = "FixturesFragment"
@@ -51,8 +55,13 @@ class FixturesFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
 
+
+        val contextThemeWrapper: Context = ContextThemeWrapper(activity, getTeamActionTheme())
+
+        val localInflater = inflater.cloneInContext(contextThemeWrapper)
+
         binding = DataBindingUtil.inflate(
-            inflater,
+            localInflater,
             R.layout.fragment_fixtures,
             container,
             false

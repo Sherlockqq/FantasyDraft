@@ -42,6 +42,9 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$version_appcompat"
     implementation "com.google.android.material:material:$version_material"
 
+    //Constraint
+    implementation "androidx.constraintlayout:constraintlayout:$version_constaint"
+
     //Dagger
     kapt "com.google.dagger:dagger-compiler:$version_dagger"
     kapt "com.google.dagger:dagger-android-processor:$version_dagger"

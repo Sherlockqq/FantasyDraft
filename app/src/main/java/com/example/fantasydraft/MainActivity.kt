@@ -23,6 +23,7 @@ import androidx.datastore.preferences.core.preferencesKey
 import androidx.datastore.preferences.createDataStore
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
+import com.midina.core_ui.ui.BaseFragment
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -55,6 +56,9 @@ class MainActivity : AppCompatActivity(),
 
         Log.d(TAG, "onCreate: ")
         binding = ActivityMainBinding.inflate(layoutInflater)
+
+        setTheme(getTeamTheme())
+
         setContentView(binding.root)
 
         dataStore = createDataStore("last_fragment")
@@ -121,6 +125,8 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+
+
     private fun getImage(team: String): Int {
         when (team) {
             "Львов" -> return R.drawable.lviv_logo
@@ -141,6 +147,20 @@ class MainActivity : AppCompatActivity(),
             "Минай" -> return R.drawable.minaj_logo
         }
         return R.drawable.connection_error
+    }
+
+    private fun getTeamTheme(): Int {
+        val sPref =  this.getSharedPreferences(
+            "SplashActivity",
+            AppCompatActivity.MODE_PRIVATE
+        )
+        val team = sPref?.getString(BaseFragment.SAVED_TEAM, "")
+        if (team != null) {
+            when (team) {
+                "Динамо Киев" -> return R.style.Theme_Dynamo
+            }
+        }
+        return R.style.Theme_FantasyDraft
     }
 
     override fun highlightItem(itemId: Int) {
