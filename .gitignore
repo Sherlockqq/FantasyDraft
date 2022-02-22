@@ -12,7 +12,7 @@
 /.idea/misc.xml
 /.idea/vcs.xml
 .DS_Store
-/build
+/com.midina.android.match_domain.build
 /captures
 .externalNativeBuild
 .cxx

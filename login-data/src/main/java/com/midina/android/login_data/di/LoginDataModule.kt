@@ -6,6 +6,7 @@ import com.midina.login_domain.usecase.SigningInUsecase
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Singleton
 
 @Module(
@@ -17,6 +18,7 @@ class LoginDataModule {
     @Provides
     @Singleton
     fun provideSigningInRepository() = SigningInRepository()
+
 }
 
 @Module

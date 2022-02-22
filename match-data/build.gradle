@@ -10,8 +10,6 @@ android {
     defaultConfig {
         minSdk = version_min_sdk
         targetSdk = version_target_sdk
-        versionCode = version_code
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -30,6 +28,11 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+//    testOptions {
+//        unitTests.all {
+//            useJUnitPlatform()
+//        }
+//    }
 }
 
 dependencies {
@@ -47,6 +50,11 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$version_retrofit_converter"
 
     implementation "com.squareup.okhttp3:logging-interceptor:$version_okhttp"
+
+    //Test
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'io.mockk:mockk:1.9.3'
 
     implementation project(path: ':match-domain')
 }

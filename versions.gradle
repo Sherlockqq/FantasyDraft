@@ -1,7 +1,7 @@
 ext {
 //    build
     version_kotlin = "1.5.21"
-    version_gradle = "7.0.0"
+    version_gradle = '7.1.1'
 //    android
     version_lifecycle = "2.3.1"
     version_core = "1.7.0"
@@ -40,7 +40,7 @@ ext {
     androidXTestRulesVersion = '1.2.0'
     robolectricVersion = '4.5.1'
     archTestingVersion = '2.1.0'
-    mockito_version = '2.23.0'
+    mockito_version = '4.0.0'
     espresso_version = '3.4.0'
     coroutine_test_version = '1.4.2'
 

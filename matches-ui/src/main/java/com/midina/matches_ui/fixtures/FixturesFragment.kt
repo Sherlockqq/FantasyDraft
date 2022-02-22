@@ -5,30 +5,23 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import com.midina.core_ui.ui.BaseFragment
-import com.midina.core_ui.ui.OnBottomNavItemSelectListener
-import com.midina.matches_domain.model.MatchSchedule
-import com.midina.matches_ui.AlarmReceiver
 import com.midina.matches_ui.R
 import com.midina.matches_ui.adapters.TourPageAdapter
 import com.midina.matches_ui.databinding.FragmentFixturesBinding
 import kotlinx.coroutines.flow.collect
 import android.view.LayoutInflater
-
-
-
+import androidx.lifecycle.lifecycleScope
+import com.midina.core_ui.ui.BaseFragment
+import com.midina.core_ui.ui.OnBottomNavItemSelectListener
+import com.midina.matches_domain.model.MatchSchedule
+import com.midina.matches_ui.AlarmReceiver
 
 private const val SAVED_TOUR = "SAVED_TOUR"
 

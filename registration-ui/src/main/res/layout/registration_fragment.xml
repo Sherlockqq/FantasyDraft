@@ -4,9 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable
-            name="viewModel"
-            type="com.midina.registration_ui.RegistrationViewModel" />
+
     </data>
 
     <ScrollView
@@ -19,593 +17,60 @@
             android:layout_height="wrap_content"
             tools:context="com.midina.registration_ui.RegistrationFragment">
 
-            <TextView
-                android:id="@+id/tv_name"
-                android:layout_width="wrap_content"
+            <include
+                android:id="@+id/first_name"
+                layout="@layout/first_name_layout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/nameMarginStart"
-                android:layout_marginTop="@dimen/nameMarginTop"
-                android:text="@string/first_name"
-                android:textSize="@dimen/mainTextOfTopic"
-                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tv_name_rq"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/rqMarginStart"
-                android:layout_marginTop="@dimen/rqNameMarginTop"
-                android:text="@string/required"
-                app:layout_constraintStart_toEndOf="@+id/tv_name"
-                app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_firstName"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="@dimen/editTextWidth"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/etMarginStart"
-                android:layout_marginTop="@dimen/etMarginTop"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_name">
-
-                <EditText
-                    android:id="@+id/etName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/first_name"
-                    android:afterTextChanged="@{(text) -> viewModel.onFirstNameChanged(text)}"
-                    app:onFocusChangeListener = "@{viewModel.FirstNameOnFocusListener}"
-                    android:inputType="textPersonName"
-                    android:minHeight="@dimen/etMinHeight"
-                    tools:ignore="SpeakableTextPresentCheck" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/tv_name_request"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/requestMarginStart"
-                android:layout_marginTop="@dimen/requestMarginTop"
-                android:text="@string/name_request"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/til_firstName" />
-
-            <com.midina.core_ui.ui.CheckStateView
-
-                android:id="@+id/cvFirstName"
-                android:layout_width="@dimen/cvWidth"
-                android:layout_height="@dimen/cvHeight"
-                android:layout_marginEnd="@dimen/cvEndMargin"
-                android:scaleType="fitStart"
-                app:layout_constraintBottom_toBottomOf="@+id/til_firstName"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-            </com.midina.core_ui.ui.CheckStateView>
-
-            <View
-                android:id="@+id/dividerLine1"
+            <include
+                android:id="@+id/last_name"
+                layout="@layout/last_name_layout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dividerHeight"
-                android:layout_marginTop="@dimen/dividerMarginTop"
-                android:background="@color/black"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_name_request" />
+                app:layout_constraintTop_toBottomOf="@+id/first_name" />
 
-            <TextView
-                android:id="@+id/tv_last_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/mainTextMarginStart"
-                android:layout_marginTop="@dimen/mainTextMarginTop"
-                android:text="@string/last_name"
-                android:textSize="@dimen/mainTextOfTopic"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dividerLine1" />
-
-            <TextView
-                android:id="@+id/tv_last_name_rq"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/rqMarginStart"
-                android:layout_marginTop="@dimen/rqMarginTop"
-                android:text="@string/required"
-                app:layout_constraintStart_toEndOf="@+id/tv_last_name"
-                app:layout_constraintTop_toBottomOf="@+id/dividerLine1" />
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_lastName"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="@dimen/editTextWidth"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/etMarginStart"
-                android:layout_marginTop="@dimen/etMarginTop"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_last_name">
-
-
-                <EditText
-                    android:id="@+id/etLastName"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:afterTextChanged="@{(text) -> viewModel.onLastNameChanged(text)}"
-                    app:onFocusChangeListener = "@{viewModel.lastNameOnFocusListener}"
-                    android:hint="@string/last_name"
-                    android:inputType="textPersonName"
-                    android:minHeight="@dimen/etMinHeight" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/tv_last_name_request"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/requestMarginStart"
-                android:layout_marginTop="@dimen/requestMarginTop"
-                android:text="@string/lastName_request"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/til_lastName" />
-
-
-            <com.midina.core_ui.ui.CheckStateView
-                android:id="@+id/cvLastname"
-                android:layout_width="@dimen/cvWidth"
-                android:layout_height="@dimen/cvHeight"
-                android:layout_marginEnd="@dimen/cvEndMargin"
-                app:layout_constraintBottom_toBottomOf="@+id/til_lastName"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dividerLine1">
-
-            </com.midina.core_ui.ui.CheckStateView>
-
-            <View
-                android:id="@+id/dividerLine2"
+            <include
+                android:id="@+id/email"
+                layout="@layout/email_layout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dividerHeight"
-                android:layout_marginTop="@dimen/dividerMarginTop"
-                android:background="@color/black"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_last_name_request" />
+                app:layout_constraintTop_toBottomOf="@+id/last_name"/>
 
-            <TextView
-                android:id="@+id/tv_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/mainTextMarginStart"
-                android:layout_marginTop="@dimen/mainTextMarginTop"
-                android:text="@string/email_address"
-                android:textSize="@dimen/mainTextOfTopic"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dividerLine2" />
-
-            <TextView
-                android:id="@+id/tv_email_rq"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/rqMarginStart"
-                android:layout_marginTop="@dimen/rqMarginTop"
-                android:text="@string/required"
-                app:layout_constraintStart_toEndOf="@+id/tv_email"
-                app:layout_constraintTop_toBottomOf="@+id/dividerLine2" />
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_email"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="@dimen/editTextWidth"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/etMarginStart"
-                android:layout_marginTop="@dimen/etMarginTop"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_email">
-
-                <EditText
-                    android:id="@+id/etEmail"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/email_example"
-                    android:afterTextChanged="@{(text) -> viewModel.onEmailChanged(text)}"
-                    app:onFocusChangeListener = "@{viewModel.emailOnFocusListener}"
-                    android:inputType="textEmailAddress"
-                    android:minHeight="@dimen/etMinHeight"
-                    tools:ignore="SpeakableTextPresentCheck" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <TextView
-                android:id="@+id/tv_email_request"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/requestMarginStart"
-                android:layout_marginTop="@dimen/requestMarginTop"
-                android:text="@string/email_request"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/til_email" />
-
-            <TextView
-                android:id="@+id/tv_email_sending"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/emailSendingMarginStart"
-                android:layout_marginTop="@dimen/emailSendingMarginTop"
-                android:text="@string/confirmation"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_email_request" />
-
-            <com.midina.core_ui.ui.CheckStateView
-                android:id="@+id/cvEmail"
-                android:layout_width="@dimen/cvWidth"
-                android:layout_height="@dimen/cvHeight"
-                android:layout_marginEnd="@dimen/cvEndMargin"
-                app:layout_constraintBottom_toBottomOf="@+id/til_email"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dividerLine2">
-
-            </com.midina.core_ui.ui.CheckStateView>
-
-            <View
-                android:id="@+id/dividerLine3"
+            <include
+                android:id="@+id/password"
+                layout="@layout/password_layout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dividerHeight"
-                android:layout_marginTop="@dimen/dividerMarginTop"
-                android:background="@color/black"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_email_sending" />
+                app:layout_constraintTop_toBottomOf="@+id/email"/>
 
-            <TextView
-                android:id="@+id/tv_password"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/mainTextMarginStart"
-                android:layout_marginTop="@dimen/mainTextMarginTop"
-                android:text="@string/password"
-                android:textSize="@dimen/mainTextOfTopic"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dividerLine3" />
-
-            <TextView
-                android:id="@+id/tv_pass_rq"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/rqMarginStart"
-                android:layout_marginTop="@dimen/rqMarginTop"
-                android:text="@string/required"
-                app:layout_constraintStart_toEndOf="@+id/tv_password"
-                app:layout_constraintTop_toBottomOf="@+id/dividerLine3" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_password"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="@dimen/editTextWidth"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/etMarginStart"
-                android:layout_marginTop="@dimen/etMarginTop"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_password"
-                app:passwordToggleEnabled="true">
-
-                <EditText
-                    android:id="@+id/et_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ems="10"
-                    android:hint="@string/password_hint"
-                    android:afterTextChanged="@{(text) -> viewModel.onPasswordChanged(text)}"
-                    app:onFocusChangeListener = "@{viewModel.passwordOnFocusListener}"
-                    android:inputType="textPassword"
-                    android:minHeight="@dimen/etMinHeight" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <ProgressBar
-                android:id="@+id/pass_progress_bar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="@dimen/progressBarWidth"
-                android:layout_height="@dimen/progressBarHeight"
-                android:layout_marginStart="@dimen/progressBarMarginStart"
-                android:layout_marginTop="@dimen/progressBarMarginTop"
-                android:max="8"
-                android:progressBackgroundTint="@color/progressBackgroundTint"
-                android:progressTint="@color/progressTint"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/til_password"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/tv_pass_requirements"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/requestMarginStart"
-                android:layout_marginTop="@dimen/requestMarginTop"
-                android:text="@string/pass_requirements"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/pass_progress_bar" />
-
-            <com.midina.core_ui.ui.CheckStateView
-                android:id="@+id/cvPassword"
-                android:layout_width="@dimen/cvWidth"
-                android:layout_height="@dimen/cvHeight"
-                android:layout_marginEnd="@dimen/cvEndMargin"
-                app:layout_constraintBottom_toBottomOf="@+id/til_password"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dividerLine3">
-
-            </com.midina.core_ui.ui.CheckStateView>
-
-            <View
-                android:id="@+id/dividerLine4"
+            <include
+                android:id="@+id/gender"
+                layout="@layout/gender_layout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dividerHeight"
-                android:layout_marginTop="@dimen/dividerMarginTop"
-                android:background="@color/black"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_pass_requirements" />
+                app:layout_constraintTop_toBottomOf="@+id/password"/>
 
-            <TextView
-                android:id="@+id/tv_gender"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/mainTextMarginStart"
-                android:layout_marginTop="@dimen/mainTextMarginTop"
-                android:text="@string/gender"
-                android:textSize="@dimen/mainTextOfTopic"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dividerLine4" />
-
-            <TextView
-                android:id="@+id/tv_gender_rq"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/rqMarginStart"
-                android:layout_marginTop="@dimen/rqMarginTop"
-                android:text="@string/required"
-                app:layout_constraintStart_toEndOf="@+id/tv_gender"
-                app:layout_constraintTop_toBottomOf="@+id/dividerLine4" />
-
-            <CheckBox
-                android:id="@+id/cb_male"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/genderMaleMarginStart"
-                android:layout_marginTop="@dimen/genderMarginTop"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_gender" />
-
-            <CheckBox
-                android:id="@+id/cb_female"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/genderMarginTop"
-                app:layout_constraintStart_toStartOf="@+id/tv_female"
-                app:layout_constraintTop_toBottomOf="@+id/tv_gender" />
-
-            <CheckBox
-                android:id="@+id/cb_unspecified"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/genderMarginTop"
-                app:layout_constraintStart_toStartOf="@+id/tv_unspecified"
-                app:layout_constraintTop_toBottomOf="@+id/tv_gender" />
-
-            <TextView
-                android:id="@+id/tv_male"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/genderMaleMarginStart"
-                android:layout_marginTop="@dimen/genderMarginTop"
-                android:text="@string/male"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cb_male" />
-
-            <TextView
-                android:id="@+id/tv_female"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="@dimen/genderMarginTop"
-                android:text="@string/female"
-                app:layout_constraintStart_toEndOf="@+id/tv_male"
-                app:layout_constraintTop_toBottomOf="@+id/cb_female" />
-
-            <TextView
-                android:id="@+id/tv_unspecified"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="@dimen/genderMarginTop"
-                android:text="@string/unspecified"
-                app:layout_constraintStart_toEndOf="@+id/tv_female"
-                app:layout_constraintTop_toBottomOf="@+id/cb_unspecified" />
-
-            <com.midina.core_ui.ui.CheckStateView
-                android:id="@+id/cvGender"
-                android:layout_width="@dimen/cvWidth"
-                android:layout_height="@dimen/cvHeight"
-                android:layout_marginEnd="@dimen/cvEndMargin"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_unspecified"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dividerLine4">
-
-            </com.midina.core_ui.ui.CheckStateView>
-
-            <View
-                android:id="@+id/dividerLine5"
+            <include
+                android:id="@+id/date"
+                layout="@layout/date_layout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dividerHeight"
-                android:layout_marginTop="@dimen/dividerMarginTop"
-                android:background="@color/black"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_male" />
-
-            <TextView
-                android:id="@+id/tv_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/mainTextMarginStart"
-                android:layout_marginTop="@dimen/mainTextMarginTop"
-                android:text="@string/date"
-                android:textSize="@dimen/mainTextOfTopic"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dividerLine5" />
-
-            <TextView
-                android:id="@+id/tv_date_rq"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/rqMarginStart"
-                android:layout_marginTop="@dimen/rqMarginTop"
-                android:text="@string/required"
-                app:layout_constraintStart_toEndOf="@+id/tv_date"
-                app:layout_constraintTop_toBottomOf="@+id/dividerLine5" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_days"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="@dimen/daysWidth"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/etMarginStart"
-                android:layout_marginTop="@dimen/dateMarginTop"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_date">
-
-                <EditText
-                    android:id="@+id/et_date_days"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/dd"
-                    app:addTextChangedListener="@{viewModel.daysOnTextChangeListener}"
-                    app:onFocusChangeListener = "@{viewModel.daysOnFocusListener}"
-                    android:inputType="number"
-                    android:maxLength="2"
-                    android:textSize="@dimen/dateTextSize"
-                    android:imeOptions="actionDone"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <TextView
-                android:id="@+id/tv_slash1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/slashMarginStart"
-                android:layout_marginTop="@dimen/firstSlashMarginTop"
-                android:text="@string/slash"
-                android:textSize="@dimen/slash"
-                app:layout_constraintStart_toEndOf="@+id/til_days"
-                app:layout_constraintTop_toBottomOf="@+id/tv_date" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_monthes"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="@dimen/monthesWidth"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dateMarginStart"
-                android:layout_marginTop="@dimen/dateMarginTop"
-                app:layout_constraintStart_toEndOf="@+id/tv_slash1"
-                app:layout_constraintTop_toBottomOf="@+id/tv_date">
-
-                <EditText
-                    android:id="@+id/et_date_monthes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/mm"
-                    android:inputType="number"
-                    android:maxLength="2"
-                    app:addTextChangedListener="@{viewModel.monthesOnTextChangeListener}"
-                    app:onFocusChangeListener = "@{viewModel.monthesOnFocusListener}"
-                    android:textSize="@dimen/dateTextSize"
-                    android:imeOptions="actionDone"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <TextView
-                android:id="@+id/tv_slash2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/slashMarginStart"
-                android:layout_marginTop="@dimen/slashMarginTop"
-                android:text="@string/slash"
-                android:textSize="@dimen/slash"
-                app:layout_constraintStart_toEndOf="@+id/til_monthes"
-                app:layout_constraintTop_toBottomOf="@+id/tv_date" />
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_years"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="@dimen/yearsWidth"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dateMarginStart"
-                android:layout_marginTop="@dimen/dateMarginTop"
-                app:layout_constraintStart_toEndOf="@+id/tv_slash2"
-                app:layout_constraintTop_toBottomOf="@+id/tv_date">
-
-                <EditText
-                    android:id="@+id/et_date_years"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:ems="4"
-                    android:hint="@string/yyyy"
-                    app:addTextChangedListener="@{viewModel.yearsOnTextChangeListener}"
-                    app:onFocusChangeListener = "@{viewModel.yearsOnFocusListener}"
-                    android:inputType="number"
-                    android:maxLength="4"
-                    android:textSize="@dimen/dateTextSize" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <com.midina.core_ui.ui.CheckStateView
-                android:id="@+id/cvDate"
-                android:layout_width="@dimen/cvWidth"
-                android:layout_height="@dimen/cvHeight"
-                android:layout_marginEnd="@dimen/cvEndMargin"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="@+id/til_years"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dividerLine5">
-
-            </com.midina.core_ui.ui.CheckStateView>
-
-
-            <View
-                android:id="@+id/dividerLine6"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dividerHeight"
-                android:layout_marginTop="@dimen/dividerMarginTop"
-                android:background="@color/black"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/til_days" />
+                app:layout_constraintTop_toBottomOf="@+id/gender"/>
 
             <Button
                 android:id="@+id/bt_regist"
@@ -614,14 +79,22 @@
                 android:layout_marginTop="@dimen/registerMarginTop"
                 android:layout_marginBottom="@dimen/registerMarginBottom"
                 android:text="@string/to_regist"
+                tools:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dividerLine6" />
+                app:layout_constraintTop_toBottomOf="@+id/date" />
 
+            <ProgressBar
+                android:id="@+id/pb_loading"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:visibility="invisible"
+                android:layout_marginTop="@dimen/registerMarginTop"
+                android:layout_marginBottom="@dimen/registerMarginBottom"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/date" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
     </ScrollView>
-
-
 </layout>

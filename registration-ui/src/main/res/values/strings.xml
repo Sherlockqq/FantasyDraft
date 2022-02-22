@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="first_name">Имя</string>
-    <string name="required">*Небоходимо</string>
+    <string name="required">*Необходимо</string>
     <string name="name_request">Введите ваше имя!</string>
     <string name="last_name">Фамилия</string>
     <string name="lastName_request">Введите вашу фамилию!</string>
@@ -23,4 +23,9 @@
     <string name="mm">MM</string>
     <string name="yyyy">ГГГГ</string>
     <string name="title">Регистрация</string>
+    <string name="edit_date">0%1$s</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="verification">Please verify your email address</string>
+    <string name="date_requirements">Введите свою дату рождения</string>
 </resources>

@@ -9,7 +9,9 @@ import javax.inject.Inject
 
 class FavouriteViewModel @Inject constructor() : ViewModel() {
 
-    private var teams = mutableListOf<Team>()
+    private val _teams = MutableStateFlow( mutableListOf<Team>())
+    val teams: StateFlow<List<Team>>
+        get() = _teams
 
     private val _events = MutableStateFlow<UiEvent>(UiEvent.Loading)
     val events: StateFlow<UiEvent>
@@ -40,9 +42,9 @@ class FavouriteViewModel @Inject constructor() : ViewModel() {
 
     private fun getTeams() {
         teamNames.forEach { name ->
-            teams.add(Team(name))
+            _teams.value.add(Team(name))
         }
-        _events.value = UiEvent.Success(teams)
+        _events.value = UiEvent.Success(teams.value)
     }
 }
 

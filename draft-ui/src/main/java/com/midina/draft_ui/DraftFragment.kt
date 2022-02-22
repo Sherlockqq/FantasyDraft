@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnBottomNavItemSelectListener
+
 import com.midina.draft_ui.databinding.FragmentDraftBinding
 import kotlinx.coroutines.flow.collect
 

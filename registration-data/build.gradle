@@ -5,13 +5,11 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk = version_comp_sdk
 
     defaultConfig {
-        minSdk 21
-        targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        minSdk = version_min_sdk
+        targetSdk = version_target_sdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -47,10 +45,10 @@ dependencies {
     implementation "androidx.room:room-ktx:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
 
-    //Tests
-    testImplementation "junit:junit:$version_junit"
-    androidTestImplementation "androidx.test.ext:junit:$version_junit"
-    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    //test
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'io.mockk:mockk:1.9.3'
 
     //Firebase
     implementation platform("com.google.firebase:firebase-bom:$version_firebase")

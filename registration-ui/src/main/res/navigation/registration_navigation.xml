@@ -9,6 +9,7 @@
         android:id="@+id/registrationFragment"
         android:name="com.midina.registration_ui.RegistrationFragment"
         android:label="RegistrationFragment"
-        tools:layout="@layout/registration_fragment"/>
+        tools:layout="@layout/registration_fragment">
+    </fragment>
 
 </navigation>

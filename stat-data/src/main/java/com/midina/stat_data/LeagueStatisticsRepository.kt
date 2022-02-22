@@ -170,7 +170,7 @@ class LeagueStatisticsRepository @Inject constructor(private val statApi: Statis
                 Log.d(TAG, "getTop onError $it")
             }
             .map {
-                ResultEvent.Success(it.toTopAssistant())
+               ResultEvent.Success(it.toTopAssistant())
             }
     }
 

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.midina.registration_ui.RegistrationViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/nameMarginStart"
+            android:layout_marginTop="@dimen/nameMarginTop"
+            android:text="@string/last_name"
+            android:textSize="@dimen/mainTextOfTopic"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_title_rq"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/rqMarginStart"
+            android:layout_marginTop="@dimen/rqNameMarginTop"
+            android:text="@string/required"
+            app:layout_constraintStart_toEndOf="@+id/tv_title"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_field"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="@dimen/editTextWidth"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/etMarginStart"
+            android:layout_marginTop="@dimen/etMarginTop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title">
+
+            <EditText
+                android:id="@+id/et_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/last_name"
+                android:afterTextChanged="@{(text) -> viewModel.onLastNameChanged(text)}"
+                app:onFocusChangeListener = "@{viewModel.LastNameOnFocusListener}"
+                android:inputType="textPersonName"
+                android:minHeight="@dimen/etMinHeight"
+                tools:ignore="SpeakableTextPresentCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/tvRequest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/requestMarginStart"
+            android:layout_marginTop="@dimen/requestMarginTop"
+            android:text="@string/lastName_request"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:state="@{viewModel.lastNameState}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/til_field" />
+
+        <ImageView
+            android:id="@+id/iv_lastName"
+            android:layout_width="@dimen/cvWidth"
+            android:layout_height="@dimen/cvHeight"
+            android:layout_marginEnd="@dimen/cvEndMargin"
+            android:visibility="visible"
+            android:src="@drawable/ic_default"
+            app:state="@{viewModel.lastNameState}"
+            app:layout_constraintBottom_toBottomOf="@+id/til_field"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+        </ImageView>
+
+        <View
+            android:id="@+id/dividerLine"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dividerHeight"
+            android:layout_marginTop="@dimen/dividerMarginTop"
+            android:background="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvRequest" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

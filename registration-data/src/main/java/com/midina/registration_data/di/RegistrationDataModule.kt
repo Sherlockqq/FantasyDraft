@@ -6,7 +6,9 @@ import com.midina.registration_data.RegisterUserRepository
 import com.midina.registration_data.database.UserDao
 import com.midina.registration_data.database.UserDatabase
 import com.midina.registration_data.usecaseimpl.RegisterUserUsecaseImpl
+import com.midina.registration_data.usecaseimpl.WriteToDatabaseUsecaseImpl
 import com.midina.registration_domain.usecase.RegisterUserUsecase
+import com.midina.registration_domain.usecase.WriteToDatabaseUsecase
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -15,7 +17,7 @@ import javax.inject.Singleton
 
 @Module(
     includes = [
-        RegistrationDataUseCaseModule::class
+        UseCaseModule::class
     ]
 )
 class RegistrationDataModule {
@@ -37,12 +39,17 @@ class RegistrationDataModule {
 
     @Provides
     @Singleton
-    fun provideRegisterUserRepository(user: UserDao) = RegisterUserRepository(user)
+    fun provideRegisterUserRepository(user: UserDao) =
+        RegisterUserRepository(user)
 }
 
 @Module
-interface RegistrationDataUseCaseModule {
+interface UseCaseModule {
     @Binds
     fun bindRegisterUserImpl(registerUser: RegisterUserUsecaseImpl): RegisterUserUsecase
+
+    @Binds
+    fun bindWriteToDatabaseUserImpl(registerUser: WriteToDatabaseUsecaseImpl):
+            WriteToDatabaseUsecase
 }
 
