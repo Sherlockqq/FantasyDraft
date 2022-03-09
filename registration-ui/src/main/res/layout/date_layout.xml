@@ -160,15 +160,12 @@
             android:id="@+id/dividerLine"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dividerHeight"
-            android:layout_marginStart="@dimen/requestMarginStart"
             android:layout_marginTop="@dimen/requestMarginTop"
             android:background="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvRequest" />
-
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

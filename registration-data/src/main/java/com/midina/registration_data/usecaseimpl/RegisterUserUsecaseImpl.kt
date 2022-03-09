@@ -9,6 +9,6 @@ import javax.inject.Inject
 class RegisterUserUsecaseImpl @Inject constructor(
     private val registerUserRepository: RegisterUserRepository
 ) : RegisterUserUsecase {
-    override suspend fun execute(user: User, password: String): ResultEvent =
-        registerUserRepository.getIsRegistered(user, password)
+    override suspend fun execute(email: String, password: String): ResultEvent<String> =
+        registerUserRepository.getIsRegistered(email, password)
 }

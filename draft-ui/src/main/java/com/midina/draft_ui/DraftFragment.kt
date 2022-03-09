@@ -7,18 +7,23 @@ import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
+import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnBottomNavItemSelectListener
 
 import com.midina.draft_ui.databinding.FragmentDraftBinding
 import kotlinx.coroutines.flow.collect
+
+const val TAG = "DraftFragment"
 
 class DraftFragment : BaseFragment() {
 
@@ -53,6 +58,7 @@ class DraftFragment : BaseFragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        binding.vwDraft.viewModel = viewModel
 
         lifecycleScope.launchWhenCreated {
             viewModel.signEvents
@@ -61,14 +67,39 @@ class DraftFragment : BaseFragment() {
                 }
         }
 
-        binding.registerButton.setOnClickListener {
-            findNavController().navigate(R.id.action_registration_navigation, null)
+        lifecycleScope.launchWhenCreated {
+            viewModel.sendingEvent
+                .collect {
+                    handleSendingEvents(it)
+                }
         }
-        binding.signInButton.setOnClickListener {
-            findNavController().navigate(R.id.action_login_navigation, null)
+
+
+        binding.vwDraft.btAction.setOnClickListener {
+            when(viewModel.signEvents.value) {
+                SigningUiEvent.OnNotSignIn -> {
+                    findNavController().navigate(R.id.action_registration_navigation)
+                }
+                is SigningUiEvent.OnNotVerified -> {
+                    viewModel.verifyClicked()
+                }
+                is SigningUiEvent.OnVerified -> {
+                    Log.d(TAG,"navigate to Play fragment")
+                }
+            }
         }
-        binding.signOutButton.setOnClickListener {
-            viewModel.signedOutClicked()
+        binding.vwDraft.btSign.setOnClickListener {
+            when(viewModel.signEvents.value) {
+                SigningUiEvent.OnNotSignIn -> {
+                    findNavController().navigate(R.id.action_login_navigation, null)
+                }
+                is SigningUiEvent.OnNotVerified -> {
+                    viewModel.signedOutClicked()
+                }
+                is SigningUiEvent.OnVerified -> {
+                    viewModel.signedOutClicked()
+                }
+            }
         }
         return binding.root
     }
@@ -80,18 +111,34 @@ class DraftFragment : BaseFragment() {
 
     private fun handleSignsEvents(event: SigningUiEvent) {
         when (event) {
-            is SigningUiEvent.onSignIn -> {
-                binding.signInButton.isInvisible = true
-                binding.signOutButton.isVisible = true
-                binding.btPlay.isEnabled = true
+            is SigningUiEvent.OnVerified -> {
+                binding.vwDraft.tvEmail.text = getString(R.string.email, event.email)
+                binding.vwDraft.tvEmail.isVisible = true
             }
-            is SigningUiEvent.onNotSignIn -> {
-                binding.signInButton.isVisible = true
-                binding.signOutButton.isInvisible = true
-                binding.btPlay.isEnabled = false
+            is SigningUiEvent.OnNotSignIn -> {
+                binding.vwDraft.tvEmail.isGone = true
+            }
+            is SigningUiEvent.OnNotVerified -> {
+                binding.vwDraft.tvEmail.text = getString(R.string.verify_email, event.email)
+                binding.vwDraft.tvEmail.isVisible = true
             }
         }
     }
+
+    private fun handleSendingEvents(event: SendingEvent) {
+        when (event) {
+            SendingEvent.OnDefault -> {
+                Log.d(TAG, "DEFAULT")
+            }
+            SendingEvent.OnError -> {
+                Log.d(TAG, "ERROR")
+            }
+            SendingEvent.OnSuccess -> {
+                Log.d(TAG, "SUCCESS")
+            }
+        }
+    }
+
     private fun highlightIcon() {
         if (context is OnBottomNavItemSelectListener) {
             listener = context as OnBottomNavItemSelectListener

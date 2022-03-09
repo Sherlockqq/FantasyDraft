@@ -1,32 +1,37 @@
 package com.example.fantasydraft
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.animation.AnimationUtils
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.navigation.NavController
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import com.example.fantasydraft.databinding.ActivityMainBinding
-import com.midina.core_ui.ui.OnBottomNavHideListener
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.midina.core_ui.ui.OnBottomNavItemSelectListener
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.preferencesKey
 import androidx.datastore.preferences.createDataStore
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import com.example.fantasydraft.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.ActionCodeResult
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+import com.google.firebase.ktx.Firebase
 import com.midina.core_ui.ui.BaseFragment
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import com.midina.core_ui.ui.OnBottomNavHideListener
+import com.midina.core_ui.ui.OnBottomNavItemSelectListener
 import com.midina.matches_ui.OnArrowClickListener
 import com.midina.matches_ui.fixtures.FixturesFragment
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 private const val LAST_FRAGMENT = "LAST_FRAGMENT"
 private const val TAG = "MainActivity"
@@ -96,8 +101,8 @@ class MainActivity : AppCompatActivity(),
                 saveToLastFragmentDataStore(fragmentId)
             }
         }
-
         openBundle()
+        handleDynamicLink(navController)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -130,7 +135,6 @@ class MainActivity : AppCompatActivity(),
     }
 
 
-
     private fun getImage(team: String): Int {
         when (team) {
             "Львов" -> return R.drawable.lviv_logo
@@ -154,7 +158,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun getTeamTheme(): Int {
-        val sPref =  this.getSharedPreferences(
+        val sPref = this.getSharedPreferences(
             "SplashActivity",
             MODE_PRIVATE
         )
@@ -231,5 +235,51 @@ class MainActivity : AppCompatActivity(),
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val fragment = navHostFragment.childFragmentManager.fragments[0] as FixturesFragment
         fragment.previousPage()
+    }
+
+    private fun handleDynamicLink(navController: NavController) {
+
+        FirebaseDynamicLinks.getInstance().getDynamicLink(intent)
+            .addOnSuccessListener { pdLinkData ->
+                if (pdLinkData != null) {
+                    val oobCode: String? = pdLinkData.link?.getQueryParameter("oobCode")
+                    if (oobCode != null) {
+                        val fAuth = Firebase.auth
+                        fAuth.checkActionCode(oobCode).addOnSuccessListener { result ->
+                            when (result.operation) {
+                                ActionCodeResult.VERIFY_EMAIL -> {
+                                    fAuth.applyActionCode(oobCode)
+                                        .addOnSuccessListener {
+                                            fAuth.currentUser.let { user ->
+                                                user?.reload()
+                                                if (user?.isEmailVerified == true) {
+                                                    val fragmentManager: FragmentManager =
+                                                        supportFragmentManager
+                                                    //this will clear the back stack and displays no animation on the screen
+                                                    fragmentManager.popBackStackImmediate(
+                                                        null,
+                                                        FragmentManager.POP_BACK_STACK_INCLUSIVE
+                                                    )
+                                                    navController.navigate(R.id.action_draft_navigation)
+                                                }
+                                            }
+                                            Log.i(TAG, "Verified email")
+                                        }
+                                        .addOnFailureListener { resultCode ->
+                                            Log.w(TAG, "Failed to verify email", resultCode)
+                                        }
+                                }
+                                ActionCodeResult.PASSWORD_RESET -> {
+                                    Log.d(TAG, "PASSWORD RESET")
+                                }
+                            }
+                        }.addOnFailureListener { result ->
+                            Log.w(TAG, "Invalid code sent")
+                        }
+                    }
+                }
+            }.addOnFailureListener { ex ->
+                Log.w(TAG, "Invalid code sent. $ex")
+            }
     }
 }

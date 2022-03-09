@@ -52,6 +52,7 @@ dependencies {
 
     //Firebase
     implementation platform("com.google.firebase:firebase-bom:$version_firebase")
+    implementation 'com.google.firebase:firebase-dynamic-links:21.0.0'
     implementation 'com.google.firebase:firebase-auth-ktx'
 
     implementation project(path: ':registration-domain')

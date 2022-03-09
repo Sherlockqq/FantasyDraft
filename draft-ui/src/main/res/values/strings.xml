@@ -3,8 +3,13 @@
     <string name="sign_in">Войти</string>
     <string name="register">Регистрация</string>
     <string name="upl">Украинская Премьер Лига</string>
-    <string name="welcome_to_fantasy">Добро пожаловать</string>
     <string name="start">Начать Игру</string>
     <string name="sign_out">Выйти</string>
     <string name="title">Драфт</string>
+    <string name="fantasy">Fantasy</string>
+    <string name="premier_league">Premier League</string>
+    <string name="welcome_to_fantasy">Welcome to Fantasy</string>
+    <string name="official">The official fantasy football game of the Premier League</string>
+    <string name="email">Signed as %1$s</string>
+    <string name="verify_email">Verify your email %1$s!</string>
 </resources>

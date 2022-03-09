@@ -4,6 +4,7 @@ import android.text.Editable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.midina.login_domain.model.ResultEvent
+import com.midina.login_domain.usecase.GoogleSignInUsecase
 import com.midina.login_domain.usecase.SigningInUsecase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +15,7 @@ import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
     private val signingInUsecase: SigningInUsecase,
+    private val googleSignUsecase: GoogleSignInUsecase,
     private val coroutineDispatcher: CoroutineDispatcher
 ) :
     ViewModel() {
@@ -47,13 +49,29 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    fun googleSignInClicked(idToken: String) {
+        viewModelScope.launch(coroutineDispatcher) {
+            googleSignIn(idToken)
+        }
+    }
+
     private suspend fun signIn() {
         val result = signingInUsecase.execute(_email.value, _password.value)
         when (result) {
             is ResultEvent.Success -> _loginEvents.value = LoginEvent.OnSuccess
             is ResultEvent.InvalidateData -> _loginEvents.value = LoginEvent.OnError
             is ResultEvent.Error -> {
-            }//TODO Exception
+            }
+        }
+    }
+
+    private suspend fun googleSignIn(idToken: String) {
+        val result = googleSignUsecase.execute(idToken)
+
+        when (result) {
+            is ResultEvent.Success -> _loginEvents.value = LoginEvent.OnSuccess
+            is ResultEvent.InvalidateData -> _loginEvents.value = LoginEvent.OnError
+            is ResultEvent.Error -> {}
         }
     }
 }

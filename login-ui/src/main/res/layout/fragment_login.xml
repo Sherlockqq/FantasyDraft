@@ -80,6 +80,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_requirements" />
 
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/bt_google_sign_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/LoginMarginTop"
+            app:layout_constraintTop_toBottomOf="@id/bt_sign_in"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/bt_facebook_sign_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/LoginMarginTop"
+            app:layout_constraintTop_toBottomOf="@id/bt_google_sign_in"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

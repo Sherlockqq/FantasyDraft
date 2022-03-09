@@ -92,7 +92,6 @@ class FixturesFragment : BaseFragment() {
             adapter = activity?.let {
                 TourPageAdapter(it, matchesMap)
             }!!
-            Log.d(TAG, " matches : $matchesMap")
             binding.pager.adapter = adapter
             binding.pager.setCurrentItem(viewModel.currentTour.value, false)
             matchesMap[viewModel.currentTour.value]?.let { createAlarm(it) }
@@ -181,15 +180,12 @@ class FixturesFragment : BaseFragment() {
                         viewModel.getTimeInMillis(matchesList[index].date),
                         pendingIntent
                     )
-                    Log.d(TAG, "while idle")
                 } else {
                     alarmManager.setExact(
                         AlarmManager.RTC_WAKEUP,
                         viewModel.getTimeInMillis(matchesList[index].date),
                         pendingIntent
                     )
-                    Log.d(TAG, "not idle")
-
                 }
             }
         }

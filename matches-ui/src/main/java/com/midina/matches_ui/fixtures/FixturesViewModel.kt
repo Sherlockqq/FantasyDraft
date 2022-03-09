@@ -121,11 +121,7 @@ class FixturesViewModel @Inject constructor(
     }
 
     fun getTimeInMillis(matchTime: String): Long {
-        val matchDate = sdf.parse(matchTime)
-
-        Log.d("FixturesViewModel", "Current Date: $matchDate")
-
-        return matchDate.time
+        return  sdf.parse(matchTime).time
     }
 }
 

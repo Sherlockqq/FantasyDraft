@@ -5,4 +5,5 @@
     <string name="sign_in">Войти</string>
     <string name="requirements">Введите правильный пароль и email!</string>
     <string name="title">Авторизация</string>
+    <string name="default_web_client_id">133687627539-fpc7kjm1tnsso22p8c6vurup4g9oi2gg.apps.googleusercontent.com</string>
 </resources>

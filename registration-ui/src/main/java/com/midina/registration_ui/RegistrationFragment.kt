@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView.OnEditorActionListener
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -270,12 +272,27 @@ class RegistrationFragment : BaseFragment() {
     private fun handleRegistrationEvents(event: RegistrationEvent) {
         when (event) {
             is RegistrationEvent.OnSuccess -> {
-                findNavController().navigate(R.id.action_draft_navigation, null)
+               // findNavController().navigate(R.id.action_draft_navigation, null)
             }
             is RegistrationEvent.OnError -> {
                 binding?.pbLoading?.isVisible = false
                 binding?.btRegist?.isVisible = true
                 binding?.btRegist?.isEnabled = true
+
+                when (event.error) {
+                    getString(R.string.error_collision) -> {
+                        viewModel.setEmailError()
+                        Toast.makeText(context, event.error, LENGTH_LONG).show()
+                    }
+                    getString(R.string.error_connection) -> {
+                        Toast
+                            .makeText(context, getString(R.string.toast_connection), LENGTH_LONG)
+                            .show()
+                    }
+                    getString(R.string.error_data) -> {
+                        Toast.makeText(context, event.error, LENGTH_LONG).show()
+                    }
+                }
             }
             is RegistrationEvent.OnProgress -> {
                 binding?.btRegist?.isVisible = false

@@ -9,7 +9,7 @@ import javax.inject.Inject
 class WriteToDatabaseUsecaseImpl @Inject constructor(
     private val registerUserRepository: RegisterUserRepository
 ) : WriteToDatabaseUsecase {
-    override suspend fun execute(user: User): ResultEvent {
+    override suspend fun execute(user: User): ResultEvent<String> {
         return registerUserRepository.writeToDatabase(user)
     }
 }

@@ -4,5 +4,5 @@ import com.midina.registration_domain.model.ResultEvent
 import com.midina.registration_domain.model.User
 
 interface WriteToDatabaseUsecase {
-    suspend fun execute(user: User): ResultEvent
+    suspend fun execute(user: User): ResultEvent<String>
 }

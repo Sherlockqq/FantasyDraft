@@ -194,7 +194,7 @@ class RegistrationViewModel @Inject constructor(
     }
 
     val emailOnFocusListener = View.OnFocusChangeListener { _, hasFocus ->
-        if (!hasFocus && _email.value.let { !isEmail(it) }) {
+        if (!hasFocus && email.value.let { !isEmail(it) } && email.value.isNotEmpty()) {
             _emailState.value = State.ERROR
             _emailEvents.value = EmailUiEvent.OnTextInvalid
         }
@@ -272,6 +272,8 @@ class RegistrationViewModel @Inject constructor(
                 ) {
                     checkDate()
                 }
+            } else {
+                _dateState.value = State.DEFAULT
             }
         }
     }
@@ -310,6 +312,8 @@ class RegistrationViewModel @Inject constructor(
                 ) {
                     checkDate()
                 }
+            } else {
+                _dateState.value = State.DEFAULT
             }
         }
     }
@@ -339,6 +343,8 @@ class RegistrationViewModel @Inject constructor(
                 ) {
                     checkDate()
                 }
+            } else {
+                _dateState.value = State.DEFAULT
             }
         }
     }
@@ -395,31 +401,31 @@ class RegistrationViewModel @Inject constructor(
     private suspend fun registerUser() {
         _registerEvents.value = RegistrationEvent.OnProgress
         if (checkingAllIsCorrect()) {
-            val date = _dateYears.value.toString() + "-" +
-                    _dateMonthes.value.toString() + "-" + _dateDays.value.toString()
+            val date = dateYears.value.toString() + "-" +
+                    dateMonthes.value.toString() + "-" + dateDays.value.toString()
             val user = User(
-                _firstName.value,
-                _lastName.value,
-                _email.value,
+                firstName.value,
+                lastName.value,
+                email.value,
                 gender.value,
                 date
             )
-            val result = registerUserUsecase.execute(user, _password.value)
+            val result = registerUserUsecase.execute(email.value, password.value)
             when (result) {
-                ResultEvent.Success -> {
+                is ResultEvent.Success -> {
                     writeToDatabase(user)
                     _registerEvents.value = RegistrationEvent.OnSuccess
                 }
-                ResultEvent.Error -> {
-                    _registerEvents.value = RegistrationEvent.OnError
+                is ResultEvent.Error -> {
+                    _registerEvents.value = RegistrationEvent.OnError(result.value.toString())
                 }
-                ResultEvent.InProgress -> {
+                is ResultEvent.InProgress -> {
                     _registerEvents.value = RegistrationEvent.OnProgress
                 }
             }
         } else {
             setErrors()
-            _registerEvents.value = RegistrationEvent.OnError
+            _registerEvents.value = RegistrationEvent.OnError("Not all data is correct!")
         }
     }
 
@@ -427,13 +433,13 @@ class RegistrationViewModel @Inject constructor(
         val result = writeToDatabaseUsecase.execute(user)
 
         when (result) {
-            ResultEvent.Success -> {
+            is ResultEvent.Success -> {
                 Log.d(TAG, "Success")
             }
-            ResultEvent.Error -> {
+            is ResultEvent.Error -> {
                 Log.d(TAG, "Error")
             }
-            ResultEvent.InProgress -> {
+            is ResultEvent.InProgress -> {
                 Log.d(TAG, "InProgress")
             }
         }
@@ -465,6 +471,10 @@ class RegistrationViewModel @Inject constructor(
         viewModelScope.launch(dispatcher) {
             registerUser()
         }
+    }
+
+    fun setEmailError() {
+        _emailState.value = State.ERROR
     }
 
     fun maleClicked() {
@@ -528,7 +538,7 @@ sealed class YearsUiEvent {
 
 sealed class RegistrationEvent {
     object OnSuccess : RegistrationEvent()
-    object OnError : RegistrationEvent()
+    class OnError(val error: String) : RegistrationEvent()
     object OnProgress : RegistrationEvent()
     object OnDefault : RegistrationEvent()
 }

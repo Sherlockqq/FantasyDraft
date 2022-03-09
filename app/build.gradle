@@ -54,6 +54,10 @@ dependencies {
     androidTestImplementation 'org.junit.jupiter:junit-jupiter'
     androidTestImplementation 'org.junit.jupiter:junit-jupiter'
 
+    //firebase
+    implementation 'com.google.firebase:firebase-dynamic-links:21.0.0'
+    implementation 'com.google.firebase:firebase-auth-ktx'
+
     //DataStore Preferences
     implementation "androidx.datastore:datastore-preferences:1.0.0-alpha04"
 
