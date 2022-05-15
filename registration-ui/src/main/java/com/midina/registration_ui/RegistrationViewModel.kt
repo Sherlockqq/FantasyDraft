@@ -10,9 +10,12 @@ import androidx.lifecycle.viewModelScope
 import com.midina.registration_domain.model.Gender
 import com.midina.registration_domain.model.User
 import com.midina.registration_domain.model.ResultEvent
+import com.midina.registration_domain.usecase.GenerateTokenUsecase
 import com.midina.registration_domain.usecase.RegisterUserUsecase
-import com.midina.registration_domain.usecase.WriteToDatabaseUsecase
+import com.midina.registration_domain.usecase.WriteToFirebaseDatastoreUsecase
+import com.midina.registration_domain.usecase.WriteToRoomDatabaseUsecase
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -52,7 +55,9 @@ private val EMAIL_ADDRESS_PATTERN: Pattern = Pattern.compile(
 
 class RegistrationViewModel @Inject constructor(
     private val registerUserUsecase: RegisterUserUsecase,
-    private val writeToDatabaseUsecase: WriteToDatabaseUsecase,
+    private val writeToRoomDatabaseUsecase: WriteToRoomDatabaseUsecase,
+    private val writeToFirebaseDataStoreUsecase: WriteToFirebaseDatastoreUsecase,
+    private val generateTokenUsecase: GenerateTokenUsecase,
     private val dispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
@@ -404,16 +409,17 @@ class RegistrationViewModel @Inject constructor(
             val date = dateYears.value.toString() + "-" +
                     dateMonthes.value.toString() + "-" + dateDays.value.toString()
             val user = User(
-                firstName.value,
-                lastName.value,
-                email.value,
+                firstName.value.trim(),
+                lastName.value.trim(),
+                email.value.trim(),
                 gender.value,
-                date
+                date.trim()
             )
-            val result = registerUserUsecase.execute(email.value, password.value)
+            val result = registerUserUsecase.execute(email.value.trim(), password.value)
             when (result) {
                 is ResultEvent.Success -> {
-                    writeToDatabase(user)
+                    writeToDatabases(user)
+                    generateToken()
                     _registerEvents.value = RegistrationEvent.OnSuccess
                 }
                 is ResultEvent.Error -> {
@@ -429,8 +435,30 @@ class RegistrationViewModel @Inject constructor(
         }
     }
 
-    private suspend fun writeToDatabase(user: User) {
-        val result = writeToDatabaseUsecase.execute(user)
+    private fun writeToDatabases(user: User) {
+        viewModelScope.launch(dispatcher) {
+            launch { writeToRoomDatabase(user) }
+            launch { writeToFirebaseDatastore(user) }
+        }
+    }
+
+    private suspend fun generateToken() {
+        val result = generateTokenUsecase.execute()
+        when (result) {
+            is ResultEvent.Success -> {
+                Log.d(TAG, "Success")
+            }
+            is ResultEvent.Error -> {
+                Log.d(TAG, "Error")
+            }
+            is ResultEvent.InProgress -> {
+                Log.d(TAG, "InProgress")
+            }
+        }
+    }
+
+    private suspend fun writeToRoomDatabase(user: User) {
+        val result = writeToRoomDatabaseUsecase.execute(user)
 
         when (result) {
             is ResultEvent.Success -> {
@@ -443,7 +471,22 @@ class RegistrationViewModel @Inject constructor(
                 Log.d(TAG, "InProgress")
             }
         }
+    }
 
+    private suspend fun writeToFirebaseDatastore(user: User) {
+        val result = writeToFirebaseDataStoreUsecase.execute(user)
+
+        when (result) {
+            is ResultEvent.Success -> {
+                Log.d(TAG, "Success")
+            }
+            is ResultEvent.Error -> {
+                Log.d(TAG, "Error")
+            }
+            is ResultEvent.InProgress -> {
+                Log.d(TAG, "InProgress")
+            }
+        }
     }
 
     private fun setErrors() {

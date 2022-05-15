@@ -50,20 +50,21 @@ class DraftViewModel @Inject constructor(
     }
 
     fun verifyClicked() {
-        viewModelScope.launch(Dispatchers.IO )  {
-           val result = sendingVerificationUsecase.execute()
-            when(result) {
-                ResultSending.Error -> {
-                    _sendingEvents.value = SendingEvent.OnError
-                }
-                ResultSending.Success -> {
-                    _sendingEvents.value = SendingEvent.OnSuccess
-                }
-            }
+        viewModelScope.launch(Dispatchers.IO ) {
+            sendingVerification()
         }
     }
 
     private suspend fun sendingVerification() {
+        val result = sendingVerificationUsecase.execute()
+        when(result) {
+            ResultSending.Error -> {
+                _sendingEvents.value = SendingEvent.OnError
+            }
+            ResultSending.Success -> {
+                _sendingEvents.value = SendingEvent.OnSuccess
+            }
+        }
     }
 
     private suspend fun signingOut() {

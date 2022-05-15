@@ -11,9 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isGone
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -21,8 +19,6 @@ import androidx.navigation.fragment.findNavController
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
-import com.facebook.FacebookSdk
-import com.facebook.FacebookSdk.getApplicationContext
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -32,7 +28,6 @@ import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnBottomNavHideListener
 import com.midina.login_ui.databinding.FragmentLoginBinding
 import kotlinx.coroutines.flow.collect
-import java.util.*
 
 const val TAG = "LoginFragment"
 
@@ -55,7 +50,6 @@ class LoginFragment : BaseFragment() {
                 }
             }
         }
-
 
     private val viewModel: LoginViewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[LoginViewModel::class.java]
@@ -107,11 +101,22 @@ class LoginFragment : BaseFragment() {
                 }
         }
 
-        binding?.btSignIn?.setOnClickListener {
+        lifecycleScope.launchWhenCreated {
+            viewModel.resetEvents
+                .collect {
+                    handleLResetEvents(it)
+                }
+        }
+
+        binding?.tvRegister?.setOnClickListener {
+            findNavController().navigate(R.id.action_registration_navigation)
+        }
+
+        binding?.btLogin?.setOnClickListener {
             viewModel.signInClicked()
         }
 
-        binding?.btGoogleSignIn?.setOnClickListener {
+        binding?.ivGoogle?.setOnClickListener {
 
             val gso: GoogleSignInOptions =
                 GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -120,54 +125,93 @@ class LoginFragment : BaseFragment() {
                     .build()
 
             val mGoogleSignInClient =
-                this.activity?.let { activity -> GoogleSignIn.getClient(activity, gso) };
+                this.activity?.let { activity -> GoogleSignIn.getClient(activity, gso) }
 
             val signInIntent: Intent = mGoogleSignInClient!!.signInIntent
 
             resultGoogleLauncher.launch(signInIntent)
         }
 
-
-        // Initialize Facebook Login button
         val callbackManager = CallbackManager.Factory.create()
-
-        LoginManager.getInstance().registerCallback(callbackManager,
+        binding?.btFacebookSignIn?.setPermissions("email")
+        binding?.btFacebookSignIn?.fragment = this
+        binding?.btFacebookSignIn?.registerCallback(
+            callbackManager,
             object : FacebookCallback<LoginResult> {
-                override fun onSuccess(result: LoginResult?) {
-                    binding?.tvRequirements?.isGone = true
-                    findNavController().navigate(R.id.action_draft_navigation, null)
-                }
-
                 override fun onCancel() {
-                    binding?.tvRequirements?.isVisible = true
+                    Log.d(TAG, "button onCancel")
                 }
 
-                override fun onError(error: FacebookException?) {
-                    binding?.tvRequirements?.isVisible = true
+                override fun onError(error: FacebookException) {
+                    Log.d(TAG, "button onError")
                 }
 
+                override fun onSuccess(result: LoginResult) {
+                    viewModel.facebookSignInClicked(result.accessToken.token)
+                }
             })
 
+        binding?.ivFacebook?.setOnClickListener {
+            binding?.btFacebookSignIn?.callOnClick()
+        }
+
         binding?.btFacebookSignIn?.setOnClickListener {
-            LoginManager.getInstance()
-                .logInWithReadPermissions(this, Arrays.asList("public_profile"))
+            LoginManager.getInstance().logInWithReadPermissions(
+                this,
+                callbackManager,
+                listOf("public_profile", "email")
+            )
+        }
+
+        binding?.tietEmail?.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                val colour = context?.let { ContextCompat.getColor(it, R.color.active_colour) }
+                if (colour != null) {
+                    binding?.tvEmail?.setTextColor(colour)
+                }
+            } else {
+                viewModel.emailFocusChanged()
+                val colour = context?.let { ContextCompat.getColor(it, R.color.static_colour) }
+                if (colour != null) {
+                    binding?.tvEmail?.setTextColor(colour)
+                }
+            }
+        }
+
+        binding?.tietPassword?.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                val colour = context?.let { ContextCompat.getColor(it, R.color.active_colour) }
+                if (colour != null) {
+                    binding?.tvPassword?.setTextColor(colour)
+                }
+            } else {
+                val colour = context?.let { ContextCompat.getColor(it, R.color.static_colour) }
+                if (colour != null) {
+                    binding?.tvPassword?.setTextColor(colour)
+                }
+            }
+        }
+
+        binding?.tvForgot?.setOnClickListener {
+            viewModel.forgotPasswordClicked()
         }
 
         return binding?.root
     }
 
     private fun handleLoginEvents(event: LoginEvent) {
-        when (event) {
-            is LoginEvent.OnSuccess -> {
-                binding?.tvRequirements?.isGone = true
-                findNavController().navigate(R.id.action_draft_navigation, null)
-            }
-            is LoginEvent.OnError -> {
-                binding?.tvRequirements?.isVisible = true
-            }
-            is LoginEvent.OnDefault -> {
-                binding?.tvRequirements?.isInvisible = true
-            }
+        if (event is LoginEvent.OnSuccess) {
+            findNavController().navigate(R.id.action_draft_navigation, null)
+        } else if (event is LoginEvent.OnError) {
+            Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun handleLResetEvents(event: PasswordResetEvent) {
+        if (event == PasswordResetEvent.OnError) {
+            Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show()
+        } else if (event == PasswordResetEvent.OnSuccess) {
+            Toast.makeText(context, "Check email to reset the pass", Toast.LENGTH_SHORT).show()
         }
     }
 }

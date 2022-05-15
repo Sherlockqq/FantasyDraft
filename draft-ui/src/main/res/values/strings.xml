@@ -12,4 +12,6 @@
     <string name="official">The official fantasy football game of the Premier League</string>
     <string name="email">Signed as %1$s</string>
     <string name="verify_email">Verify your email %1$s!</string>
+    <string name="verifying_is_in_process">Verifying is in process...</string>
+    <string name="email_is_sent">Email is sent</string>
 </resources>

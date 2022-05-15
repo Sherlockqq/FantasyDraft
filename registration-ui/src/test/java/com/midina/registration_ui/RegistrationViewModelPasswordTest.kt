@@ -3,7 +3,7 @@ package com.midina.registration_ui
 import android.text.Editable
 import android.view.View
 import com.midina.registration_domain.usecase.RegisterUserUsecase
-import com.midina.registration_domain.usecase.WriteToDatabaseUsecase
+import com.midina.registration_domain.usecase.WriteToRoomDatabaseUsecase
 import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,7 +18,7 @@ class RegistrationViewModelPasswordTest {
 
     private lateinit var viewModel: RegistrationViewModel
     private lateinit var usecase: RegisterUserUsecase
-    private lateinit var usecaseDatabase: WriteToDatabaseUsecase
+    private lateinit var usecaseRoomDatabase: WriteToRoomDatabaseUsecase
 
     @get:Rule
     val rule = MainCoroutineRule()
@@ -26,8 +26,8 @@ class RegistrationViewModelPasswordTest {
     @Before
     fun setUp() {
         usecase = mockk(relaxed = true)
-        usecaseDatabase = mockk(relaxed = true)
-        viewModel = RegistrationViewModel(usecase, usecaseDatabase, rule.dispatcher)
+        usecaseRoomDatabase = mockk(relaxed = true)
+        viewModel = RegistrationViewModel(usecase, usecaseRoomDatabase, rule.dispatcher)
     }
 
     @After

@@ -1,7 +1,7 @@
 ext {
 //    build
     version_kotlin = "1.5.21"
-    version_gradle = '7.1.1'
+    version_gradle = '7.1.2'
 //    android
     version_lifecycle = "2.3.1"
     version_core = "1.7.0"

@@ -1,11 +1,7 @@
 package com.midina.login_ui
 
 import android.text.InputType
-import androidx.fragment.app.testing.launchFragment
-import androidx.fragment.app.testing.launchFragmentInContainer
-import androidx.lifecycle.lifecycleScope
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withInputType
@@ -32,7 +28,7 @@ class LoginFragmentTestEspresso {
 
     @Test
     fun emailEditTypeTest() {
-        onView(withId(R.id.et_email))
+        onView(withId(R.id.til_email))
             .check(matches(withInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)))
     }
 

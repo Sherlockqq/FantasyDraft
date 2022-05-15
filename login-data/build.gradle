@@ -38,6 +38,7 @@ dependencies {
 
     //Dagger
     implementation "com.google.dagger:dagger:$version_dagger"
+    implementation 'com.google.firebase:firebase-database-ktx:20.0.3'
     kapt "com.google.dagger:dagger-compiler:$version_dagger"
 
     //Coroutine

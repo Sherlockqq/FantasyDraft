@@ -3,13 +3,13 @@ package com.midina.registration_data.usecaseimpl
 import com.midina.registration_data.RegisterUserRepository
 import com.midina.registration_domain.model.ResultEvent
 import com.midina.registration_domain.model.User
-import com.midina.registration_domain.usecase.WriteToDatabaseUsecase
+import com.midina.registration_domain.usecase.WriteToFirebaseDatastoreUsecase
 import javax.inject.Inject
 
-class WriteToDatabaseUsecaseImpl @Inject constructor(
+class WriteToFirebaseDatastoreUsecaseImpl @Inject constructor(
     private val registerUserRepository: RegisterUserRepository
-) : WriteToDatabaseUsecase {
+) : WriteToFirebaseDatastoreUsecase {
     override suspend fun execute(user: User): ResultEvent<String> {
-        return registerUserRepository.writeToDatabase(user)
+        return registerUserRepository.writeToFirebaseDataStore(user)
     }
 }

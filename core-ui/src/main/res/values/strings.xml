@@ -2,4 +2,5 @@
 <resources>
     <string name="facebook_app_id">379011553985902</string>
     <string name="fb_login_protocol_scheme">fb379011553985902</string>
+    <string name="something_went_wrong">Something went wrong. Try later</string>
 </resources>

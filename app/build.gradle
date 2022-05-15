@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -57,7 +58,9 @@ dependencies {
     //firebase
     implementation 'com.google.firebase:firebase-dynamic-links:21.0.0'
     implementation 'com.google.firebase:firebase-auth-ktx'
-
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
     //DataStore Preferences
     implementation "androidx.datastore:datastore-preferences:1.0.0-alpha04"
 

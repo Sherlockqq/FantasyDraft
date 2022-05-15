@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class SigningInUsecaseImpl @Inject constructor
     (private val signingInRepository: SigningInRepository): SigningInUsecase {
-    override suspend fun execute(email: String, password: String): ResultEvent =
+    override suspend fun execute(email: String, password: String): ResultEvent<String> =
         signingInRepository.getIsSigned(email, password)
 }
 

@@ -4,7 +4,7 @@ import android.text.Editable
 import android.text.TextUtils
 import android.view.View
 import com.midina.registration_domain.usecase.RegisterUserUsecase
-import com.midina.registration_domain.usecase.WriteToDatabaseUsecase
+import com.midina.registration_domain.usecase.WriteToRoomDatabaseUsecase
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -20,7 +20,7 @@ class RegistrationViewModelDaysTest {
 
     private lateinit var viewModel: RegistrationViewModel
     private lateinit var usecaseRegist: RegisterUserUsecase
-    private lateinit var usecaseDatabase: WriteToDatabaseUsecase
+    private lateinit var usecaseRoomDatabase: WriteToRoomDatabaseUsecase
 
     @get:Rule
     val rule = MainCoroutineRule()
@@ -28,8 +28,8 @@ class RegistrationViewModelDaysTest {
     @Before
     fun setUp() {
         usecaseRegist = mockk(relaxed = true)
-        usecaseDatabase = mockk(relaxed = true)
-        viewModel = RegistrationViewModel(usecaseRegist, usecaseDatabase, rule.dispatcher)
+        usecaseRoomDatabase = mockk(relaxed = true)
+        viewModel = RegistrationViewModel(usecaseRegist, usecaseRoomDatabase, rule.dispatcher)
     }
 
     @After

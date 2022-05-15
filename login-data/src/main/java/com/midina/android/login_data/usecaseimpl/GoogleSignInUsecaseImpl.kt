@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class GoogleSignInUsecaseImpl @Inject constructor
     (private val signingInRepository: SigningInRepository) : GoogleSignInUsecase {
-    override suspend fun execute(idToken: String): ResultEvent {
+    override suspend fun execute(idToken: String): ResultEvent<String> {
         return signingInRepository.googleSignIn(idToken)
     }
 }

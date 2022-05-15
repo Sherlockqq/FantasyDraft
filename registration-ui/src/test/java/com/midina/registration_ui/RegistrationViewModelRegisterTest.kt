@@ -4,7 +4,7 @@ import android.text.Editable
 import android.util.Log
 import com.midina.registration_domain.model.ResultEvent
 import com.midina.registration_domain.usecase.RegisterUserUsecase
-import com.midina.registration_domain.usecase.WriteToDatabaseUsecase
+import com.midina.registration_domain.usecase.WriteToRoomDatabaseUsecase
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -30,7 +30,7 @@ class RegistrationViewModelRegisterTest {
     private lateinit var dayEditable: Editable
     private lateinit var monthEditable: Editable
     private lateinit var yearEditable: Editable
-    private lateinit var usecaseDatabase: WriteToDatabaseUsecase
+    private lateinit var usecaseRoomDatabase: WriteToRoomDatabaseUsecase
 
     @get:Rule
     val rule = MainCoroutineRule()
@@ -45,10 +45,10 @@ class RegistrationViewModelRegisterTest {
         dayEditable = mockk(relaxed = true)
         monthEditable = mockk(relaxed = true)
         yearEditable = mockk(relaxed = true)
-        usecaseDatabase = mockk(relaxed = true)
+        usecaseRoomDatabase = mockk(relaxed = true)
         mockkStatic(Log::class)
 
-        viewModel = RegistrationViewModel(usecase, usecaseDatabase, rule.dispatcher)
+        viewModel = RegistrationViewModel(usecase, usecaseRoomDatabase, rule.dispatcher)
     }
 
     @After
@@ -67,7 +67,7 @@ class RegistrationViewModelRegisterTest {
         every { yearEditable.toString() } returns "2020"
         every { Log.d(any(), any())} returns 0
         coEvery { usecase.execute(any(), any()) } returns ResultEvent.Success
-        coEvery { usecaseDatabase.execute(any()) } returns ResultEvent.Success
+        coEvery { usecaseRoomDatabase.execute(any()) } returns ResultEvent.Success
 
 
         viewModel.onFirstNameChanged(firstNameEditable)

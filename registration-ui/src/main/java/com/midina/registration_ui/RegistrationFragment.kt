@@ -272,7 +272,7 @@ class RegistrationFragment : BaseFragment() {
     private fun handleRegistrationEvents(event: RegistrationEvent) {
         when (event) {
             is RegistrationEvent.OnSuccess -> {
-               // findNavController().navigate(R.id.action_draft_navigation, null)
+                findNavController().navigate(R.id.action_draft_navigation, null)
             }
             is RegistrationEvent.OnError -> {
                 binding?.pbLoading?.isVisible = false

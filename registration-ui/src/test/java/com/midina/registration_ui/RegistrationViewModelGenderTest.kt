@@ -2,7 +2,7 @@ package com.midina.registration_ui
 
 import com.midina.registration_domain.model.Gender
 import com.midina.registration_domain.usecase.RegisterUserUsecase
-import com.midina.registration_domain.usecase.WriteToDatabaseUsecase
+import com.midina.registration_domain.usecase.WriteToRoomDatabaseUsecase
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
@@ -16,7 +16,7 @@ class RegistrationViewModelGenderTest {
 
     private lateinit var viewModel: RegistrationViewModel
     private lateinit var usecase: RegisterUserUsecase
-    private lateinit var usecaseDatabase: WriteToDatabaseUsecase
+    private lateinit var usecaseRoomDatabase: WriteToRoomDatabaseUsecase
 
     @get:Rule
     val rule = MainCoroutineRule()
@@ -24,8 +24,8 @@ class RegistrationViewModelGenderTest {
     @Before
     fun setUp() {
         usecase = mockk(relaxed = true)
-        usecaseDatabase = mockk(relaxed = true)
-        viewModel = RegistrationViewModel(usecase, usecaseDatabase, rule.dispatcher)
+        usecaseRoomDatabase = mockk(relaxed = true)
+        viewModel = RegistrationViewModel(usecase, usecaseRoomDatabase, rule.dispatcher)
     }
 
     @After
