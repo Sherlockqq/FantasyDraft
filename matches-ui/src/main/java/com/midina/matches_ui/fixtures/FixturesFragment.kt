@@ -95,7 +95,6 @@ class FixturesFragment : BaseFragment() {
             binding.pager.adapter = adapter
             binding.pager.setCurrentItem(viewModel.currentTour.value, false)
             matchesMap[viewModel.currentTour.value]?.let { createAlarm(it) }
-
         }
     }
 
@@ -133,7 +132,6 @@ class FixturesFragment : BaseFragment() {
             )
             else -> binding.pager.setCurrentItem(0, false)
         }
-
         return true
     }
 
@@ -193,7 +191,6 @@ class FixturesFragment : BaseFragment() {
 
     fun nextPage() {
         binding.pager.setCurrentItem(binding.pager.currentItem + 1, true)
-
     }
 
     fun previousPage() {

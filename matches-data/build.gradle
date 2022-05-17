@@ -36,8 +36,11 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$version_appcompat"
     implementation "com.google.android.material:material:$version_material"
 
-    //JSoup
-    implementation "org.jsoup:jsoup:$version_jsoup"
+    //Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$version_retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$version_retrofit_converter"
+
+    implementation "com.squareup.okhttp3:logging-interceptor:$version_okhttp"
 
     //Dagger
     implementation "com.google.dagger:dagger:$version_dagger"

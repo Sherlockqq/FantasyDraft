@@ -5,11 +5,11 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class MatchSchedule(
-    var id: Int,
     var tour: Int,
     var homeTeam: String,
+    var homeLogo: String,
     var guestTeam: String,
+    var guestLogo: String,
     var date: String,
-    var score: String,
-    val isHeader: Boolean? = null
+    var score: String
 ) : Parcelable

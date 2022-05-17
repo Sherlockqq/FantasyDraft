@@ -48,7 +48,7 @@ dependencies {
     //Tests
     testImplementation "junit:junit:$version_junit"
     androidTestImplementation "androidx.test.ext:junit:$version_junit"
-// AndroidJUnitRunner and JUnit Rules
+    // AndroidJUnitRunner and JUnit Rules
     androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation 'androidx.test:rules:1.4.0'
 

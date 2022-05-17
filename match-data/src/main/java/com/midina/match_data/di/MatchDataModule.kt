@@ -12,7 +12,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Named
 
-
 //api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={API key}
 
 const val BASE_URL = "http://api.openweathermap.org/data/2.5/"

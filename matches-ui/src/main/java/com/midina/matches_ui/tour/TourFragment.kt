@@ -15,7 +15,8 @@ import com.midina.matches_domain.model.MatchSchedule
 import com.midina.matches_ui.OnArrowClickListener
 import com.midina.matches_ui.R
 import com.midina.matches_ui.adapters.MatchAdapter
-import com.midina.matches_ui.adapters.TourPageAdapter.Companion.KEY
+import com.midina.matches_ui.adapters.TourPageAdapter.Companion.KEY_MATCHES
+import com.midina.matches_ui.adapters.TourPageAdapter.Companion.KEY_TOURS
 import com.midina.matches_ui.databinding.FragmentTourBinding
 
 class TourFragment : BaseFragment() {
@@ -28,8 +29,6 @@ class TourFragment : BaseFragment() {
     private val adapter = MatchAdapter()
 
     private var listener: OnArrowClickListener? = null
-
-    private val matchesInTour = 8
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -59,21 +58,16 @@ class TourFragment : BaseFragment() {
 
         binding.rvTourList.adapter = adapter
 
-        arguments?.takeIf { it.containsKey(KEY) }?.apply {
-            val matches = getParcelableArrayList<MatchSchedule>(KEY)
-            Log.d(TAG,"Matches: $matches")
+        arguments?.takeIf { it.containsKey(KEY_MATCHES) }?.apply {
+            val matches = getParcelableArrayList<MatchSchedule>(KEY_MATCHES)
+            val tours = getInt(KEY_TOURS)
+            Log.d(TAG, "Matches: $matches")
             if (matches != null) {
                 adapter.updateMatches(matches)
-                if (matches.size == matchesInTour) {
-                    binding.gameweekText.text = getString(R.string.gameweek, matches[1].tour)
-                    checkTour(matches[1].tour)
-                } else {
-                    binding.gameweekText.text = getString(R.string.schedule)
-                    checkTour(0)
-                }
+                binding.gameweekText.text = getString(R.string.gameweek, matches[1].tour)
+                setArrows(matches[1].tour, tours)
             }
         }
-
 
         adapter.setOnItemClickListener(object : MatchAdapter.OnItemClickListener {
             override fun onItemClick(position: Int, match: MatchSchedule) {
@@ -100,13 +94,13 @@ class TourFragment : BaseFragment() {
             it.putString("Date", this.date)
         }
 
-    private fun checkTour(tour: Int) {
+    private fun setArrows(tour: Int, lastTour: Int) {
         when (tour) {
-            0 -> {
+            1 -> {
                 binding.backArrow.isVisible = false
                 binding.nextArrow.isVisible = true
             }
-            30 -> {
+            lastTour -> {
                 binding.backArrow.isVisible = true
                 binding.nextArrow.isVisible = false
             }
