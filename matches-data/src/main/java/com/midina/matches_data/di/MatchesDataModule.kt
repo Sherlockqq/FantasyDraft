@@ -29,7 +29,7 @@ class MatchesDataModule {
 
     @Provides
     @Singleton
-    fun provideMatchRepository() = MatchRepository(getWeatherApiInterface(getRetrofitInstance()))
+    fun provideMatchRepository() = MatchRepository(getFootballApiInterface(getRetrofitInstance()))
 
     @Singleton
     @Provides
@@ -64,7 +64,7 @@ class MatchesDataModule {
 
     @Singleton
     @Provides
-    fun getWeatherApiInterface(@Named("Fixtures")retrofit: Retrofit): FixturesApiInterface {
+    fun getFootballApiInterface(@Named("Fixtures")retrofit: Retrofit): FixturesApiInterface {
         return retrofit.create(FixturesApiInterface::class.java)
     }
 }

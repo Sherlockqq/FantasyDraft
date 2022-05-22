@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Named
 import kotlin.collections.ArrayList
 
 private const val DATE_PATTERN = "dd.MM.yyyy HH:mm"
@@ -24,6 +25,7 @@ private const val MINUTE = 60000L
 class MatchViewModel @Inject constructor(
     private val getWeatherUsecase: GetWeatherUsecase,
     private val dispatchers: CoroutineDispatcher,
+    @Named("MatchBundle")
     bundle: Bundle?
 ) : ViewModel() {
 

@@ -3,7 +3,6 @@ package com.midina.team_ui
 import android.content.Context
 import android.os.Bundle
 import android.view.ContextThemeWrapper
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,12 +24,8 @@ class ClubFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
 
-        val contextThemeWrapper: Context = ContextThemeWrapper(activity, getTeamTheme())
-
-        val localInflater = inflater.cloneInContext(contextThemeWrapper)
-
         binding = DataBindingUtil.inflate(
-            localInflater,
+            inflater,
             layoutId,
             container,
             false
@@ -56,7 +51,7 @@ class ClubFragment : BaseFragment() {
             "SplashActivity",
             AppCompatActivity.MODE_PRIVATE
         )
-        val team = sPref?.getString(SAVED_TEAM, "")
+        val team = sPref?.getString(FAVOURITE_TEAM_ID, "")
         if (team != null) {
             binding.vTeamView.ivStadium.setImageResource(getStadium(team))
             binding.vTeamView.ivTeamLogo.setImageResource(getLogo(team))

@@ -45,13 +45,8 @@ class FixturesFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
 
-
-        val contextThemeWrapper: Context = ContextThemeWrapper(activity, getTeamActionTheme())
-
-        val localInflater = inflater.cloneInContext(contextThemeWrapper)
-
         binding = DataBindingUtil.inflate(
-            localInflater,
+            inflater,
             layoutId,
             container,
             false

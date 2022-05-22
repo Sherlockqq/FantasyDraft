@@ -1,6 +1,7 @@
 package com.midina.match_data.di
 
 import com.midina.android.match_domain.usecase.GetWeatherUsecase
+import com.midina.match_data.GetWeatherUsecaseImpl
 import com.midina.match_data.api.WeatherApiInterface
 import dagger.Binds
 import dagger.Module
@@ -49,5 +50,5 @@ class MatchDataModule {
 @Module
 interface MatchDataUseCaseModule {
     @Binds
-    fun bindGetMatchWeatherUseCase(getWeatherImpl: com.midina.match_data.GetWeatherUsecaseImpl): GetWeatherUsecase
+    fun bindGetMatchWeatherUseCase(getWeatherImpl: GetWeatherUsecaseImpl): GetWeatherUsecase
 }
