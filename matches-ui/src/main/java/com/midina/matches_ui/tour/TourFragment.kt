@@ -88,10 +88,7 @@ class TourFragment : BaseFragment() {
 
     private fun MatchSchedule.toBundle() =
         Bundle().also {
-            it.putString("HomeTeam", this.homeTeam)
-            it.putString("GuestTeam", this.guestTeam)
-            it.putString("Score", this.score)
-            it.putString("Date", this.date)
+            it.putInt("fixtureId", fixtureId)
         }
 
     private fun setArrows(tour: Int, lastTour: Int) {

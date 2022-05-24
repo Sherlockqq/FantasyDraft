@@ -130,16 +130,13 @@ class FixturesFragment : BaseFragment() {
         return true
     }
 
-    private fun MatchSchedule.toIntent(
-        tour: Int,
-        homeTeam: String,
-        guestTeam: String
-    ): Intent {
+    private fun MatchSchedule.toIntent(): Intent {
         val intent = Intent(activity?.applicationContext, AlarmReceiver::class.java)
 
         val bundle = Bundle()
 
         bundle.putInt("tour", tour)
+        bundle.putInt("homeTeamId", id)
         bundle.putString("homeTeam", homeTeam)
         bundle.putString("guestTeam", guestTeam)
 
@@ -154,11 +151,7 @@ class FixturesFragment : BaseFragment() {
         for (index in matchesList.indices) {
 
             if (matchesList[index].score == getString(R.string.emptyScore)) {
-                val intent = matchesList[index].toIntent(
-                    matchesList[index].tour,
-                    matchesList[index].homeTeam,
-                    matchesList[index].guestTeam
-                )
+                val intent = matchesList[index].toIntent()
 
                 val pendingIntent = PendingIntent.getBroadcast(
                     activity?.applicationContext,

@@ -14,6 +14,17 @@
         android:layout_height="match_parent"
         tools:context=".MatchFragment">
 
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.matchEvents}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            app:layout_constraintEnd_toEndOf="parent"/>
+
         <ImageView
             android:id="@+id/iv_stadium"
             android:layout_width="match_parent"
@@ -21,11 +32,11 @@
             android:layout_marginTop="@dimen/stadium_margin_top"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
+            android:visibility="@{viewModel.matchEvents}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/stadium_olimpiyskii" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/iv_homeTeam"
@@ -33,17 +44,17 @@
             android:layout_height="@dimen/team_icon_height"
             android:layout_marginBottom="@dimen/team_margin_bottom"
             android:background="@color/team_background"
-            tools:src="@drawable/dynamo_logo"
+            android:visibility="@{viewModel.matchEvents}"
             app:layout_constraintBottom_toBottomOf="@+id/iv_stadium"
             app:layout_constraintStart_toStartOf="parent" />
 
         <ImageView
-            android:id="@+id/iv_guestTeam"
+            android:id="@+id/iv_awayTeam"
             android:layout_width="@dimen/team_icon_width"
             android:layout_height="@dimen/team_icon_height"
             android:layout_marginBottom="@dimen/team_margin_bottom"
             android:background="@color/team_background"
-            tools:src="@drawable/shakhtar_logo"
+            android:visibility="@{viewModel.matchEvents}"
             app:layout_constraintBottom_toBottomOf="@+id/iv_stadium"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -58,13 +69,14 @@
             android:textAlignment="viewEnd"
             android:textAllCaps="false"
             android:textColor="@color/tv_team_text_color"
-            tools:text="ДИН"
+            android:visibility="@{viewModel.matchEvents}"
+            tools:text="MUN"
             app:layout_constraintBottom_toBottomOf="@+id/iv_homeTeam"
             app:layout_constraintStart_toEndOf="@+id/iv_homeTeam"
             app:layout_constraintTop_toTopOf="@+id/iv_homeTeam" />
 
         <TextView
-            android:id="@+id/tv_guestTeam"
+            android:id="@+id/tv_awayTeam"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/tv_team_height"
             android:background="@color/tv_team_background"
@@ -73,10 +85,11 @@
             android:paddingEnd="@dimen/tv_team_padding_end"
             android:text=""
             android:textColor="@color/tv_team_text_color"
-            tools:text="ШАХ"
-            app:layout_constraintBottom_toBottomOf="@+id/iv_guestTeam"
-            app:layout_constraintEnd_toStartOf="@+id/iv_guestTeam"
-            app:layout_constraintTop_toTopOf="@+id/iv_guestTeam"
+            android:visibility="@{viewModel.matchEvents}"
+            tools:text="MCI"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_awayTeam"
+            app:layout_constraintEnd_toStartOf="@+id/iv_awayTeam"
+            app:layout_constraintTop_toTopOf="@+id/iv_awayTeam"
             app:layout_constraintVertical_bias="0.0" />
 
         <TextView
@@ -86,8 +99,9 @@
             android:background="@color/tv_score_background"
             android:textAlignment="center"
             android:textColor="@color/tv_score_text_color"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_guestTeam"
-            app:layout_constraintEnd_toStartOf="@+id/tv_guestTeam"
+            android:visibility="@{viewModel.matchEvents}"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_awayTeam"
+            app:layout_constraintEnd_toStartOf="@+id/tv_awayTeam"
             app:layout_constraintStart_toEndOf="@+id/tv_homeTeam"
             app:layout_constraintTop_toTopOf="@+id/tv_homeTeam" />
 
@@ -101,6 +115,7 @@
             tools:text="23.09.2019"
             android:textColor="@color/top_bar_text_color"
             android:textSize="@dimen/top_bar_text_size"
+            android:visibility="@{viewModel.matchEvents}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -109,6 +124,7 @@
             android:layout_width="@dimen/tv_background_width"
             android:layout_height="@dimen/tv_background_height"
             android:background="@color/tv_date_background"
+            android:visibility="@{viewModel.matchEvents}"
             app:layout_constraintBottom_toBottomOf="@+id/tv_date"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tv_date"
@@ -119,9 +135,9 @@
             android:layout_width="@dimen/iv_weather_width"
             android:layout_height="@dimen/iv_weather_height"
             android:layout_marginStart="@dimen/iv_weather_margin_start"
+            android:visibility="@{viewModel.matchEvents}"
             app:layout_constraintBottom_toBottomOf="@+id/tv_date"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/tv_date"
             app:layout_constraintTop_toTopOf="@+id/tv_date" />
 
@@ -132,6 +148,7 @@
             android:layout_marginStart="@dimen/tv_temperature_margin_start"
             android:textColor="@color/top_bar_text_color"
             android:textSize="@dimen/top_bar_text_size"
+            android:visibility="@{viewModel.matchEvents}"
             app:layout_constraintBottom_toBottomOf="@+id/ivWeather"
             app:layout_constraintStart_toEndOf="@+id/ivWeather"
             app:layout_constraintTop_toTopOf="@+id/ivWeather" />

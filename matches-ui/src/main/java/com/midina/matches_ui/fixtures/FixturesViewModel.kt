@@ -16,7 +16,7 @@ import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 //2021-08-13T19:00:00+00:00
-private const val DATE_PATTERN = "yyyy-MM.DD HH:mm"
+private const val DATE_PATTERN = "yyyy-MM-DD HH:mm"
 
 class FixturesViewModel @Inject constructor(
     private val getMatchesScheduleUsecase: GetMatchesScheduleUsecase,
@@ -53,7 +53,12 @@ class FixturesViewModel @Inject constructor(
 
                     when (tourResult) {
                         is ResultEvent.Success -> {
-                           _currentTour.value = tourResult.value
+                            if (tourResult.value == 0) {
+                                // The last tour, when league is finished
+                                _currentTour.value = matchesMap.size
+                            } else {
+                                _currentTour.value = tourResult.value
+                            }
                             _events.value = UiEvent.Success(matchesMap)
                         }
                         is ResultEvent.Error -> _events.value = UiEvent.Error

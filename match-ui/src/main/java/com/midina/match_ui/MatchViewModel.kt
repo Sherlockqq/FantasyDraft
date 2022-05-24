@@ -3,9 +3,12 @@ package com.midina.match_ui
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import androidx.lifecycle.*
-import com.midina.android.match_domain.model.MatchWeather
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.midina.android.match_domain.model.ResultEvent
+import com.midina.android.match_domain.model.Match
+import com.midina.android.match_domain.model.MatchWeather
+import com.midina.android.match_domain.usecase.GetMatchUsecase
 import com.midina.android.match_domain.usecase.GetWeatherUsecase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,21 +16,41 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Timer
+import java.util.TimerTask
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.collections.ArrayList
 
-private const val DATE_PATTERN = "dd.MM.yyyy HH:mm"
+private const val DATE_PATTERN = "yyyy-MM-DD HH:mm"
 private const val MINUTE = 60000L
+private const val TAG = "MatchViewModel"
 
 @SuppressLint("SimpleDateFormat")
 class MatchViewModel @Inject constructor(
     private val getWeatherUsecase: GetWeatherUsecase,
+    private val getMatchUsecase: GetMatchUsecase,
     private val dispatchers: CoroutineDispatcher,
     @Named("MatchBundle")
     bundle: Bundle?
 ) : ViewModel() {
+
+    private val _matchId = MutableStateFlow(0)
+    val matchId: StateFlow<Int>
+        get() = _matchId.asStateFlow()
+
+    private val _city = MutableStateFlow("")
+    val city: StateFlow<String>
+        get() = _city.asStateFlow()
+
+    private val _date = MutableStateFlow("")
+    val date: StateFlow<String>
+        get() = _date.asStateFlow()
+
+    private val _score = MutableStateFlow("")
+    val score: StateFlow<String>
+        get() = _score.asStateFlow()
 
     private val _dateArr = MutableStateFlow<ArrayList<Int>>(ArrayList())
     val dateArr: StateFlow<ArrayList<Int>>
@@ -38,142 +61,71 @@ class MatchViewModel @Inject constructor(
     val scoreOrDateEvents: StateFlow<UiScoreOrDateEvent>
         get() = _scoreOrDateEvents.asStateFlow()
 
-    private val _events = MutableStateFlow<UiEvent>(UiEvent.EmptyState)
-    val events: StateFlow<UiEvent>
-        get() = _events.asStateFlow()
+    private val _matchEvents = MutableStateFlow<UiMatchEvent>(UiMatchEvent.Loading)
+    val matchEvents: StateFlow<UiMatchEvent>
+        get() = _matchEvents.asStateFlow()
 
-    private val _homeTeam = MutableStateFlow("")
-    val homeTeam: StateFlow<String>
-        get() = _homeTeam.asStateFlow()
-
-    private val _guestTeam = MutableStateFlow("")
-    val guestTeam: StateFlow<String>
-        get() = _guestTeam.asStateFlow()
-
-    private val _score = MutableStateFlow("")
-    val score: StateFlow<String>
-        get() = _score.asStateFlow()
-
-    private val _date = MutableStateFlow("")
-    val date: StateFlow<String>
-        get() = _date.asStateFlow()
-
-    private val _lat = MutableStateFlow(0.0F)
-    val lat: StateFlow<Float>
-        get() = _lat.asStateFlow()
-
-    private val _lon = MutableStateFlow(0.0F)
-    val lon: StateFlow<Float>
-        get() = _lon.asStateFlow()
+    private val _weatherEvents = MutableStateFlow<UiWeatherEvent>(UiWeatherEvent.EmptyState)
+    val weatherEvents: StateFlow<UiWeatherEvent>
+        get() = _weatherEvents.asStateFlow()
 
     private val timer = Timer()
 
     private val sdf by lazy { SimpleDateFormat(DATE_PATTERN) }
 
     init {
-        _homeTeam.value = bundle?.getString("HomeTeam").toString()
-        _guestTeam.value = bundle?.getString("GuestTeam").toString()
-        _score.value = bundle?.getString("Score").toString()
-        _date.value = bundle?.getString("Date").toString()
+        _matchId.value = bundle?.getInt("fixtureId").toString().toInt()
         getData()
-        getScoreOrTime()
-    }
-
-    private fun getCoordinates() {
-        when (_homeTeam.value) {
-            "Львов" -> {
-                _lat.value = 49.84F
-                _lon.value = 24.02F
-            }
-            "Верес" -> {
-                _lat.value = 50.61F
-                _lon.value = 26.25F
-            }
-            "Шахтер Донецк" -> {
-                _lat.value = 50.44F
-                _lon.value = 30.52F
-            }
-            "Металлист 1925" -> {
-                _lat.value = 49.99F
-                _lon.value = 36.23F
-            }
-            "Десна" -> {
-                _lat.value = 51.49F
-                _lon.value = 31.28F
-            }
-            "Заря" -> {
-                _lat.value = 47.83F
-                _lon.value = 35.14F
-            }
-            "Ворскла" -> {
-                _lat.value = 49.58F
-                _lon.value = 34.55F
-            }
-            "Динамо Киев" -> {
-                _lat.value = 50.44F
-                _lon.value = 30.52F
-            }
-            "Мариуполь" -> {
-                _lat.value = 47.09F
-                _lon.value = 37.54F
-            }
-            "Колос К" -> {
-                _lat.value = 49.98F
-                _lon.value = 30.01F
-            }
-            "Ингулец" -> {
-                _lat.value = 48.34F
-                _lon.value = 33.26F
-            }
-            "Рух Львов" -> {
-                _lat.value = 49.84F
-                _lon.value = 24.02F
-            }
-            "Черноморец" -> {
-                _lat.value = 46.47F
-                _lon.value = 30.73F
-            }
-            "Александрия" -> {
-                _lat.value = 48.67F
-                _lon.value = 33.10F
-            }
-            "Днепр-1" -> {
-                _lat.value = 48.46F
-                _lon.value = 35.04F
-            }
-            "Минай" -> {
-                _lat.value = 48.59F
-                _lon.value = 22.28F
-            }
-        }
     }
 
     private fun getData() {
-        getCoordinates()
         viewModelScope.launch(dispatchers) {
-            getWeather()
+            matchRequest()
+            weatherRequest()
         }
     }
 
-    private suspend fun getWeather() {
-        val result = getWeatherUsecase.execute(_lat.value, _lon.value, date.value)
+    private suspend fun matchRequest() {
+        val result = getMatchUsecase.execute(matchId.value)
+
+        when (result) {
+            ResultEvent.EmptyState -> {
+                _matchEvents.value = UiMatchEvent.Loading
+            }
+            ResultEvent.Error -> {
+                _matchEvents.value = UiMatchEvent.Error
+            }
+            is ResultEvent.Success -> {
+                _city.value = result.value.fixture.venue.city
+                _date.value = result.value.fixture.date
+                //TODO Change set score
+                _score.value =
+                    result.value.goals.home.toString() + " : " + result.value.goals.away.toString()
+                setScoreOrTime()
+                _matchEvents.value = UiMatchEvent.Success(result.value)
+            }
+        }
+    }
+
+    private suspend fun weatherRequest() {
+        val result = getWeatherUsecase.execute(city.value, date.value)
         when (result) {
             is ResultEvent.Success -> {
-                _events.value = UiEvent.Success(result.value)
+                _weatherEvents.value = UiWeatherEvent.Success(result.value)
             }
             is ResultEvent.EmptyState -> {
-                _events.value = UiEvent.EmptyState
+                _weatherEvents.value = UiWeatherEvent.EmptyState
             }
-            is ResultEvent.Error -> _events.value = UiEvent.Error
+            is ResultEvent.Error -> _weatherEvents.value = UiWeatherEvent.Error
         }
     }
 
-    private fun getScoreOrTime() {
+    private fun setScoreOrTime() {
         if (score.value == "? : ?") {
             timer.scheduleAtFixedRate(
                 object : TimerTask() {
                     override fun run() {
-                        getTimeTillMatch()
+                        setTimeTillMatch()
                     }
                 },
                 0,
@@ -185,7 +137,7 @@ class MatchViewModel @Inject constructor(
     }
 
     @SuppressLint("SimpleDateFormat")
-    private fun getTimeTillMatch() {
+    private fun setTimeTillMatch() {
         val dateFormat = SimpleDateFormat(DATE_PATTERN)
         val currentDateStr = sdf.format(Date())
         val currentDate = dateFormat.parse(currentDateStr)
@@ -210,27 +162,6 @@ class MatchViewModel @Inject constructor(
         _scoreOrDateEvents.value = UiScoreOrDateEvent.HasDate
     }
 
-    fun getTeamName(teamName: String): String {
-        when (teamName) {
-            "Львов" -> return "ЛЬВ"
-            "Верес" -> return "ВЕР"
-            "Шахтер Донецк" -> return "ШАХ"
-            "Металлист 1925" -> return "МЕТ"
-            "Десна" -> return "ДЕС"
-            "Заря" -> return "ЗАР"
-            "Ворскла" -> return "ВОР"
-            "Динамо Киев" -> return "ДИН"
-            "Мариуполь" -> return "МАР"
-            "Колос К" -> return "КОЛ"
-            "Ингулец" -> return "ИНГ"
-            "Рух Львов" -> return "РУХ"
-            "Черноморец" -> return "ЧЕР"
-            "Александрия" -> return "АЛЕ"
-            "Днепр-1" -> return "ДНЕ"
-            "Минай" -> return "МИН"
-        }
-        return "КОМ"
-    }
 
     override fun onCleared() {
         super.onCleared()
@@ -245,8 +176,14 @@ sealed class UiScoreOrDateEvent {
     object Default : UiScoreOrDateEvent()
 }
 
-sealed class UiEvent {
-    class Success(val weather: MatchWeather) : UiEvent()
-    object EmptyState : UiEvent()
-    object Error : UiEvent()
+sealed class UiMatchEvent {
+    class Success(val match: Match) : UiMatchEvent()
+    object Loading : UiMatchEvent()
+    object Error : UiMatchEvent()
+}
+
+sealed class UiWeatherEvent {
+    class Success(val weather: MatchWeather) : UiWeatherEvent()
+    object EmptyState : UiWeatherEvent()
+    object Error : UiWeatherEvent()
 }

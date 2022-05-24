@@ -161,7 +161,6 @@ class MainActivity : AppCompatActivity(),
         val extras = intent.extras
         if (extras != null) {
             val teamLogo = extras.getString(FAVOURITE_TEAM_LOGO)
-            Log.d(TAG, "ffsdf")
             if (!teamLogo.isNullOrEmpty()) {
                 val menu: Menu = binding.bottomNavigation.menu
                 val item = menu.findItem(R.id.club_navigation)
@@ -169,7 +168,7 @@ class MainActivity : AppCompatActivity(),
                 Glide.with(this)
                     .asBitmap()
                     .load(teamLogo)
-                    .error(R.drawable.dynamo_logo)
+                    .error(R.drawable.connection_error)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(object : CustomTarget<Bitmap?>() {
                         override fun onLoadCleared(placeholder: Drawable?) {}
@@ -222,7 +221,7 @@ class MainActivity : AppCompatActivity(),
             if (result >= 0 && result < fragments.size) {
                 when (result) {
                     1 -> navController.navigate(R.id.action_draft_navigation)
-                    2 -> navController.navigate(R.id.action_match_navigation)
+                    2 -> navController.navigate(R.id.action_match_navigation) //TODO Fix crash
                     3 -> {
                         navController.navigate(R.id.action_draft_navigation)
                         navController.navigate(R.id.action_registration_navigation)

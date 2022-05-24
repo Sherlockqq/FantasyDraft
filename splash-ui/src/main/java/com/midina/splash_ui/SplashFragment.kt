@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnStartActivityListener
 import com.midina.splash_ui.databinding.FragmentSplashBinding
@@ -69,22 +71,17 @@ class SplashFragment : BaseFragment() {
 
     private fun onError() {
         Log.d(TAG, "onError")
+        binding.ivUplLogo.isVisible = false
     }
 
     private fun onLoading() {
         Log.d(TAG, "onLoading")
-        hidingAnimation()
     }
 
     private fun onEmptyState() {
         Log.d(TAG, "onEmptyState")
     }
 
-    private fun hidingAnimation() {
-        Log.d(TAG, "hidingAnimation: ")
-        val anim = AnimationUtils.loadAnimation(context, R.anim.to_invisible)
-        binding.ivUplLogo.startAnimation(anim)
-    }
 
     private fun checkSeason(season: Int) {
         val sPref = this.activity?.getPreferences(AppCompatActivity.MODE_PRIVATE)
@@ -92,7 +89,7 @@ class SplashFragment : BaseFragment() {
         val teamId = sPref?.getInt(FAVOURITE_TEAM_ID, 0)
         val teamLogo = sPref?.getString(FAVOURITE_TEAM_LOGO, "")
 
-        if ( sPrefSeason == 0 || season != sPrefSeason
+        if (sPrefSeason == 0 || season != sPrefSeason
             || teamId == 0 || teamLogo.isNullOrEmpty()
         ) {
             val ed = sPref?.edit()

@@ -2,10 +2,10 @@ package com.midina.match_data
 
 import com.midina.android.match_domain.model.ResultEvent
 import com.midina.match_data.api.WeatherApiInterface
-import com.midina.match_data.data.Main
-import com.midina.match_data.data.RetroWeather
-import com.midina.match_data.data.Weather
-import com.midina.match_data.data.WeatherDescription
+import com.midina.match_data.data.weatherDescription.Main
+import com.midina.match_data.data.weatherDescription.RetroWeather
+import com.midina.match_data.data.weatherDescription.Weather
+import com.midina.match_data.data.weatherDescription.WeatherDescription
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -1,6 +1,6 @@
 package com.midina.matches_data.di
 
-import com.midina.matches_data.MatchRepository
+import com.midina.matches_data.FixturesRepository
 import com.midina.matches_data.api.FixturesApiInterface
 import com.midina.matches_data.usecaseimpl.GetCurrentTourUsecaseImplementation
 import com.midina.matches_data.usecaseimpl.GetMatchesScheduleUsecaseImpl
@@ -29,7 +29,7 @@ class MatchesDataModule {
 
     @Provides
     @Singleton
-    fun provideMatchRepository() = MatchRepository(getFootballApiInterface(getRetrofitInstance()))
+    fun provideMatchRepository() = FixturesRepository(getFootballApiInterface(getRetrofitInstance()))
 
     @Singleton
     @Provides
