@@ -21,7 +21,6 @@ import androidx.lifecycle.lifecycleScope
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnBottomNavItemSelectListener
 import com.midina.matches_domain.model.MatchSchedule
-import com.midina.matches_ui.AlarmReceiver
 
 private const val SAVED_TOUR = "SAVED_TOUR"
 
@@ -89,7 +88,6 @@ class FixturesFragment : BaseFragment() {
             }!!
             binding.pager.adapter = adapter
             binding.pager.setCurrentItem(viewModel.currentTour.value, false)
-            matchesMap[viewModel.currentTour.value]?.let { createAlarm(it) }
         }
     }
 
@@ -128,53 +126,6 @@ class FixturesFragment : BaseFragment() {
             else -> binding.pager.setCurrentItem(0, false)
         }
         return true
-    }
-
-    private fun MatchSchedule.toIntent(): Intent {
-        val intent = Intent(activity?.applicationContext, AlarmReceiver::class.java)
-
-        val bundle = Bundle()
-
-        bundle.putInt("tour", tour)
-        bundle.putInt("homeTeamId", id)
-        bundle.putString("homeTeam", homeTeam)
-        bundle.putString("guestTeam", guestTeam)
-
-        intent.putExtras(bundle)
-        return intent
-    }
-
-    private fun createAlarm(matchesList: ArrayList<MatchSchedule>) {
-        val alarmManager =
-            activity?.applicationContext?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        for (index in matchesList.indices) {
-
-            if (matchesList[index].score == getString(R.string.emptyScore)) {
-                val intent = matchesList[index].toIntent()
-
-                val pendingIntent = PendingIntent.getBroadcast(
-                    activity?.applicationContext,
-                    index,
-                    intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT
-                )
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    alarmManager.setExactAndAllowWhileIdle(
-                        AlarmManager.RTC_WAKEUP,
-                        viewModel.getTimeInMillis(matchesList[index].date),
-                        pendingIntent
-                    )
-                } else {
-                    alarmManager.setExact(
-                        AlarmManager.RTC_WAKEUP,
-                        viewModel.getTimeInMillis(matchesList[index].date),
-                        pendingIntent
-                    )
-                }
-            }
-        }
     }
 
     fun nextPage() {

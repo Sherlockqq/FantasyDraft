@@ -106,5 +106,6 @@ dependencies {
     implementation project(path: ':favourite-domain')
     implementation project(path: ':favourite-data')
     implementation project(path: ':club-ui')
-
+    implementation project(path: ':club-domain')
+    implementation project(path: ':club-data')
 }

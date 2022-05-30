@@ -3,6 +3,7 @@ package com.example.fantasydraft.di
 import android.content.Context
 import com.example.fantasydraft.FantasydraftApplication
 import com.midina.android.login_data.di.LoginDataModule
+import com.midina.club_data.di.ClubDataModule
 import com.midina.core_ui.di.ViewModelBuilderModule
 import com.midina.draft_data.di.DraftDataModule
 import com.midina.draft_ui.di.DraftUiModule
@@ -46,7 +47,8 @@ import dagger.android.AndroidInjectionModule
     SplashDataModule::class,
     FavouriteUiModule::class,
     FavouriteDataModule::class,
-    ClubUiModule::class])
+    ClubUiModule::class,
+    ClubDataModule::class])
 
 interface AppComponent {
     @Component.Builder

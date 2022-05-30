@@ -4,7 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="viewModel"
+            type="com.midina.team_ui.ClubViewModel" />
     </data>
 
     <androidx.constraintlayout.motion.widget.MotionLayout
@@ -15,19 +17,18 @@
         app:layoutDescription="@xml/fragment_club_scene"
         tools:showPaths="true">
 
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
         <include
             android:id="@+id/v_team_view"
             layout="@layout/team_view" />
-
-<!--        <androidx.viewpager2.widget.ViewPager2-->
-<!--            android:id="@+id/pager"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="0dp"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/v_team_view" />-->
-
 
         <View
             android:id="@+id/button"

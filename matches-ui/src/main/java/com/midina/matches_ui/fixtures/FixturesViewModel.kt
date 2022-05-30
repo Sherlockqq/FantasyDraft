@@ -16,7 +16,6 @@ import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 //2021-08-13T19:00:00+00:00
-private const val DATE_PATTERN = "yyyy-MM-DD HH:mm"
 
 class FixturesViewModel @Inject constructor(
     private val getMatchesScheduleUsecase: GetMatchesScheduleUsecase,
@@ -24,8 +23,6 @@ class FixturesViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var matchesMap: Map<Int, ArrayList<MatchSchedule>> = mutableMapOf()
-
-    private val sdf by lazy { SimpleDateFormat(DATE_PATTERN) }
 
     private val _currentTour = MutableStateFlow(0)
     val currentTour: StateFlow<Int>
@@ -69,9 +66,6 @@ class FixturesViewModel @Inject constructor(
         }
     }
 
-    fun getTimeInMillis(matchTime: String): Long {
-        return  sdf.parse(matchTime).time
-    }
 }
 
 

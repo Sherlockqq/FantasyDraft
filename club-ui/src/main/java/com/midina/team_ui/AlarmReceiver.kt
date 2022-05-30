@@ -1,4 +1,4 @@
-package com.midina.matches_ui
+package com.midina.team_ui
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -9,6 +9,9 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.midina.team_ui.ClubFragment.Companion.AWAY
+import com.midina.team_ui.ClubFragment.Companion.HOME
+import com.midina.team_ui.ClubFragment.Companion.TOUR
 import javax.inject.Inject
 
 class AlarmReceiver @Inject constructor() : BroadcastReceiver() {
@@ -19,20 +22,20 @@ class AlarmReceiver @Inject constructor() : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
 
-        var tour = 0
+        var tour = ""
         var homeTeam = ""
-        var guestTeam = ""
+        var awayTeam = ""
 
         try {
-            tour = intent.getIntExtra("tour", 0)
-            homeTeam = intent.getStringExtra("homeTeam").toString()
-            guestTeam = intent.getStringExtra("guestTeam").toString()
+            tour = intent.getStringExtra(TOUR).toString()
+            homeTeam = intent.getStringExtra(HOME).toString()
+            awayTeam = intent.getStringExtra(AWAY).toString()
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
         createNotificationChannel(context)
-        notifyNotification(context, tour, homeTeam, guestTeam)
+        notifyNotification(context, tour, homeTeam, awayTeam)
     }
 
     private fun createNotificationChannel(context: Context) {
@@ -49,15 +52,14 @@ class AlarmReceiver @Inject constructor() : BroadcastReceiver() {
 
     private fun notifyNotification(
         context: Context,
-        tour: Int,
+        tour: String,
         homeTeam: String,
-        guestTeam: String
+        awayTeam: String
     ) {
-
         with(NotificationManagerCompat.from(context)) {
             val build = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-                .setContentTitle("Tour: $tour. Match is started!")
-                .setContentText("$homeTeam vs $guestTeam")
+                .setContentTitle("$tour. Match is started!")
+                .setContentText("$homeTeam vs $awayTeam")
                 .setSmallIcon(R.drawable.ic_baseline_event_note_24)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
 

@@ -1,5 +1,6 @@
 package com.example.fantasydraft
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -34,10 +35,12 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.ktx.Firebase
 import com.midina.core_ui.ui.BaseFragment
+import com.midina.core_ui.ui.BaseFragment.Companion.FAVOURITE_TEAM_ID
 import com.midina.core_ui.ui.BaseFragment.Companion.FAVOURITE_TEAM_LOGO
 import com.midina.core_ui.ui.OnBottomNavHideListener
 import com.midina.core_ui.ui.OnBottomNavItemSelectListener
 import com.midina.core_ui.ui.OnFragmentUiBlockListener
+import com.midina.favourite_domain.model.Team
 import com.midina.matches_ui.OnArrowClickListener
 import com.midina.matches_ui.fixtures.FixturesFragment
 import kotlinx.coroutines.flow.first
@@ -161,6 +164,8 @@ class MainActivity : AppCompatActivity(),
         val extras = intent.extras
         if (extras != null) {
             val teamLogo = extras.getString(FAVOURITE_TEAM_LOGO)
+            val teamId = extras.getInt(FAVOURITE_TEAM_ID)
+            setSharedPreferencesTeamId(teamId)
             if (!teamLogo.isNullOrEmpty()) {
                 val menu: Menu = binding.bottomNavigation.menu
                 val item = menu.findItem(R.id.club_navigation)
@@ -176,7 +181,7 @@ class MainActivity : AppCompatActivity(),
                             resource: Bitmap,
                             transition: Transition<in Bitmap?>?
                         ) {
-                            item.icon = BitmapDrawable(resources,resource)
+                            item.icon = BitmapDrawable(resources, resource)
                         }
                     })
             }
@@ -312,5 +317,12 @@ class MainActivity : AppCompatActivity(),
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
                 as NavHostFragment
         navHostFragment.navController.navigate(R.id.action_draft_navigation)
+    }
+
+    private fun setSharedPreferencesTeamId(teamId: Int) {
+        val sPref = this.getPreferences(MODE_PRIVATE)
+        val ed = sPref?.edit()
+        ed?.putInt(FAVOURITE_TEAM_ID, teamId)
+        ed?.apply()
     }
 }
