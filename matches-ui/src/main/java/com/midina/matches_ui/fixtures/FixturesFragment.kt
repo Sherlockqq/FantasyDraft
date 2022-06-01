@@ -22,15 +22,13 @@ import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnBottomNavItemSelectListener
 import com.midina.matches_domain.model.MatchSchedule
 
-private const val SAVED_TOUR = "SAVED_TOUR"
-
 class FixturesFragment : BaseFragment() {
 
     private val TAG = "FixturesFragment"
 
     override val layoutId = R.layout.fragment_fixtures
 
-    private lateinit var binding: FragmentFixturesBinding
+    private var binding: FragmentFixturesBinding? = null
     private lateinit var adapter: TourPageAdapter
     private var listener: OnBottomNavItemSelectListener? = null
 
@@ -42,7 +40,7 @@ class FixturesFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
 
         binding = DataBindingUtil.inflate(
             inflater,
@@ -51,9 +49,9 @@ class FixturesFragment : BaseFragment() {
             false
         )
 
-        binding.lifecycleOwner = viewLifecycleOwner
+        binding?.lifecycleOwner = viewLifecycleOwner
 
-        binding.viewModel = viewModel
+        binding?.viewModel = viewModel
 
         lifecycleScope.launchWhenCreated {
             viewModel.events
@@ -62,7 +60,7 @@ class FixturesFragment : BaseFragment() {
                 }
         }
 
-        return binding.root
+        return binding?.root
     }
 
     @SuppressLint("NewApi")
@@ -78,36 +76,27 @@ class FixturesFragment : BaseFragment() {
     private fun onSuccess(matchesMap: Map<Int, ArrayList<MatchSchedule>>) {
         if (matchesMap.isNotEmpty()) {
             Log.d("MainActivity", "list size : ${matchesMap.size}")
-            binding.progressBar.isVisible = false
-            binding.nonSuccessText.isVisible = false
 
             setHasOptionsMenu(true)
 
             adapter = activity?.let {
                 TourPageAdapter(it, matchesMap)
             }!!
-            binding.pager.adapter = adapter
-            binding.pager.setCurrentItem(viewModel.currentTour.value, false)
+            binding?.pager?.adapter = adapter
+            binding?.pager?.setCurrentItem(viewModel.currentTour.value, false)
         }
     }
 
     private fun onError() {
-        binding.nonSuccessText.setText(R.string.connection_error)
-        binding.progressBar.isVisible = false
-        binding.nonSuccessText.isVisible = true
-        binding.ConnectionErrorView.isVisible = true
+        Log.d(TAG, "FixturesFragment OnError")
     }
 
     private fun onLoading() {
-        binding.nonSuccessText.setText(R.string.loading)
-        binding.nonSuccessText.isVisible = true
-        binding.progressBar.isVisible = true
+        Log.d(TAG, "FixturesFragment OnLoading")
     }
 
     private fun onEmptyState() {
-        binding.nonSuccessText.setText(R.string.empty_state)
-        binding.progressBar.isVisible = false
-        binding.nonSuccessText.isVisible = true
+        Log.d(TAG, "FixturesFragment OnEmptyState")
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -117,23 +106,25 @@ class FixturesFragment : BaseFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.show_first_tour -> binding.pager.setCurrentItem(1, false)
+            R.id.show_first_tour -> binding?.pager?.setCurrentItem(1, false)
 
-            R.id.show_current_tour -> binding.pager.setCurrentItem(
+            R.id.show_current_tour -> binding?.pager?.setCurrentItem(
                 viewModel.currentTour.value,
                 false
             )
-            else -> binding.pager.setCurrentItem(0, false)
+            else -> binding?.pager?.setCurrentItem(0, false)
         }
         return true
     }
 
     fun nextPage() {
-        binding.pager.setCurrentItem(binding.pager.currentItem + 1, true)
+        binding?.pager?.
+        setCurrentItem(binding?.pager?.currentItem?.plus(1) ?: 1, true)
     }
 
     fun previousPage() {
-        binding.pager.setCurrentItem(binding.pager.currentItem - 1, true)
+        binding?.pager?.
+        setCurrentItem(binding?.pager?.currentItem?.minus(1) ?: 1, true)
     }
 
 

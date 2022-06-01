@@ -13,7 +13,7 @@ fun ProgressBar.setVisibility(event: UiEvent?) {
         UiEvent.Error -> false
         UiEvent.Loading -> true
         UiEvent.EmptyState -> false
-        is UiEvent.Success -> false 
+        is UiEvent.Success -> false
         null -> true
     }
 }
