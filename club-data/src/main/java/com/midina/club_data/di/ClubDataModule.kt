@@ -2,11 +2,10 @@ package com.midina.club_data.di
 
 import com.midina.club_data.api.ClubApiInterface
 import com.midina.club_data.usecaseimpl.GetFixturesUsecaseImpl
-import com.midina.club_data.usecaseimpl.GetSeasonUsecaseImpl
 import com.midina.club_data.usecaseimpl.GetTeamInfoUsecaseImpl
 import com.midina.club_domain.usecases.GetFixturesUsecase
-import com.midina.club_domain.usecases.GetSeasonUsecase
 import com.midina.club_domain.usecases.GetTeamInfoUsecase
+import com.midina.core_data.di.FOOTBALL_URL
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -18,8 +17,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Named
-
-const val FOOTBALL_URL = "https://v3.football.api-sports.io"
 
 @Module(
     includes = [
@@ -71,9 +68,6 @@ class ClubDataModule {
 interface ClubDataUseCaseModule {
     @Binds
     fun bindGetTeamInfoUseCase(getTeamInfoUsecaseImpl: GetTeamInfoUsecaseImpl): GetTeamInfoUsecase
-
-    @Binds
-    fun bindGetSeasonUseCase(getSeasonUsecaseImpl: GetSeasonUsecaseImpl): GetSeasonUsecase
 
     @Binds
     fun bindGetFixturesUseCase(getFixturesUsecaseImpl: GetFixturesUsecaseImpl): GetFixturesUsecase

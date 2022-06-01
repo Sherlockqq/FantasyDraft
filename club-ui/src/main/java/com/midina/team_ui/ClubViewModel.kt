@@ -7,7 +7,7 @@ import com.midina.club_domain.model.ResultEvent
 import com.midina.club_domain.model.fixtures.FixturesInfo
 import com.midina.club_domain.model.team.TeamInfo
 import com.midina.club_domain.usecases.GetFixturesUsecase
-import com.midina.club_domain.usecases.GetSeasonUsecase
+import com.midina.core_domain.usecases.GetSeasonUsecase
 import com.midina.club_domain.usecases.GetTeamInfoUsecase
 import com.midina.core_ui.ui.BaseFragment.Companion.FAVOURITE_TEAM_ID
 import kotlinx.coroutines.Dispatchers
@@ -85,9 +85,10 @@ class ClubViewModel @Inject constructor(
         val result = getSeasonUsecase.execute()
 
         when (result) {
-            ResultEvent.EmptyState -> _alarmEvents.value = AlarmEvent.EmptyState
-            ResultEvent.Error -> _alarmEvents.value = AlarmEvent.Error
-            is ResultEvent.Success -> {
+            com.midina.core_domain.model.ResultEvent.EmptyState -> _alarmEvents.value =
+                AlarmEvent.EmptyState
+            com.midina.core_domain.model.ResultEvent.Error -> _alarmEvents.value = AlarmEvent.Error
+            is com.midina.core_domain.model.ResultEvent.Success -> {
                 _season.value = result.value
                 fixturesRequest()
             }

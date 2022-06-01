@@ -96,6 +96,8 @@ dependencies {
     implementation project(path: ':match-domain')
     implementation project(path: ':match-ui')
     implementation project(path: ':core-ui')
+    implementation project(path: ':core-domain')
+    implementation project(path: ':core-data')
     implementation project(path: ':stat-ui')
     implementation project(path: ':stat-domain')
     implementation project(path: ':stat-data')

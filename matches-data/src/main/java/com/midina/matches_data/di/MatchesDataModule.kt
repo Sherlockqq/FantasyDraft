@@ -1,5 +1,6 @@
 package com.midina.matches_data.di
 
+import com.midina.core_data.di.FOOTBALL_URL
 import com.midina.matches_data.FixturesRepository
 import com.midina.matches_data.api.FixturesApiInterface
 import com.midina.matches_data.usecaseimpl.GetCurrentTourUsecaseImplementation
@@ -17,8 +18,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
 import javax.inject.Singleton
-
-const val BASE_URL = "https://v3.football.api-sports.io"
 
 @Module(
     includes = [
@@ -56,7 +55,7 @@ class MatchesDataModule {
             .build()
 
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(FOOTBALL_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -76,7 +75,7 @@ interface MatchesDataUseCaseModule {
             GetMatchesScheduleUsecase
 
     @Binds
-    fun bindGetСurrentTourUseCase(getCurrentTourUsecaseImpl: GetCurrentTourUsecaseImplementation):
+    fun bindGetCurrentTourUseCase(getCurrentTourUsecaseImpl: GetCurrentTourUsecaseImplementation):
             GetCurrentTourUsecase
 }
 

@@ -50,5 +50,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'io.mockk:mockk:1.9.3'
 
+    implementation project(path: ':core-data')
     implementation project(path: ':club-domain')
 }

@@ -2,8 +2,7 @@ package com.midina.splash_ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.midina.splash_domain.model.ResultEvent
-import com.midina.splash_domain.usecase.GetSeasonUsecase
+import com.midina.core_domain.usecases.GetSeasonUsecase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,11 +26,11 @@ class SplashViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val result = getSeasonUsecase.execute()
             when (result) {
-                ResultEvent.EmptyState -> _events.value = UiEvent.EmptyState
-                ResultEvent.Error -> _events.value = UiEvent.Error
-                is ResultEvent.Success -> {
-                    _events.value = UiEvent.Success(result.value)
-                }
+                com.midina.core_domain.model.ResultEvent.EmptyState -> _events.value =
+                    UiEvent.EmptyState
+                com.midina.core_domain.model.ResultEvent.Error -> _events.value = UiEvent.Error
+                is com.midina.core_domain.model.ResultEvent.Success -> _events.value =
+                    UiEvent.Success(result.value)
             }
         }
     }

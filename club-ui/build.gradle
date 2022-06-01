@@ -54,6 +54,7 @@ dependencies {
     //Module
     implementation project(path: ':core-ui')
     implementation project(path: ':core-nav')
+    implementation project(path: ':core-domain')
     implementation project(path: ':club-domain')
 
 
