@@ -74,7 +74,6 @@ class MatchAdapter : RecyclerView.Adapter<MatchAdapter.FixturesHolder>() {
             home.text = item.homeTeam
             guest.text = item.guestTeam
             score.text = item.score
-
             Glide.with(itemView).load(item.homeLogo).into(homeImage)
             Glide.with(itemView).load(item.guestLogo).into(guestImage)
         }

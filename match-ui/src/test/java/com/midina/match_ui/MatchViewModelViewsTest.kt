@@ -162,8 +162,8 @@ class MatchViewModelTest {
 
         viewModel = MatchViewModel(usecase, rule.dispatcher, bundle)
 
-        assertTrue(viewModel.events.value is UiEvent.Success)
-        assertEquals(matchWeather, (viewModel.events.value as UiEvent.Success).weather)
+        assertTrue(viewModel.matchEvents.value is UiEvent.Success)
+        assertEquals(matchWeather, (viewModel.matchEvents.value as UiEvent.Success).weather)
     }
 
     @Test
@@ -174,7 +174,7 @@ class MatchViewModelTest {
 
         viewModel = MatchViewModel(usecase, rule.dispatcher, bundle)
 
-        assertTrue(viewModel.events.value is UiEvent.EmptyState)
+        assertTrue(viewModel.matchEvents.value is UiEvent.EmptyState)
     }
 
     @Test
@@ -185,7 +185,7 @@ class MatchViewModelTest {
 
         viewModel = MatchViewModel(usecase, rule.dispatcher, bundle)
 
-        assertTrue(viewModel.events.value is UiEvent.Error)
+        assertTrue(viewModel.matchEvents.value is UiEvent.Error)
     }
 
     @Test

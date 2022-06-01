@@ -47,9 +47,16 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$version_dagger"
     kapt "com.google.dagger:dagger-android-processor:$version_dagger"
 
+    //Glide
+    implementation "com.github.bumptech.glide:glide:$version_glide"
+    kapt "com.github.bumptech.glide:compiler:$version_glide"
+
     //Module
     implementation project(path: ':core-ui')
     implementation project(path: ':core-nav')
+    implementation project(path: ':core-domain')
+    implementation project(path: ':club-domain')
+
 
     testImplementation "junit:junit:$version_junit"
     androidTestImplementation "androidx.test.ext:junit:$version_junit"

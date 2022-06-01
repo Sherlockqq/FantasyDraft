@@ -4,7 +4,7 @@ import com.midina.android.match_domain.model.MatchWeather
 import com.midina.android.match_domain.model.ResultEvent
 
 interface GetWeatherUsecase {
-    suspend fun execute(lat: Float,lon:Float,date:String): ResultEvent<MatchWeather>
+    suspend fun execute(city: String,date:String): ResultEvent<MatchWeather>
 }
 
 

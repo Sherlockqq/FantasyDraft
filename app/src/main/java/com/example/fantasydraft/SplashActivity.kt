@@ -11,8 +11,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData
 import com.google.firebase.ktx.Firebase
+import com.midina.core_ui.ui.BaseFragment.Companion.FAVOURITE_TEAM_ID
+import com.midina.core_ui.ui.BaseFragment.Companion.FAVOURITE_TEAM_LOGO
 import com.midina.core_ui.ui.OnStartActivityListener
-
 
 class SplashActivity : AppCompatActivity(), OnStartActivityListener {
 
@@ -24,9 +25,8 @@ class SplashActivity : AppCompatActivity(), OnStartActivityListener {
         Log.d(TAG, "onCreate: ")
         binding = ActivitySplashBinding.inflate(layoutInflater)
 
-        setTheme(R.style.Theme_FantasyDraft)
-        supportActionBar?.hide()
-            //handleDynamicLink()
+//        setTheme(R.style.Theme_FantasyDraft)
+//        supportActionBar?.hide()
         setContentView(binding.root)
     }
 
@@ -35,44 +35,12 @@ class SplashActivity : AppCompatActivity(), OnStartActivityListener {
         finish()
     }
 
-
-    override fun startMainActivity(team: String) {
+    override fun startMainActivity(teamId: Int, teamLogo: String) {
         val intent = Intent(this, MainActivity::class.java)
-            .putExtra("Team", team)
+            .putExtra(FAVOURITE_TEAM_ID, teamId)
+            .putExtra(FAVOURITE_TEAM_LOGO, teamLogo)
+
         startActivity(intent)
         finish()
-    }
-
-    private fun handleDynamicLink() {
-
-        FirebaseDynamicLinks.getInstance().getDynamicLink(intent)
-            .addOnSuccessListener { pdLinkData ->
-                if (pdLinkData != null) {
-                    val oobCode: String? = pdLinkData.link?.getQueryParameter("oobCode")
-                    val fAuth = Firebase.auth
-                    if (oobCode != null) {
-                        fAuth.checkActionCode(oobCode).addOnSuccessListener { result ->
-                            when (result.operation) {
-                                ActionCodeResult.VERIFY_EMAIL -> {
-                                    fAuth.applyActionCode(oobCode)
-                                        .addOnSuccessListener {
-                                            Log.i(TAG, "Verified email")
-                                        }
-                                        .addOnFailureListener { resultCode ->
-                                            Log.w(TAG, "Failed to verify email", resultCode)
-                                        }
-                                }
-                                ActionCodeResult.PASSWORD_RESET -> {
-                                    Log.d(TAG, "PASSWORD RESET")
-                                }
-                            }
-                        }.addOnFailureListener { result ->
-                            Log.w(TAG, "Invalid code sent")
-                        }
-                    }
-                }
-            }.addOnFailureListener { ex ->
-                Log.w(TAG, "Invalid code sent. $ex")
-            }
     }
 }

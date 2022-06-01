@@ -42,12 +42,8 @@ class DraftFragment : BaseFragment(), OnFragmentUiBlockListener {
         savedInstanceState: Bundle?
     ): View? {
 
-        val contextThemeWrapper: Context = ContextThemeWrapper(activity, getTeamTheme())
-
-        val localInflater = inflater.cloneInContext(contextThemeWrapper)
-
         binding = DataBindingUtil.inflate(
-            localInflater,
+            inflater,
             R.layout.fragment_draft,
             container,
             false

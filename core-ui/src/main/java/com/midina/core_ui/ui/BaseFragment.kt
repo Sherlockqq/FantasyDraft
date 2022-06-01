@@ -18,35 +18,9 @@ abstract class BaseFragment : Fragment() {
         super.onAttach(context)
     }
 
-    fun getTeamTheme(): Int {
-        val sPref =  this.activity?.getSharedPreferences(
-            "SplashActivity",
-            AppCompatActivity.MODE_PRIVATE
-        )
-        val team = sPref?.getString(SAVED_TEAM, "")
-        if (team != null) {
-            when (team) {
-                "Динамо Киев" -> return R.style.Theme_DynamoNoAction
-            }
-        }
-        return R.style.Theme_FantasyDraft
-    }
-
-    fun getTeamActionTheme(): Int {
-        val sPref =  this.activity?.getSharedPreferences(
-            "SplashActivity",
-            AppCompatActivity.MODE_PRIVATE
-        )
-        val team = sPref?.getString(SAVED_TEAM, "")
-        if (team != null) {
-            when (team) {
-                "Динамо Киев" -> return R.style.Theme_Dynamo
-            }
-        }
-        return R.style.Theme_FantasyDraft
-    }
-
     companion object {
-        const val SAVED_TEAM = "TEAM"
+        const val SAVED_SEASON = "SEASON"
+        const val FAVOURITE_TEAM_ID = "FAVOURITE_TEAM_ID"
+        const val FAVOURITE_TEAM_LOGO = "FAVOURITE_TEAM_LOGO"
     }
 }

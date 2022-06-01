@@ -1,9 +1,11 @@
 package com.example.fantasydraft
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Base64
 import android.util.Log
 import android.view.Menu
 import android.view.animation.AnimationUtils
@@ -21,6 +23,11 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.example.fantasydraft.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.ActionCodeResult
@@ -28,15 +35,16 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.ktx.Firebase
 import com.midina.core_ui.ui.BaseFragment
+import com.midina.core_ui.ui.BaseFragment.Companion.FAVOURITE_TEAM_ID
+import com.midina.core_ui.ui.BaseFragment.Companion.FAVOURITE_TEAM_LOGO
 import com.midina.core_ui.ui.OnBottomNavHideListener
 import com.midina.core_ui.ui.OnBottomNavItemSelectListener
 import com.midina.core_ui.ui.OnFragmentUiBlockListener
+import com.midina.favourite_domain.model.Team
 import com.midina.matches_ui.OnArrowClickListener
 import com.midina.matches_ui.fixtures.FixturesFragment
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 
 
 private const val LAST_FRAGMENT = "LAST_FRAGMENT"
@@ -70,29 +78,27 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        try {
-            val info = packageManager.getPackageInfo(
-                "com.example.fantasydraft",
-                PackageManager.GET_SIGNATURES
-            )
-            for (signature in info.signatures) {
-                val md = MessageDigest.getInstance("SHA")
-                md.update(signature.toByteArray())
-                Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
-            }
-        } catch (e: PackageManager.NameNotFoundException) {
-
-        } catch (e: NoSuchAlgorithmException) {
-
-        }
-
+        //TODO signatures is deprecated. FIX IT!
+//        try {
+//            val info = packageManager.getPackageInfo(
+//                "com.example.fantasydraft",
+//                PackageManager.GET_SIGNATURES
+//            )
+//            info.signatures.forEach { signature ->
+//                val md = MessageDigest.getInstance("SHA")
+//                md.update(signature.toByteArray())
+//                Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+//            }
+//        } catch (e: PackageManager.NameNotFoundException) {
+//
+//        } catch (e: NoSuchAlgorithmException) {
+//
+//        }
 
         Log.d(TAG, "onCreate: ")
         binding = ActivityMainBinding.inflate(layoutInflater)
 
-        setTheme(getTeamTheme())
-
-        setContentView(binding.root)
+        //setTheme(R.style.Theme_FantasyDraft)
 
         dataStore = createDataStore("last_fragment")
 
@@ -126,7 +132,9 @@ class MainActivity : AppCompatActivity(),
                 saveToLastFragmentDataStore(fragmentId)
             }
         }
-        openBundle()
+        openExtras()
+
+        setContentView(binding.root)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -152,38 +160,32 @@ class MainActivity : AppCompatActivity(),
         binding.bottomNavigation.isVisible = true
     }
 
-    private fun openBundle() {
+    private fun openExtras() {
         val extras = intent.extras
         if (extras != null) {
-            val team = extras.getString("Team")
-            if (!team.isNullOrEmpty()) {
+            val teamLogo = extras.getString(FAVOURITE_TEAM_LOGO)
+            val teamId = extras.getInt(FAVOURITE_TEAM_ID)
+            setSharedPreferencesTeamId(teamId)
+            if (!teamLogo.isNullOrEmpty()) {
                 val menu: Menu = binding.bottomNavigation.menu
                 val item = menu.findItem(R.id.club_navigation)
-                item.setIcon(getImage(team))
+
+                Glide.with(this)
+                    .asBitmap()
+                    .load(teamLogo)
+                    .error(R.drawable.connection_error)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(object : CustomTarget<Bitmap?>() {
+                        override fun onLoadCleared(placeholder: Drawable?) {}
+                        override fun onResourceReady(
+                            resource: Bitmap,
+                            transition: Transition<in Bitmap?>?
+                        ) {
+                            item.icon = BitmapDrawable(resources, resource)
+                        }
+                    })
             }
         }
-    }
-
-    private fun getImage(team: String): Int {
-        when (team) {
-            "Львов" -> return R.drawable.lviv_logo
-            "Верес" -> return R.drawable.veres_logo
-            "Шахтер Донецк" -> return R.drawable.shakhtar_logo
-            "Металлист 1925" -> return R.drawable.metallist25_logo
-            "Десна" -> return R.drawable.desna_logo
-            "Заря" -> return R.drawable.zarya_logo
-            "Ворскла" -> return R.drawable.vorskla_logo
-            "Динамо Киев" -> return R.drawable.dynamo_logo
-            "Мариуполь" -> return R.drawable.mariupol_logo
-            "Колос К" -> return R.drawable.kolos_logo
-            "Ингулец" -> return R.drawable.ingulets_logo
-            "Рух Львов" -> return R.drawable.rukh_logo
-            "Черноморец" -> return R.drawable.chornomorets_logo
-            "Александрия" -> return R.drawable.oleksandriya_logo
-            "Днепр-1" -> return R.drawable.dnipro1_logo
-            "Минай" -> return R.drawable.minaj_logo
-        }
-        return R.drawable.connection_error
     }
 
     private fun getTeamTheme(): Int {
@@ -191,12 +193,8 @@ class MainActivity : AppCompatActivity(),
             "SplashActivity",
             MODE_PRIVATE
         )
-        val team = sPref?.getString(BaseFragment.SAVED_TEAM, "")
-        if (team != null) {
-            when (team) {
-                "Динамо Киев" -> return R.style.Theme_Dynamo
-            }
-        }
+        val team = sPref?.getString(BaseFragment.FAVOURITE_TEAM_ID, "")
+
         return R.style.Theme_FantasyDraft
     }
 
@@ -228,7 +226,7 @@ class MainActivity : AppCompatActivity(),
             if (result >= 0 && result < fragments.size) {
                 when (result) {
                     1 -> navController.navigate(R.id.action_draft_navigation)
-                    2 -> navController.navigate(R.id.action_match_navigation)
+                    2 -> navController.navigate(R.id.action_match_navigation) //TODO Fix crash
                     3 -> {
                         navController.navigate(R.id.action_draft_navigation)
                         navController.navigate(R.id.action_registration_navigation)
@@ -261,7 +259,7 @@ class MainActivity : AppCompatActivity(),
     override fun onArrowBackClicked() {
         val navHostFragment: NavHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-            val fragment = navHostFragment.childFragmentManager.fragments[0] as FixturesFragment
+        val fragment = navHostFragment.childFragmentManager.fragments[0] as FixturesFragment
         fragment.previousPage()
     }
 
@@ -320,5 +318,11 @@ class MainActivity : AppCompatActivity(),
                 as NavHostFragment
         navHostFragment.navController.navigate(R.id.action_draft_navigation)
     }
-}
 
+    private fun setSharedPreferencesTeamId(teamId: Int) {
+        val sPref = this.getPreferences(MODE_PRIVATE)
+        val ed = sPref?.edit()
+        ed?.putInt(FAVOURITE_TEAM_ID, teamId)
+        ed?.apply()
+    }
+}

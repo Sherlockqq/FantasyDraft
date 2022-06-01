@@ -40,10 +40,11 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.Dynamo"/>
 
         <receiver
-            android:name="com.midina.matches_ui.AlarmReceiver"
+            android:name="com.midina.team_ui.AlarmReceiver"
             android:exported="false" />
 
         <meta-data

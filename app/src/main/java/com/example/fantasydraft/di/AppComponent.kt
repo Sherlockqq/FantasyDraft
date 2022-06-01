@@ -3,9 +3,12 @@ package com.example.fantasydraft.di
 import android.content.Context
 import com.example.fantasydraft.FantasydraftApplication
 import com.midina.android.login_data.di.LoginDataModule
+import com.midina.club_data.di.ClubDataModule
+import com.midina.core_data.di.CoreDataModule
 import com.midina.core_ui.di.ViewModelBuilderModule
 import com.midina.draft_data.di.DraftDataModule
 import com.midina.draft_ui.di.DraftUiModule
+import com.midina.favourite_data.di.FavouriteDataModule
 import com.midina.favourite_ui.di.FavouriteUiModule
 import com.midina.login_ui.di.LoginUiModule
 import com.midina.match_data.di.MatchDataModule
@@ -14,6 +17,7 @@ import com.midina.matches_data.di.MatchesDataModule
 import com.midina.matches_ui.di.MatchesUiModule
 import com.midina.registration_data.di.RegistrationDataModule
 import com.midina.registration_ui.di.RegistrationUiModule
+import com.midina.splash_data.di.SplashDataModule
 import com.midina.splash_ui.di.SplashUiModule
 import com.midina.stat_data.di.StatisticsDataModule
 import com.midina.stat_ui.di.LeagueStatUiModule
@@ -27,13 +31,14 @@ import dagger.android.AndroidInjectionModule
 @Component (modules = [
     AndroidInjectionModule::class,
     ViewModelBuilderModule::class,
+    CoreDataModule::class,
     MatchesDataModule::class,
     MatchesUiModule::class,
     MainActivityModule::class,
     DraftUiModule::class,
     DraftDataModule::class,
     RegistrationUiModule::class,
-    com.midina.registration_data.di.RegistrationDataModule::class,
+    RegistrationDataModule::class,
     LoginUiModule::class,
     LoginDataModule::class,
     MatchUiModule::class,
@@ -41,8 +46,11 @@ import dagger.android.AndroidInjectionModule
     LeagueStatUiModule::class,
     StatisticsDataModule::class,
     SplashUiModule::class,
+    SplashDataModule::class,
     FavouriteUiModule::class,
-    ClubUiModule::class])
+    FavouriteDataModule::class,
+    ClubUiModule::class,
+    ClubDataModule::class])
 
 interface AppComponent {
     @Component.Builder

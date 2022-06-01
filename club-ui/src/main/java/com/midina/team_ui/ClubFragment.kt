@@ -1,47 +1,154 @@
 package com.midina.team_ui
 
+import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
-import android.view.ContextThemeWrapper
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.midina.club_domain.model.fixtures.FixturesInfo
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnBottomNavItemSelectListener
 import com.midina.team_ui.databinding.FragmentClubBinding
+import kotlinx.coroutines.flow.collect
+
+private const val TAG = "ClubFragment"
 
 class ClubFragment : BaseFragment() {
 
     override val layoutId = R.layout.fragment_club
 
-    private lateinit var binding: FragmentClubBinding
+    private var binding: FragmentClubBinding? = null
     private var listener: OnBottomNavItemSelectListener? = null
+
+    val viewModel: ClubViewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[ClubViewModel::class.java]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-
-        val contextThemeWrapper: Context = ContextThemeWrapper(activity, getTeamTheme())
-
-        val localInflater = inflater.cloneInContext(contextThemeWrapper)
+    ): View? {
 
         binding = DataBindingUtil.inflate(
-            localInflater,
+            inflater,
             layoutId,
             container,
             false
         )
-        setView()
-        return binding.root
+
+        binding?.lifecycleOwner = viewLifecycleOwner
+        binding?.viewModel = viewModel
+        binding?.vTeamView?.viewModel = viewModel
+
+        openSharedPref()
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.teamId
+                .collect {
+                    handleTeamIdChanges(it)
+                }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.events
+                .collect {
+                    handleUiEvent(it)
+                }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.alarmEvents
+                .collect {
+                    handleAlarmEvent(it)
+                }
+        }
+
+        binding?.vTeamView?.ivAlarm?.setOnClickListener {
+            viewModel.setIsAlarm(null)
+            viewModel.alarmClicked()
+        }
+
+        return binding?.root
     }
 
     override fun onStart() {
         super.onStart()
         highlightIcon()
+    }
+
+    override fun onDestroy() {
+        saveIsAlarmToSharedPref(viewModel.isAlarm.value)
+        super.onDestroy()
+    }
+
+    private fun handleTeamIdChanges(teamId: Int) {
+        if (teamId == 0) {
+            val sPref = this.activity?.getPreferences(AppCompatActivity.MODE_PRIVATE)
+            val id = sPref?.getInt(FAVOURITE_TEAM_ID, 0)
+            id?.let {
+                viewModel.setTeamId(it)
+            }
+        } else {
+            viewModel.dataRequest()
+        }
+    }
+
+    private fun handleUiEvent(event: UiEvent) {
+        when (event) {
+            UiEvent.EmptyState -> Log.d(TAG, "UiEvent.EmptyState")
+            UiEvent.Error -> Log.d(TAG, "UiEvent.Error")
+            UiEvent.Loading -> {
+                Log.d(TAG, "UiEvent.Loading")
+                binding?.vTeamView?.vwTeamBackground?.isVisible = false
+                binding?.vTeamView?.vwBackgroundNotification?.isVisible = false
+            }
+            is UiEvent.Success -> {
+                binding?.vTeamView?.vwTeamBackground?.isVisible = true
+                binding?.vTeamView?.vwBackgroundNotification?.isVisible = true
+                binding?.vTeamView?.tvTeamName?.text = event.teamInfo.team.name
+                binding?.vTeamView?.tvStadiumName?.text = event.teamInfo.stadium.name
+                binding?.vTeamView?.ivTeamLogo?.let {
+                    Glide.with(this).load(event.teamInfo.team.logo).into(it)
+                }
+                binding?.vTeamView?.ivStadium?.let {
+                    Glide.with(this).load(event.teamInfo.stadium.logo).into(it)
+                }
+            }
+        }
+    }
+
+    private fun handleAlarmEvent(event: AlarmEvent) {
+        when (event) {
+            AlarmEvent.Default -> Log.d(TAG, "Alarm DEFAULT")
+            AlarmEvent.EmptyState -> {
+                showErrorToast()
+            }
+            AlarmEvent.Error -> {
+                showErrorToast()
+            }
+            is AlarmEvent.Success -> {
+                if (viewModel.isAlarm.value) {
+                    createAlarm(event.list)
+                } else {
+                    cancelAlarm(event.list)
+                }
+            }
+        }
     }
 
     private fun highlightIcon() {
@@ -51,62 +158,106 @@ class ClubFragment : BaseFragment() {
         }
     }
 
-    private fun setView() {
-        val sPref =  this.activity?.getSharedPreferences(
-            "SplashActivity",
-            AppCompatActivity.MODE_PRIVATE
+    private fun FixturesInfo.toIntent(): Intent {
+        val intent = Intent(activity?.applicationContext, AlarmReceiver::class.java)
+
+        val bundle = Bundle()
+
+        bundle.putString(TOUR, tour)
+        bundle.putString(HOME, home)
+        bundle.putString(AWAY, away)
+
+        intent.putExtras(bundle)
+        return intent
+    }
+
+    private fun createAlarm(matchesList: ArrayList<FixturesInfo>) {
+        val alarmManager =
+            activity?.applicationContext?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        for (index in matchesList.indices) {
+
+            val intent = matchesList[index].toIntent()
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    viewModel.getTimeInMillis(matchesList[index].date),
+                    getPendingCreateAlarmIdleIntent(index, intent)
+                )
+            } else {
+
+                alarmManager.setExact(
+                    AlarmManager.RTC_WAKEUP,
+                    viewModel.getTimeInMillis(matchesList[index].date),
+                    getPendingAlarmIntent(index, intent)
+                )
+            }
+        }
+    }
+
+    private fun cancelAlarm(matchesList: ArrayList<FixturesInfo>) {
+        val alarmManager =
+            activity?.applicationContext?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        for (index in matchesList.indices) {
+            val intent = matchesList[index].toIntent()
+            val pending: PendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                getPendingCreateAlarmIdleIntent(index, intent)
+            } else {
+                getPendingAlarmIntent(index, intent)
+            }
+            alarmManager.cancel(pending)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun getPendingCreateAlarmIdleIntent(index: Int, intent: Intent): PendingIntent {
+        return PendingIntent.getBroadcast(
+            activity?.applicationContext,
+            index,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE
         )
-        val team = sPref?.getString(SAVED_TEAM, "")
-        if (team != null) {
-            binding.vTeamView.ivStadium.setImageResource(getStadium(team))
-            binding.vTeamView.ivTeamLogo.setImageResource(getLogo(team))
-            binding.vTeamView.tvTeamName.text = team
-            binding.vTeamView.tvStadiumName.text = "Олимпийский"
-        }
     }
 
-
-    private fun getStadium(team: String): Int {
-        when (team) {
-            "Львов" -> return R.drawable.stadium_arena_lviv
-            "Верес" -> return R.drawable.stadium_veres
-            "Шахтер Донецк" -> return R.drawable.stadium_olimpiyskii
-            "Металлист 1925" -> return R.drawable.stadium_metallist25
-            "Десна" -> return R.drawable.stadium_desna
-            "Заря" -> return R.drawable.stadium_zarya
-            "Ворскла" -> return R.drawable.stadium_vorskla
-            "Динамо Киев" -> return R.drawable.stadium_olimpiyskii
-            "Мариуполь" -> return R.drawable.stadium_mariopol
-            "Колос К" -> return R.drawable.stadium_kolos
-            "Ингулец" -> return R.drawable.stadium_ingulets
-            "Рух Львов" -> return R.drawable.stadium_arena_lviv
-            "Черноморец" -> return R.drawable.stadium_chernomorets
-            "Александрия" -> return R.drawable.stadium_oleksandriya
-            "Днепр-1" -> return R.drawable.stadium_dnipro1
-            "Минай" -> return R.drawable.stadium_minaj
-        }
-        return R.drawable.connection_error
+    @SuppressLint("UnspecifiedImmutableFlag")
+    private fun getPendingAlarmIntent(index: Int, intent: Intent): PendingIntent {
+        return PendingIntent.getBroadcast(
+            activity?.applicationContext,
+            index,
+            intent,
+            0
+        )
     }
 
-    private fun getLogo(team: String): Int {
-        when (team) {
-            "Львов" -> return R.drawable.lviv_logo
-            "Верес" -> return R.drawable.veres_logo
-            "Шахтер Донецк" -> return R.drawable.shakhtar_logo
-            "Металлист 1925" -> return R.drawable.metallist25_logo
-            "Десна" -> return R.drawable.desna_logo
-            "Заря" -> return R.drawable.zarya_logo
-            "Ворскла" -> return R.drawable.vorskla_logo
-            "Динамо Киев" -> return R.drawable.dynamo_logo
-            "Мариуполь" -> return R.drawable.mariupol_logo
-            "Колос К" -> return R.drawable.kolos_logo
-            "Ингулец" -> return R.drawable.ingulets_logo
-            "Рух Львов" -> return R.drawable.rukh_logo
-            "Черноморец" -> return R.drawable.chornomorets_logo
-            "Александрия" -> return R.drawable.oleksandriya_logo
-            "Днепр-1" -> return R.drawable.dnipro1_logo
-            "Минай" -> return R.drawable.minaj_logo
-        }
-        return R.drawable.connection_error
+    private fun saveIsAlarmToSharedPref(isAlarm: Boolean) {
+        val sPref = this.activity?.getPreferences(AppCompatActivity.MODE_PRIVATE)
+        val ed = sPref?.edit()
+        ed?.putBoolean(IS_ALARM, isAlarm)
+        ed?.apply()
+    }
+
+    private fun openSharedPref() {
+        val sPref = this.activity?.getPreferences(AppCompatActivity.MODE_PRIVATE)
+        val sPrefIsAlarm = sPref?.getBoolean(IS_ALARM, false)
+        viewModel.setIsAlarm(sPrefIsAlarm)
+    }
+
+    private fun showErrorToast() {
+        viewModel.setIsAlarm(false)
+        Toast.makeText(
+            context,
+            getString(com.midina.core_ui.R.string.something_went_wrong),
+            Toast.LENGTH_SHORT
+        ).show()
+
+    }
+
+    companion object {
+        const val TOUR = "TOUR"
+        const val HOME = "HOME"
+        const val AWAY = "AWAY"
+        const val IS_ALARM = "IS_ALARM"
     }
 }

@@ -13,11 +13,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnStartActivityListener
-import com.midina.favourite_domain.Team
+import com.midina.favourite_domain.model.Team
 import com.midina.favourite_ui.databinding.FragmentFavouriteBinding
 import kotlinx.coroutines.flow.collect
 
-const val SAVED_TEAM = "TEAM"
 const val TAG = "FavouriteFragment"
 
 class FavouriteFragment : BaseFragment() {
@@ -25,8 +24,7 @@ class FavouriteFragment : BaseFragment() {
     override val layoutId = R.layout.fragment_favourite
     private val adapter = FavouriteAdapter()
 
-    private lateinit var binding: FragmentFavouriteBinding
-
+    private var binding: FragmentFavouriteBinding? = null
     private var listenerOn: OnStartActivityListener? = null
 
     val viewModel: FavouriteViewModel by lazy {
@@ -36,7 +34,7 @@ class FavouriteFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
 
         binding = DataBindingUtil.inflate(
             inflater,
@@ -45,17 +43,17 @@ class FavouriteFragment : BaseFragment() {
             false
         )
 
-        binding.lifecycleOwner = viewLifecycleOwner
+        binding?.lifecycleOwner = viewLifecycleOwner
 
-        binding.viewModel = viewModel
+        binding?.viewModel = viewModel
 
-        binding.rvTeams.layoutManager = LinearLayoutManager(this.context)
+        binding?.rvTeams?.layoutManager = LinearLayoutManager(this.context)
 
-        binding.rvTeams.adapter = adapter
+        binding?.rvTeams?.adapter = adapter
 
         adapter.setOnItemClickListener(object : FavouriteAdapter.OnItemClickListener {
             override fun onItemClick(position: Int, team: Team) {
-                setSharedPreferencesData(team.name)
+                setSharedPreferencesData(team)
             }
         })
 
@@ -65,8 +63,7 @@ class FavouriteFragment : BaseFragment() {
                     handleEvents(it)
                 }
         }
-
-        return binding.root
+        return binding?.root
     }
 
     private fun handleEvents(event: UiEvent) {
@@ -99,18 +96,20 @@ class FavouriteFragment : BaseFragment() {
     }
 
     @SuppressLint("CommitPrefEdits")
-    private fun setSharedPreferencesData(team: String) {
+    private fun setSharedPreferencesData(team: Team) {
+
         val sPref = this.activity?.getPreferences(AppCompatActivity.MODE_PRIVATE)
         val ed = sPref?.edit()
-        ed?.putString(SAVED_TEAM, team)
+        ed?.putInt(FAVOURITE_TEAM_ID, team.id)
+        ed?.putString(FAVOURITE_TEAM_LOGO, team.logo)
         ed?.apply()
-        navigateToMainActivity(team)
+        navigateToMainActivity(team.id, team.logo)
     }
 
-    private fun navigateToMainActivity(team: String) {
+    private fun navigateToMainActivity(teamId: Int, teamLogo: String) {
         if (context is OnStartActivityListener) {
             listenerOn = context as OnStartActivityListener
-            listenerOn?.startMainActivity(team)
+            listenerOn?.startMainActivity(teamId, teamLogo)
         }
     }
 }

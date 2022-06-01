@@ -8,6 +8,6 @@
     <fragment
         android:id="@+id/clubFragment"
         android:name="com.midina.team_ui.ClubFragment"
-        android:label=""
+        android:label="Club"
         tools:layout="@layout/fragment_club" />
 </navigation>

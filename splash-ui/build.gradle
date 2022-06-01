@@ -44,6 +44,9 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$version_dagger"
     kapt "com.google.dagger:dagger-android-processor:$version_dagger"
 
+    //Gson
+    implementation 'com.google.code.gson:gson:2.8.8'
+
     testImplementation "junit:junit:$version_junit"
     androidTestImplementation "androidx.test.ext:junit:$version_junit"
     androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
@@ -51,5 +54,6 @@ dependencies {
     //Module
     implementation project(path: ':core-ui')
     implementation project(path: ':core-nav')
-
+    implementation project(path: ':core-domain')
+    implementation project(path: ':splash-domain')
 }

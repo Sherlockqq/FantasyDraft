@@ -11,6 +11,7 @@ import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import kotlinx.coroutines.Dispatchers
+import javax.inject.Named
 
 @Module
 interface MatchUiModule {
@@ -18,7 +19,7 @@ interface MatchUiModule {
     @ContributesAndroidInjector(
         modules = [
             MatchViewModelModule::class,
-            BundleProvidersModule::class,
+            BundleProvidersMatchModule::class,
             MatchDispatchersModule::class]
     )
     fun providesMatchFragment(): MatchFragment
@@ -39,8 +40,9 @@ abstract class MatchViewModelModule {
 }
 
 @Module
-class BundleProvidersModule {
+class BundleProvidersMatchModule {
 
+    @Named("MatchBundle")
     @Provides
     fun provideBundle(matchFragment: MatchFragment): Bundle? {
         return matchFragment.arguments

@@ -38,8 +38,7 @@
         app:layout_constraintEnd_toEndOf="@+id/vw_even_item_logo_back"
         app:layout_constraintStart_toStartOf="@+id/vw_event_item_back"
         app:layout_constraintTop_toTopOf="@+id/vw_even_item_logo_back"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/dynamo_logo" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/tv_team_name"

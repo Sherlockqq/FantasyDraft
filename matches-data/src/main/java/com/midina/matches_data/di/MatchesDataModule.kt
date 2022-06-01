@@ -1,6 +1,7 @@
 package com.midina.matches_data.di
 
-import com.midina.matches_data.MatchRepository
+import com.midina.core_data.di.FOOTBALL_URL
+import com.midina.matches_data.FixturesRepository
 import com.midina.matches_data.api.FixturesApiInterface
 import com.midina.matches_data.usecaseimpl.GetCurrentTourUsecaseImplementation
 import com.midina.matches_data.usecaseimpl.GetMatchesScheduleUsecaseImpl
@@ -18,8 +19,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
 import javax.inject.Singleton
 
-const val BASE_URL = "https://v3.football.api-sports.io"
-
 @Module(
     includes = [
         MatchesDataUseCaseModule::class
@@ -29,7 +28,7 @@ class MatchesDataModule {
 
     @Provides
     @Singleton
-    fun provideMatchRepository() = MatchRepository(getWeatherApiInterface(getRetrofitInstance()))
+    fun provideMatchRepository() = FixturesRepository(getFootballApiInterface(getRetrofitInstance()))
 
     @Singleton
     @Provides
@@ -56,7 +55,7 @@ class MatchesDataModule {
             .build()
 
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(FOOTBALL_URL)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -64,7 +63,7 @@ class MatchesDataModule {
 
     @Singleton
     @Provides
-    fun getWeatherApiInterface(@Named("Fixtures")retrofit: Retrofit): FixturesApiInterface {
+    fun getFootballApiInterface(@Named("Fixtures")retrofit: Retrofit): FixturesApiInterface {
         return retrofit.create(FixturesApiInterface::class.java)
     }
 }
@@ -76,7 +75,7 @@ interface MatchesDataUseCaseModule {
             GetMatchesScheduleUsecase
 
     @Binds
-    fun bindGetСurrentTourUseCase(getCurrentTourUsecaseImpl: GetCurrentTourUsecaseImplementation):
+    fun bindGetCurrentTourUseCase(getCurrentTourUsecaseImpl: GetCurrentTourUsecaseImplementation):
             GetCurrentTourUsecase
 }
 
