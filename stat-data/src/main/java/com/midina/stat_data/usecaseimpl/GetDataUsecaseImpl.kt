@@ -19,7 +19,8 @@ class GetDataUsecaseImpl @Inject constructor
 }
 
 class GetAsyncDataUsecaseImpl @Inject constructor
-    (private val leagueStatisticsRepository: LeagueStatisticsRepository) : GetAsyncUsecase {
+    (private val leagueStatisticsRepository: LeagueStatisticsRepository) :
+    GetAsyncUsecase {
     override fun execute(): PublishSubject<ResultEvent<AsyncTopData>> {
         return leagueStatisticsRepository.getAsyncData()
     }

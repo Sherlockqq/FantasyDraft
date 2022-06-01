@@ -10,8 +10,6 @@ android {
     defaultConfig {
         minSdk 21
         targetSdk 31
-        versionCode 1
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -47,6 +45,12 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$version_retrofit_converter"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$version_rxjava2_retrofit"
 
+    //Tests
+    testImplementation "junit:junit:$version_junit"
+    androidTestImplementation "androidx.test.ext:junit:$version_junit"
+    // AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test:rules:1.4.0'
 
     implementation "com.squareup.okhttp3:logging-interceptor:$version_okhttp"
 

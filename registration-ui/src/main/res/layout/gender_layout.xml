@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.midina.registration_ui.RegistrationViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/mainTextMarginStart"
+            android:layout_marginTop="@dimen/mainTextMarginTop"
+            android:text="@string/gender"
+            android:textSize="@dimen/mainTextOfTopic"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_gender_rq"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/rqMarginStart"
+            android:layout_marginTop="@dimen/rqMarginTop"
+            android:text="@string/required"
+            app:layout_constraintStart_toEndOf="@+id/tv_gender"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <CheckBox
+            android:id="@+id/cb_male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/genderMaleMarginStart"
+            android:layout_marginTop="@dimen/genderMarginTop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_gender" />
+
+        <CheckBox
+            android:id="@+id/cb_female"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/genderMarginTop"
+            app:layout_constraintStart_toStartOf="@+id/tv_female"
+            app:layout_constraintTop_toBottomOf="@+id/tv_gender" />
+
+        <CheckBox
+            android:id="@+id/cb_unspecified"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/genderMarginTop"
+            app:layout_constraintStart_toStartOf="@+id/tv_unspecified"
+            app:layout_constraintTop_toBottomOf="@+id/tv_gender" />
+
+        <TextView
+            android:id="@+id/tv_male"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/genderMaleMarginStart"
+            android:layout_marginTop="@dimen/genderMarginTop"
+            android:text="@string/male"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cb_male" />
+
+        <TextView
+            android:id="@+id/tv_female"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="@dimen/genderMarginTop"
+            android:text="@string/female"
+            app:layout_constraintStart_toEndOf="@+id/tv_male"
+            app:layout_constraintTop_toBottomOf="@+id/cb_female" />
+
+        <TextView
+            android:id="@+id/tv_unspecified"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="@dimen/genderMarginTop"
+            android:text="@string/unspecified"
+            app:layout_constraintStart_toEndOf="@+id/tv_female"
+            app:layout_constraintTop_toBottomOf="@+id/cb_unspecified" />
+
+        <ImageView
+            android:id="@+id/iv_gender"
+            android:layout_width="@dimen/cvWidth"
+            android:layout_height="@dimen/cvHeight"
+            android:layout_marginEnd="@dimen/cvEndMargin"
+            android:visibility="visible"
+            android:src="@drawable/ic_default"
+            app:state="@{viewModel.genderState}"
+            app:layout_constraintBottom_toBottomOf="@+id/cb_unspecified"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+        </ImageView>
+
+        <View
+            android:id="@+id/dividerLine"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dividerHeight"
+            android:layout_marginTop="@dimen/dividerMarginTop"
+            android:background="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_male" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class IsSignedUsecaseImpl @Inject constructor
     (private val isSignedRepository: SignedRepository): IsSignedUsecase {
-    override suspend fun execute(): ResultEvent =
+    override suspend fun execute(): ResultEvent<String> =
         isSignedRepository.isSigned()
 }
 

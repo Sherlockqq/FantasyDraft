@@ -1,43 +1,56 @@
 package com.example.fantasydraft
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.Menu
 import android.view.animation.AnimationUtils
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.navigation.NavController
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import com.example.fantasydraft.databinding.ActivityMainBinding
-import com.midina.core_ui.ui.OnBottomNavHideListener
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.midina.core_ui.ui.OnBottomNavItemSelectListener
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.preferencesKey
 import androidx.datastore.preferences.createDataStore
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import com.example.fantasydraft.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.ActionCodeResult
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
+import com.google.firebase.ktx.Firebase
 import com.midina.core_ui.ui.BaseFragment
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import com.midina.core_ui.ui.OnBottomNavHideListener
+import com.midina.core_ui.ui.OnBottomNavItemSelectListener
+import com.midina.core_ui.ui.OnFragmentUiBlockListener
 import com.midina.matches_ui.OnArrowClickListener
 import com.midina.matches_ui.fixtures.FixturesFragment
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
+
 
 private const val LAST_FRAGMENT = "LAST_FRAGMENT"
 private const val TAG = "MainActivity"
-
 
 class MainActivity : AppCompatActivity(),
     OnBottomNavHideListener, OnBottomNavItemSelectListener, OnArrowClickListener {
 
     private lateinit var dataStore: DataStore<Preferences>
-
     private lateinit var binding: ActivityMainBinding
+
+    private var listener: OnFragmentUiBlockListener? = null
+    private val firebaseDynamicLinks = FirebaseDynamicLinks.getInstance()
+    private val fAuth = Firebase.auth
 
     private val fragments: ArrayList<Int> = arrayListOf(
         R.id.fixturesFragment,
@@ -56,6 +69,23 @@ class MainActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        try {
+            val info = packageManager.getPackageInfo(
+                "com.example.fantasydraft",
+                PackageManager.GET_SIGNATURES
+            )
+            for (signature in info.signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+
+        } catch (e: NoSuchAlgorithmException) {
+
+        }
+
 
         Log.d(TAG, "onCreate: ")
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -96,8 +126,13 @@ class MainActivity : AppCompatActivity(),
                 saveToLastFragmentDataStore(fragmentId)
             }
         }
-
         openBundle()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        blockFragmentUi()
+        handleDynamicLink()
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -129,8 +164,6 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
-
-
     private fun getImage(team: String): Int {
         when (team) {
             "Львов" -> return R.drawable.lviv_logo
@@ -154,7 +187,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun getTeamTheme(): Int {
-        val sPref =  this.getSharedPreferences(
+        val sPref = this.getSharedPreferences(
             "SplashActivity",
             MODE_PRIVATE
         )
@@ -193,7 +226,6 @@ class MainActivity : AppCompatActivity(),
 
         if (result != null) {
             if (result >= 0 && result < fragments.size) {
-                // Navigate to this fragment
                 when (result) {
                     1 -> navController.navigate(R.id.action_draft_navigation)
                     2 -> navController.navigate(R.id.action_match_navigation)
@@ -229,7 +261,64 @@ class MainActivity : AppCompatActivity(),
     override fun onArrowBackClicked() {
         val navHostFragment: NavHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val fragment = navHostFragment.childFragmentManager.fragments[0] as FixturesFragment
+            val fragment = navHostFragment.childFragmentManager.fragments[0] as FixturesFragment
         fragment.previousPage()
     }
+
+    private fun handleDynamicLink() {
+
+        firebaseDynamicLinks.getDynamicLink(intent)
+            .addOnSuccessListener { pdLinkData ->
+                pdLinkData.let {
+                    val oobCode: String? = pdLinkData.link?.getQueryParameter("oobCode")
+                    oobCode?.let {
+                        fAuth.checkActionCode(oobCode).addOnSuccessListener { result ->
+                            when (result.operation) {
+                                ActionCodeResult.VERIFY_EMAIL -> {
+                                    fAuth.applyActionCode(oobCode)
+                                        .addOnSuccessListener {
+                                            fAuth.currentUser.let { user ->
+                                                user?.reload()?.addOnSuccessListener {
+                                                    if (user.isEmailVerified) {
+                                                        reloadDraftFragment()
+                                                    }
+                                                }
+                                            }
+                                            Log.i(TAG, "Verified email")
+                                        }
+                                        .addOnFailureListener { resultCode ->
+                                            Log.w(TAG, "Failed to ver   ify email", resultCode)
+                                        }
+                                }
+                                ActionCodeResult.PASSWORD_RESET -> {
+                                    Log.d(TAG, "PASSWORD RESET")
+                                }
+                            }
+                        }.addOnFailureListener { result ->
+                            Log.w(TAG, "Invalid code sent")
+                        }
+                    }
+                }
+            }.addOnFailureListener { ex ->
+                Log.w(TAG, "Invalid code sent. $ex")
+            }
+    }
+
+    private fun blockFragmentUi() {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+                as NavHostFragment
+        val fragment = navHostFragment.childFragmentManager.fragments[0]
+
+        if (fragment is OnFragmentUiBlockListener) {
+            listener = fragment
+            listener?.blockUi()
+        }
+    }
+
+    private fun reloadDraftFragment() {
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+                as NavHostFragment
+        navHostFragment.navController.navigate(R.id.action_draft_navigation)
+    }
 }
+

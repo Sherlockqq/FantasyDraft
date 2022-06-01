@@ -10,8 +10,6 @@ android {
     defaultConfig {
         minSdk = version_min_sdk
         targetSdk = version_target_sdk
-        versionCode = version_code
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -45,6 +43,9 @@ dependencies {
     //Firebase
     implementation platform("com.google.firebase:firebase-bom:$version_firebase")
     implementation 'com.google.firebase:firebase-auth-ktx'
+
+    //Facebook
+    implementation 'com.facebook.android:facebook-login:12.0.0'
 
     //Modules
     implementation project(path: ':draft-domain')

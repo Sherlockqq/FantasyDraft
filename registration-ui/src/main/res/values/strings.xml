@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="first_name">Имя</string>
-    <string name="required">*Небоходимо</string>
+    <string name="required">*Необходимо</string>
     <string name="name_request">Введите ваше имя!</string>
     <string name="last_name">Фамилия</string>
     <string name="lastName_request">Введите вашу фамилию!</string>
@@ -23,4 +23,11 @@
     <string name="mm">MM</string>
     <string name="yyyy">ГГГГ</string>
     <string name="title">Регистрация</string>
+    <string name="edit_date">0%1$s</string>
+    <string name="verification">Please verify your email address</string>
+    <string name="date_requirements">Введите свою дату рождения</string>
+    <string name="toast_connection">Internet connection problem. Try again.</string>
+    <string name="error_data">Not all data is correct.</string>
+    <string name="error_collision">The email address is already in use by another account.</string>
+    <string name="error_connection">A network error (such as timeout, interrupted connection or unreachable host) has occurred.</string>
 </resources>

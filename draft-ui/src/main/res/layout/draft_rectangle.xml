@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.midina.draft_ui.DraftViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/vw_rectangle"
+            android:background="@drawable/ic_signinrectangle"
+            android:layout_width="360dp"
+            android:layout_height="256dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_premier_league"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/premier_league"
+            android:fontFamily="@font/archivo_black"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            app:layout_constraintTop_toTopOf="@+id/vw_rectangle"
+            app:layout_constraintStart_toStartOf="@+id/vw_rectangle"
+            app:layout_constraintEnd_toEndOf="@+id/vw_rectangle"/>
+
+        <TextView
+            android:id="@+id/tv_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/welcome_to_fantasy"
+            android:fontFamily="@font/archivo_black"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:layout_constraintTop_toBottomOf="@id/tv_premier_league"
+            app:layout_constraintStart_toStartOf="@+id/vw_rectangle"
+            app:layout_constraintEnd_toEndOf="@+id/vw_rectangle"/>
+
+        <TextView
+            android:id="@+id/tv_official"
+            android:layout_width="320dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="4dp"
+            android:fontFamily="@font/archivo_black"
+            android:text="@string/official"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="@+id/vw_rectangle"
+            app:layout_constraintStart_toStartOf="@+id/vw_rectangle"
+            app:layout_constraintTop_toBottomOf="@id/tv_welcome" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/bt_sign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_signin"
+            android:layout_marginTop="16dp"
+            android:drawableEnd="@drawable/ic_next_arrows_svgrepo_com"
+            app:sign="@{viewModel.signEvents}"
+            app:layout_constraintTop_toBottomOf="@id/tv_official"
+            app:layout_constraintStart_toStartOf="@+id/vw_rectangle"
+            app:layout_constraintEnd_toEndOf="@+id/vw_rectangle"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/bt_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/ic_registration"
+            android:drawableEnd="@drawable/ic_next_arrows_svgrepo_com"
+            app:action="@{viewModel.signEvents}"
+            app:layout_constraintTop_toBottomOf="@+id/bt_sign"
+            app:layout_constraintStart_toStartOf="@+id/vw_rectangle"
+            app:layout_constraintEnd_toEndOf="@+id/vw_rectangle"/>
+
+        <TextView
+            android:id="@+id/tv_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/archivo_black"
+            android:text="Your email"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintStart_toStartOf="@+id/vw_rectangle"
+            app:layout_constraintEnd_toEndOf="@+id/vw_rectangle"
+            app:layout_constraintTop_toBottomOf="@id/bt_action"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -106,10 +106,10 @@ class LeagueStatisticsRepository @Inject constructor(private val statApi: Statis
                 Single.zip(
                     getTopScorer(),
                     getTopAssistant(),
-                    getTopTeams(),
-                    { scorer, assistant, teamStat ->
-                        TopData(scorer, assistant, teamStat)
-                    })
+                    getTopTeams()
+                ) { scorer, assistant, teamStat ->
+                    TopData(scorer, assistant, teamStat)
+                }
             }
             .map {
                 ResultEvent.Success(Pair(season, it))
@@ -170,7 +170,7 @@ class LeagueStatisticsRepository @Inject constructor(private val statApi: Statis
                 Log.d(TAG, "getTop onError $it")
             }
             .map {
-                ResultEvent.Success(it.toTopAssistant())
+               ResultEvent.Success(it.toTopAssistant())
             }
     }
 

@@ -1,34 +1,34 @@
 package com.midina.registration_ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
-import com.midina.core_ui.ui.State
 import android.view.inputmethod.EditorInfo
-
 import android.widget.TextView.OnEditorActionListener
+import android.widget.Toast
+import android.widget.Toast.LENGTH_LONG
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnBottomNavHideListener
 import com.midina.registration_ui.databinding.RegistrationFragmentBinding
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 
-//TODO Make CustomView correct size( test on physical device)
+const val TAG = "RegistrationFragment"
 
 class RegistrationFragment : BaseFragment() {
 
     override val layoutId = R.layout.registration_fragment
 
-    private lateinit var binding: RegistrationFragmentBinding
+    private var binding: RegistrationFragmentBinding? = null
 
     private val viewModel: RegistrationViewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[RegistrationViewModel::class.java]
@@ -56,24 +56,28 @@ class RegistrationFragment : BaseFragment() {
     }
 
 
-    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
 
         (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title)
 
         binding = DataBindingUtil.inflate(
             inflater,
-            R.layout.registration_fragment,
+            layoutId,
             container,
             false
         )
 
-        binding.lifecycleOwner = viewLifecycleOwner
+        binding?.lifecycleOwner = viewLifecycleOwner
 
-        binding.viewModel = viewModel
+        binding?.firstName?.viewModel = viewModel
+        binding?.lastName?.viewModel = viewModel
+        binding?.email?.viewModel = viewModel
+        binding?.password?.viewModel = viewModel
+        binding?.gender?.viewModel = viewModel
+        binding?.date?.viewModel = viewModel
 
         lifecycleScope.launchWhenCreated {
             viewModel.firstNameEvents
@@ -118,253 +122,218 @@ class RegistrationFragment : BaseFragment() {
         }
 
         lifecycleScope.launchWhenCreated {
-            viewModel.yearsEvents
-                .collect {
-                    handleYearsEvents(it)
-                }
-        }
-
-        lifecycleScope.launchWhenCreated {
             viewModel.registerEvents
                 .collect {
                     handleRegistrationEvents(it)
                 }
         }
 
-        //todo move to VM
-        binding.etDateDays.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
+        binding?.date?.etDateDays?.setOnEditorActionListener(OnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (binding.etDateDays.text.length == 1) {
-                    binding.etDateDays.setText("0${binding.etDateDays.text}")
+                if (binding?.date?.etDateDays?.text?.length == 1) {
+                    binding?.date?.etDateDays?.setText(
+                        getString(
+                            R.string.edit_date,
+                            binding?.date?.etDateDays?.text
+                        )
+                    )
                 }
-                binding.etDateMonthes.requestFocus()
+                binding?.date?.etDateMonthes?.requestFocus()
                 return@OnEditorActionListener true
             }
             false
         })
 
-        binding.etDateMonthes.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
+        binding?.date?.etDateMonthes?.setOnEditorActionListener(OnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (binding.etDateMonthes.text.length == 1) {
-                    binding.etDateMonthes.setText("0${binding.etDateMonthes.text}")
+                if (binding?.date?.etDateMonthes?.text?.length == 1) {
+                    binding?.date?.etDateMonthes?.setText(
+                        getString(
+                            R.string.edit_date,
+                            binding?.date?.etDateMonthes?.text
+                        )
+                    )
                 }
-                binding.etDateYears.requestFocus()
+                binding?.date?.etDateYears?.requestFocus()
                 return@OnEditorActionListener true
             }
             false
         })
 
 
-        binding.cbMale.setOnClickListener {
-            MaleChecked()
+        binding?.gender?.cbMale?.setOnClickListener {
+            maleChecked()
         }
 
-        binding.cbFemale.setOnClickListener {
-            FemaleChecked()
+        binding?.gender?.cbFemale?.setOnClickListener {
+            femaleChecked()
         }
 
-        binding.cbUnspecified.setOnClickListener {
-            UnspecifiedChecked()
+        binding?.gender?.cbUnspecified?.setOnClickListener {
+            unspecifiedChecked()
         }
 
-        binding.btRegist.setOnClickListener {
+        binding?.btRegist?.setOnClickListener {
+            binding?.btRegist?.isEnabled = false
             viewModel.registrationIsClicked()
         }
 
-        return binding.root
+        return binding?.root
     }
 
     private fun handleFirstNameEvents(event: FirstNameUiEvent) {
-        when (event) {
-            is FirstNameUiEvent.OnTextEmpty -> {
-                binding.tvNameRequest.isVisible = true
-                binding.cvFirstName.setState(State.DEFAULT)
-            }
-            is FirstNameUiEvent.OnTextValid -> {
-                binding.tvNameRequest.isGone = true
-                binding.cvFirstName.setState(State.CORRECT)
-            }
-            is FirstNameUiEvent.OnTextInvalid -> {
-                binding.tvNameRequest.isVisible = true
-                binding.cvFirstName.setState(State.ERROR)
-            }
+        if (event is FirstNameUiEvent.OnTextValid) {
+            binding?.firstName?.tvRequest?.isGone = true
+        } else if (event is FirstNameUiEvent.OnTextInvalid) {
+            binding?.firstName?.tvRequest?.isVisible = true
         }
     }
 
     private fun handleLastNameEvents(event: LastNameUiEvent) {
-        when (event) {
-            is LastNameUiEvent.OnTextEmpty -> {
-                binding.tvLastNameRequest.isVisible = true
-                binding.cvLastname.setState(State.DEFAULT)
-            }
-            is LastNameUiEvent.OnTextValid -> {
-                binding.tvLastNameRequest.isGone = true
-                binding.cvLastname.setState(State.CORRECT)
-            }
-            is LastNameUiEvent.OnTextInvalid -> {
-                binding.tvLastNameRequest.isVisible = true
-                binding.cvLastname.setState(State.ERROR)
-            }
+        if (event is LastNameUiEvent.OnTextValid) {
+            binding?.lastName?.tvRequest?.isGone = true
+        } else if (event is LastNameUiEvent.OnTextInvalid) {
+            binding?.lastName?.tvRequest?.isVisible = true
         }
     }
 
     private fun handleEmailEvents(event: EmailUiEvent) {
-        when (event) {
-            is EmailUiEvent.OnTextEmpty -> {
-                binding.tvEmailRequest.isVisible = true
-                binding.cvEmail.setState(State.DEFAULT)
-            }
-            is EmailUiEvent.OnTextValid -> {
-                binding.tvEmailRequest.isGone = true
-                binding.cvEmail.setState(State.CORRECT)
-            }
-            is EmailUiEvent.OnTextInvalid -> {
-                binding.tvEmailRequest.isVisible = true
-                binding.cvEmail.setState(State.ERROR)
-            }
+        if (event is EmailUiEvent.OnTextValid) {
+            binding?.email?.tvRequest?.isGone = true
+        } else if (event is EmailUiEvent.OnTextInvalid) {
+            binding?.email?.tvRequest?.isVisible = true
         }
     }
 
     private fun handlePasswordEvents(event: PasswordUiEvent) {
         when (event) {
             is PasswordUiEvent.OnTextEmpty -> {
-                binding.passProgressBar.isGone = true
-                binding.tvPassRequirements.isVisible = true
-                binding.cvPassword.setState(State.DEFAULT)
+                binding?.password?.passProgressBar?.isGone = true
             }
             is PasswordUiEvent.OnTextValid -> {
-                binding.tvPassRequirements.isGone = true
-                binding.cvPassword.setState(State.CORRECT)
+                binding?.password?.tvRequest?.isGone = true
                 val max = 8
-                binding.passProgressBar.progress = max
-
+                binding?.password?.passProgressBar?.progress = max
             }
             is PasswordUiEvent.OnTextInvalid -> {
-                binding.passProgressBar.isGone = true
-                binding.tvPassRequirements.isVisible = true
-                binding.cvPassword.setState(State.ERROR)
+                binding?.password?.passProgressBar?.isGone = true
+                binding?.password?.tvRequest?.isVisible = true
+
             }
             is PasswordUiEvent.OnProcess -> {
-                binding.passProgressBar.isVisible = true
-                binding.passProgressBar.progress = event.textSize
-                binding.cvPassword.setState(State.DEFAULT)
+                binding?.password?.passProgressBar?.isVisible = true
+                binding?.password?.passProgressBar?.progress = event.textSize
             }
         }
     }
 
-    @SuppressLint("SetTextI18n")
     private fun handleDaysEvents(event: DaysUiEvent) {
-        when (event) {
-            is DaysUiEvent.OnTextEmpty -> {
-                binding.tvDateRq.isVisible = true
-                binding.cvDate.setState(State.DEFAULT)
-            }
-            is DaysUiEvent.OnTextValid -> {
-                binding.cvDate.setState(viewModel.dateState)
-                binding.etDateMonthes.requestFocus()
-            }
-            is DaysUiEvent.OnNotFocus -> {
-                if (binding.etDateDays.text.toString().length == 1) {
-                    binding.etDateDays.setText("0${binding.etDateDays.text}")
-                }
-            }
-            is DaysUiEvent.OnTextInvalid -> {
-                binding.tvDateRq.isVisible = true
-                binding.cvDate.setState(State.ERROR)
+        if (event is DaysUiEvent.OnFinish) {
+            binding?.date?.etDateMonthes?.requestFocus()
+        } else if (event is DaysUiEvent.OnNotFocus) {
+            if (binding?.date?.etDateDays?.text?.length == 1) {
+                binding?.date?.etDateDays?.removeTextChangedListener(
+                    viewModel.daysOnTextChangeListener
+                )
+                binding?.date?.etDateDays?.setText(
+                    getString(
+                        R.string.edit_date,
+                        binding?.date?.etDateDays?.text
+                    )
+                )
+                binding?.date?.etDateDays?.addTextChangedListener(
+                    viewModel.daysOnTextChangeListener
+                )
             }
         }
     }
 
     private fun handleMonthesEvents(event: MonthesUiEvent) {
-        when (event) {
-            is MonthesUiEvent.OnTextEmpty -> {
-                binding.tvDateRq.isVisible = true
-                binding.cvDate.setState(State.DEFAULT)
-            }
-            is MonthesUiEvent.OnTextValid -> {
-                if (binding.etDateMonthes.text.toString().length == 2) {
-                    binding.cvDate.setState(viewModel.dateState)
-
-                    binding.etDateYears.requestFocus()
-                }
-            }
-            is MonthesUiEvent.OnNotFocus -> {
-                if (binding.etDateMonthes.text.toString().length == 1) {
-                    //TODO Unsubscribe
-                    //todo share textWatcher (note OnNotFocus doesnt use TextWatcher)
-                    //binding.etDateMonthes.removeTextChangedListener()
-                    binding.etDateMonthes.setText("0${binding.etDateMonthes.text}")
-                    //TODO Subscribe
-                }
-            }
-            is MonthesUiEvent.OnTextInvalid -> {
-                binding.tvDateRq.isVisible = true
-                binding.cvDate.setState(State.ERROR)
-            }
-        }
-    }
-
-    private fun handleYearsEvents(event: YearsUiEvent) {
-        when (event) {
-            is YearsUiEvent.OnTextEmpty -> {
-                binding.tvDateRq.isVisible = true
-                binding.cvDate.setState(State.DEFAULT)
-            }
-            is YearsUiEvent.OnTextValid -> {
-                binding.cvDate.setState(viewModel.dateState)
-            }
-            is YearsUiEvent.OnNotFocus -> {
-
-            }
-            is YearsUiEvent.OnTextInvalid -> {
-                binding.tvDateRq.isVisible = true
-                binding.cvDate.setState(State.ERROR)
+        if (event is MonthesUiEvent.OnFinish) {
+            binding?.date?.etDateYears?.requestFocus()
+        } else if (event is MonthesUiEvent.OnNotFocus) {
+            if (binding?.date?.etDateMonthes?.text?.length == 1) {
+                binding?.date?.etDateMonthes?.removeTextChangedListener(
+                    viewModel.monthesOnTextChangeListener
+                )
+                binding?.date?.etDateMonthes?.setText(
+                    getString(
+                        R.string.edit_date,
+                        binding?.date?.etDateMonthes?.text
+                    )
+                )
+                binding?.date?.etDateMonthes?.addTextChangedListener(
+                    viewModel.monthesOnTextChangeListener
+                )
             }
         }
     }
 
     private fun handleRegistrationEvents(event: RegistrationEvent) {
         when (event) {
-            is RegistrationEvent.OnRegistered -> {
+            is RegistrationEvent.OnSuccess -> {
                 findNavController().navigate(R.id.action_draft_navigation, null)
+            }
+            is RegistrationEvent.OnError -> {
+                binding?.pbLoading?.isVisible = false
+                binding?.btRegist?.isVisible = true
+                binding?.btRegist?.isEnabled = true
+
+                when (event.error) {
+                    getString(R.string.error_collision) -> {
+                        viewModel.setEmailError()
+                        Toast.makeText(context, event.error, LENGTH_LONG).show()
+                    }
+                    getString(R.string.error_connection) -> {
+                        Toast
+                            .makeText(context, getString(R.string.toast_connection), LENGTH_LONG)
+                            .show()
+                    }
+                    getString(R.string.error_data) -> {
+                        Toast.makeText(context, event.error, LENGTH_LONG).show()
+                    }
+                }
+            }
+            is RegistrationEvent.OnProgress -> {
+                binding?.btRegist?.isVisible = false
+                binding?.pbLoading?.isVisible = true
             }
         }
     }
 
-    private fun MaleChecked() {
-        binding.cbMale.isClickable = false
+    private fun maleChecked() {
+        binding?.gender?.cbMale?.isClickable = false
 
-        binding.cbFemale.isClickable = true
-        binding.cbFemale.isChecked = false
+        binding?.gender?.cbFemale?.isClickable = true
+        binding?.gender?.cbFemale?.isChecked = false
 
-        binding.cbUnspecified.isClickable = true
-        binding.cbUnspecified.isChecked = false
+        binding?.gender?.cbUnspecified?.isClickable = true
+        binding?.gender?.cbUnspecified?.isChecked = false
 
-        binding.cvGender.setState(State.CORRECT)
         viewModel.maleClicked()
     }
 
-    private fun FemaleChecked() {
-        binding.cbFemale.isClickable = false
+    private fun femaleChecked() {
+        binding?.gender?.cbFemale?.isClickable = false
 
-        binding.cbMale.isClickable = true
-        binding.cbMale.isChecked = false
+        binding?.gender?.cbMale?.isClickable = true
+        binding?.gender?.cbMale?.isChecked = false
 
-        binding.cbUnspecified.isClickable = true
-        binding.cbUnspecified.isChecked = false
-        binding.cvGender.setState(State.CORRECT)
+        binding?.gender?.cbUnspecified?.isClickable = true
+        binding?.gender?.cbUnspecified?.isChecked = false
+
         viewModel.femaleClicked()
     }
 
-    private fun UnspecifiedChecked() {
-        binding.cbUnspecified.isClickable = false
+    private fun unspecifiedChecked() {
+        binding?.gender?.cbUnspecified?.isClickable = false
 
-        binding.cbMale.isClickable = true
-        binding.cbMale.isChecked = false
+        binding?.gender?.cbMale?.isClickable = true
+        binding?.gender?.cbMale?.isChecked = false
 
-        binding.cbFemale.isClickable = true
-        binding.cbFemale.isChecked = false
-        binding.cvGender.setState(State.CORRECT)
+        binding?.gender?.cbFemale?.isClickable = true
+        binding?.gender?.cbFemale?.isChecked = false
+
         viewModel.unspecifiedClicked()
     }
 }

@@ -20,12 +20,14 @@ class TourPageAdapter(fa: FragmentActivity, matchesMap: Map<Int, ArrayList<Match
     override fun createFragment(position: Int): Fragment {
         val fragment = TourFragment()
         fragment.arguments = Bundle().apply {
-            putParcelableArrayList(KEY, matches[position])
+            putParcelableArrayList(KEY_MATCHES, matches[position + 1])
+            putInt(KEY_TOURS, matches.size)
         }
         return fragment
     }
 
     companion object {
-        const val KEY = "MATCHES"
+        const val KEY_MATCHES = "MATCHES"
+        const val KEY_TOURS = "TOURS"
     }
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="static_colour">#CF09A4</color>
+    <color name="active_colour">#10468E</color>
+</resources>

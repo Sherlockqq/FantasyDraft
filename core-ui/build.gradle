@@ -2,6 +2,7 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-kapt'
+
 }
 
 android {
@@ -10,8 +11,6 @@ android {
     defaultConfig {
         minSdk = version_min_sdk
         targetSdk = version_target_sdk
-        versionCode = version_code
-        versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -34,16 +33,25 @@ android {
 
 dependencies {
 
+
+
     implementation "androidx.core:core-ktx:$version_core"
     implementation "androidx.appcompat:appcompat:$version_appcompat"
     implementation "com.google.android.material:material:$version_material"
 
+    implementation platform("com.google.firebase:firebase-bom:$version_firebase")
+
+//test
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.2'
+
     api project(path: ':core-nav')
 
-    //Dagger
+//Dagger
     api "com.google.dagger:dagger:$version_dagger"
     kapt "com.google.dagger:dagger-compiler:$version_dagger"
     api "com.google.dagger:dagger-android:$version_dagger"
     api "com.google.dagger:dagger-android-support:$version_dagger" // if you use the support libraries
     kapt "com.google.dagger:dagger-android-processor:$version_dagger"
+
 }

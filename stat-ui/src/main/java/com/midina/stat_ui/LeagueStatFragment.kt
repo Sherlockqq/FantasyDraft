@@ -18,7 +18,7 @@ class LeagueStatFragment : BaseFragment() {
 
     override val layoutId: Int = R.layout.fragment_league_stat
 
-    private lateinit var binding: FragmentLeagueStatBinding
+    private var binding: FragmentLeagueStatBinding? = null
 
     private val viewModel: LeagueStatViewModel by lazy {
         ViewModelProvider(this, viewModelFactory)[LeagueStatViewModel::class.java]
@@ -27,7 +27,7 @@ class LeagueStatFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
 
         binding = DataBindingUtil.inflate(
             inflater,
@@ -71,19 +71,19 @@ class LeagueStatFragment : BaseFragment() {
                 }
         }
 
-        binding.lifecycleOwner = viewLifecycleOwner
+        binding?.lifecycleOwner = viewLifecycleOwner
 
-        binding.viewModel = viewModel
+        binding?.viewModel = viewModel
 
-        binding.btSeasonStat.button.setText(R.string.assists)
+        binding?.btSeasonStat?.button?.setText(R.string.assists)
 
-        return binding.root
+        return binding?.root
     }
 
     private fun handleSeasonUiEvent(event: SeasonResultUiEvent) {
         when (event) {
             is SeasonResultUiEvent.Success -> {
-                binding.tvSeason.text = getString(R.string.season_statistics, event.season, event.season + 1)
+                binding?.tvSeason?.text = getString(R.string.season_statistics, event.season, event.season + 1)
             }
             is SeasonResultUiEvent.EmptyState -> {
                 Log.d(TAG, "Season EmptyState")
@@ -97,14 +97,16 @@ class LeagueStatFragment : BaseFragment() {
     private fun handleTopScorerUiEvent(event: TopScorerResultUiEvent) {
         when (event) {
             is TopScorerResultUiEvent.Success -> {
-                binding.scorer.tvResult.text = getString(R.string.goals, event.player.goals)
+                binding?.scorer?.tvResult?.text = getString(R.string.goals, event.player.goals)
 
-                Glide
-                    .with(this)
-                    .load(event.player.photoURL)
-                    .into(binding.scorer.ivResult)
+                binding?.scorer?.ivResult?.let {
+                    Glide
+                        .with(this)
+                        .load(event.player.photoURL)
+                        .into(it)
+                }
 
-                binding.scorer.root.isVisible = true
+                binding?.scorer?.root?.isVisible = true
             }
             is TopScorerResultUiEvent.EmptyState -> {
                 Log.d(TAG, "TopScorer EmptyState")
@@ -119,14 +121,16 @@ class LeagueStatFragment : BaseFragment() {
     private fun handleTopAssistantUiEvent(event: TopAssistantResultUiEvent) {
         when (event) {
             is TopAssistantResultUiEvent.Success -> {
-                binding.assistant.tvResult.text = getString(R.string.assists, event.player.assists)
+                binding?.assistant?.tvResult?.text = getString(R.string.assists, event.player.assists)
 
-                Glide
-                    .with(this)
-                    .load(event.player.photoURL)
-                    .into(binding.assistant.ivResult)
+                binding?.assistant?.ivResult?.let {
+                    Glide
+                        .with(this)
+                        .load(event.player.photoURL)
+                        .into(it)
+                }
 
-                binding.assistant.root.isVisible = true
+                binding?.assistant?.root?.isVisible = true
             }
             is TopAssistantResultUiEvent.EmptyState -> {
                 Log.d(TAG, "TopScorer EmptyState")
@@ -140,17 +144,19 @@ class LeagueStatFragment : BaseFragment() {
     private fun handleTopCleanSheetsUiEvent(event: TopCleanSheetResultUiEvent) {
         when (event) {
             is TopCleanSheetResultUiEvent.Success -> {
-                binding.cleanSheets.tvResult.text = getString(
+                binding?.cleanSheets?.tvResult?.text = getString(
                     R.string.clean_sheets,
                     event.team.cleanSheets
                 )
 
-                Glide
-                    .with(this)
-                    .load(event.team.photoURL)
-                    .into(binding.cleanSheets.ivResult)
+                binding?.cleanSheets?.ivResult?.let {
+                    Glide
+                        .with(this)
+                        .load(event.team.photoURL)
+                        .into(it)
+                }
 
-                binding.cleanSheets.root.isVisible = true
+                binding?.cleanSheets?.root?.isVisible = true
             }
             is TopCleanSheetResultUiEvent.EmptyState -> {
                 Log.d(TAG, "TopScorer EmptyState")
@@ -164,14 +170,16 @@ class LeagueStatFragment : BaseFragment() {
     private fun handleTopTeamGoalsResultUiEvent(event: TopTeamGoalsResultUiEvent) {
         when (event) {
             is TopTeamGoalsResultUiEvent.Success -> {
-                binding.teamGoals.tvResult.text = getString(R.string.goals, event.team.goals)
+                binding?.teamGoals?.tvResult?.text = getString(R.string.goals, event.team.goals)
 
-                Glide
-                    .with(this)
-                    .load(event.team.photoURL)
-                    .into(binding.teamGoals.ivResult)
+                binding?.teamGoals?.ivResult?.let {
+                    Glide
+                        .with(this)
+                        .load(event.team.photoURL)
+                        .into(it)
+                }
 
-                binding.teamGoals.root.isVisible = true
+                binding?.teamGoals?.root?.isVisible = true
             }
             is TopTeamGoalsResultUiEvent.EmptyState -> {
                 Log.d(TAG, "TopScorer EmptyState")

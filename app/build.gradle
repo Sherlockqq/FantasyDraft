@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -50,9 +51,16 @@ dependencies {
     //Lifecycle
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$version_lifecycle"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$version_lifecycle"
+    testImplementation 'junit:junit:4.12'
     androidTestImplementation 'org.junit.jupiter:junit-jupiter'
     androidTestImplementation 'org.junit.jupiter:junit-jupiter'
 
+    //firebase
+    implementation 'com.google.firebase:firebase-dynamic-links:21.0.0'
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-analytics-ktx'
     //DataStore Preferences
     implementation "androidx.datastore:datastore-preferences:1.0.0-alpha04"
 
@@ -78,9 +86,9 @@ dependencies {
     implementation project(path: ':registration-ui')
     implementation project(path: ':registration-domain')
     implementation project(path: ':registration-data')
+    implementation project(path: ':login-ui')
     implementation project(path: ':login-domain')
     implementation project(path: ':login-data')
-    implementation project(path: ':login-ui')
     implementation project(path: ':match-data')
     implementation project(path: ':match-domain')
     implementation project(path: ':match-ui')
@@ -88,7 +96,6 @@ dependencies {
     implementation project(path: ':stat-ui')
     implementation project(path: ':stat-domain')
     implementation project(path: ':stat-data')
-
     implementation project(path: ':splash-ui')
     implementation project(path: ':favourite-ui')
     implementation project(path: ':club-ui')

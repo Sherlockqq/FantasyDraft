@@ -6,13 +6,13 @@
     <data>
         <variable
             name="viewModel"
-            type="com.midina.android.match_ui.MatchViewModel" />
+            type="com.midina.match_ui.MatchViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.midina.android.match_ui.MatchFragment">
+        tools:context=".MatchFragment">
 
         <ImageView
             android:id="@+id/iv_stadium"

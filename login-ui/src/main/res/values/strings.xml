@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="email_example">example@gmail.com</string>
-    <string name="password_hint">Ваш пароль</string>
-    <string name="sign_in">Войти</string>
-    <string name="requirements">Введите правильный пароль и email!</string>
-    <string name="title">Авторизация</string>
+    <string name="title">Login</string>
+    <string name="default_web_client_id">133687627539-fpc7kjm1tnsso22p8c6vurup4g9oi2gg.apps.googleusercontent.com</string>
+    <string name="login">Login</string>
+    <string name="email_login">Email</string>
+    <string name="password_login">Password</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="new_here_register">New Here? Register</string>
+    <string name="password_error">The password is invalid or the user does not have a password.</string>
+    <string name="email_error">There is no user record corresponding to this identifier. The user may have been deleted.</string>
+    <string name="password_error_message">The password is invalid</string>
+    <string name="email_error_message">The email is not registered or signed by another way</string>
+    <string name="example_email">example@gmail.com</string>
+    <string name="email_is_sent">Email is sent</string>
 </resources>

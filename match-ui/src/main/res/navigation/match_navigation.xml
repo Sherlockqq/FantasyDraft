@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/matchFragment"
-        android:name="com.midina.android.match_ui.MatchFragment"
+        android:name="com.midina.match_ui.MatchFragment"
         android:label="MatchFragment"
         tools:layout="@layout/fragment_match"/>
 </navigation>

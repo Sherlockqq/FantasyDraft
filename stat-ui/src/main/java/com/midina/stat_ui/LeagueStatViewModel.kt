@@ -6,10 +6,8 @@ import com.midina.stat_domain.GetAsyncUsecase
 import com.midina.stat_domain.GetDataUsecase
 import com.midina.stat_domain.model.*
 import io.reactivex.Observer
-import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
-import io.reactivex.subjects.PublishSubject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +17,8 @@ const val TAG = "LeagueStatViewModel"
 
 class LeagueStatViewModel @Inject constructor(
     private val getDataUsecase: GetDataUsecase,
-    private val getAsyncUsecase: GetAsyncUsecase) :
+    private val getAsyncUsecase: GetAsyncUsecase
+) :
     ViewModel() {
 
     private val _seasonEvents =
@@ -49,11 +48,10 @@ class LeagueStatViewModel @Inject constructor(
         get() = _topTeamGoalsEvents.asStateFlow()
 
     init {
-      //  getData()
-        getAsyncData()
+        fetchAsyncTopData()
     }
 
-    private fun getAsyncData() {
+    private fun fetchAsyncTopData() {
         var isNotErrorOrEmptyState = true
         getAsyncUsecase.execute()
             .subscribe(object : Observer<ResultEvent<AsyncTopData>> {
@@ -103,19 +101,11 @@ class LeagueStatViewModel @Inject constructor(
                         }
                         is ResultEvent.EmptyState -> {
                             isNotErrorOrEmptyState = false
-                            _seasonEvents.value = SeasonResultUiEvent.EmptyState
-                            _topScorerEvents.value = TopScorerResultUiEvent.EmptyState
-                            _topAssistantEvents.value = TopAssistantResultUiEvent.EmptyState
-                            _topCleanSheetsEvents.value = TopCleanSheetResultUiEvent.EmptyState
-                            _topTeamGoalsEvents.value = TopTeamGoalsResultUiEvent.EmptyState
+                            onEmptyState()
                         }
                         is ResultEvent.Error -> {
                             isNotErrorOrEmptyState = false
-                            _seasonEvents.value = SeasonResultUiEvent.Error
-                            _topScorerEvents.value = TopScorerResultUiEvent.Error
-                            _topAssistantEvents.value = TopAssistantResultUiEvent.Error
-                            _topCleanSheetsEvents.value = TopCleanSheetResultUiEvent.Error
-                            _topTeamGoalsEvents.value = TopTeamGoalsResultUiEvent.Error
+                            onError()
                         }
                     }
                 }
@@ -131,10 +121,25 @@ class LeagueStatViewModel @Inject constructor(
         })
     }
 
+    private fun onEmptyState() {
+        _seasonEvents.value = SeasonResultUiEvent.EmptyState
+        _topScorerEvents.value = TopScorerResultUiEvent.EmptyState
+        _topAssistantEvents.value = TopAssistantResultUiEvent.EmptyState
+        _topCleanSheetsEvents.value = TopCleanSheetResultUiEvent.EmptyState
+        _topTeamGoalsEvents.value = TopTeamGoalsResultUiEvent.EmptyState
+    }
+
+    private fun onError() {
+        _seasonEvents.value = SeasonResultUiEvent.Error
+        _topScorerEvents.value = TopScorerResultUiEvent.Error
+        _topAssistantEvents.value = TopAssistantResultUiEvent.Error
+        _topCleanSheetsEvents.value = TopCleanSheetResultUiEvent.Error
+        _topTeamGoalsEvents.value = TopTeamGoalsResultUiEvent.Error
+    }
+
     private fun getData() {
 
-        getDataUsecase.execute().subscribe(object : SingleObserver<ResultEvent<Pair<Int,
-                TopData>>> {
+        getDataUsecase.execute().subscribe(object : SingleObserver<ResultEvent<Pair<Int, TopData>>> {
             override fun onSubscribe(d: Disposable) {
                 Log.d(TAG, "onSubscribe")
             }
@@ -175,8 +180,7 @@ class LeagueStatViewModel @Inject constructor(
                                 val resultPair = result.value.second.teamStat
 
                                 _topCleanSheetsEvents.value = (resultPair
-                                        as ResultEvent.Success<Pair<TopCleanSheet?,
-                                        TopTeamGoals?>>).value
+                                        as ResultEvent.Success<Pair<TopCleanSheet?, TopTeamGoals?>>).value
                                     .first?.let {
                                         TopCleanSheetResultUiEvent
                                             .Success(it)
