@@ -28,8 +28,6 @@ import kotlinx.coroutines.flow.collect
 
 private const val TAG = "ClubFragment"
 
-//TODO TO FIX PROGRESS BAR. NOT IS GONE
-
 class ClubFragment : BaseFragment() {
 
     override val layoutId = R.layout.fragment_club
@@ -120,7 +118,6 @@ class ClubFragment : BaseFragment() {
                 binding?.vTeamView?.vwBackgroundNotification?.isVisible = false
             }
             is UiEvent.Success -> {
-                binding?.pbLoading?.isGone = true // TODO Replace with data binding
                 binding?.vTeamView?.vwTeamBackground?.isVisible = true
                 binding?.vTeamView?.vwBackgroundNotification?.isVisible = true
                 binding?.vTeamView?.tvTeamName?.text = event.teamInfo.team.name

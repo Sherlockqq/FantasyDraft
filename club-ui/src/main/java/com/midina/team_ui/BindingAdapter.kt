@@ -1,21 +1,22 @@
 package com.midina.team_ui
 
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 
-//@BindingAdapter("android:visibility")
-//fun ProgressBar.setVisibility(event: UiEvent?) {
-//    isVisible = when (event) {
-//        UiEvent.Error -> false
-//        UiEvent.Loading -> true
-//        UiEvent.EmptyState -> false
-//        is UiEvent.Success -> false //TODO IS NOT WORKING
-//        null -> true
-//    }
-//}
+@BindingAdapter("android:visibility")
+fun ProgressBar.setVisibility(event: UiEvent?) {
+    isVisible = when (event) {
+        UiEvent.Error -> false
+        UiEvent.Loading -> true
+        UiEvent.EmptyState -> false
+        is UiEvent.Success -> false 
+        null -> true
+    }
+}
 
 @BindingAdapter("android:src")
 fun ImageView.setSrc(isAlarm: Boolean) {
