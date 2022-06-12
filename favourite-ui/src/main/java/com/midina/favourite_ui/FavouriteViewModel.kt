@@ -3,7 +3,7 @@ package com.midina.favourite_ui
 import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.midina.core_ui.ui.BaseFragment.Companion.SAVED_SEASON
+import com.midina.core_ui.ui.BaseFragment.Companion.SEASON
 import com.midina.favourite_domain.model.ResultEvent
 import com.midina.favourite_domain.model.Team
 import com.midina.favourite_domain.usecases.GetTeamsUsecase
@@ -34,7 +34,7 @@ class FavouriteViewModel @Inject constructor(
         get() = _events.asStateFlow()
 
     init {
-        _season.value = bundle?.getInt(SAVED_SEASON).toString().toInt()
+        _season.value = bundle?.getInt(SEASON).toString().toInt()
         teamsRequest()
     }
 

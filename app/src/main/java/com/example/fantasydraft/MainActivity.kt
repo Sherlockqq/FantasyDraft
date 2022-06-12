@@ -1,6 +1,5 @@
 package com.example.fantasydraft
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -8,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
+import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -21,12 +21,10 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.fantasydraft.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -34,13 +32,9 @@ import com.google.firebase.auth.ActionCodeResult
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.ktx.Firebase
-import com.midina.core_ui.ui.BaseFragment
-import com.midina.core_ui.ui.BaseFragment.Companion.FAVOURITE_TEAM_ID
+import com.midina.core_ui.ui.*
+import com.midina.core_ui.ui.BaseFragment.Companion.TEAM_ID
 import com.midina.core_ui.ui.BaseFragment.Companion.FAVOURITE_TEAM_LOGO
-import com.midina.core_ui.ui.OnBottomNavHideListener
-import com.midina.core_ui.ui.OnBottomNavItemSelectListener
-import com.midina.core_ui.ui.OnFragmentUiBlockListener
-import com.midina.favourite_domain.model.Team
 import com.midina.matches_ui.OnArrowClickListener
 import com.midina.matches_ui.fixtures.FixturesFragment
 import kotlinx.coroutines.flow.first
@@ -51,7 +45,8 @@ private const val LAST_FRAGMENT = "LAST_FRAGMENT"
 private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity(),
-    OnBottomNavHideListener, OnBottomNavItemSelectListener, OnArrowClickListener {
+    OnBottomNavHideListener, OnBottomNavItemSelectListener, OnArrowClickListener,
+    OnActionBarHideListener {
 
     private lateinit var dataStore: DataStore<Preferences>
     private lateinit var binding: ActivityMainBinding
@@ -121,8 +116,7 @@ class MainActivity : AppCompatActivity(),
         lifecycleScope.launch {
             navToLastFragmentDataStore(navController)
         }
-
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        binding.toolbar.setupWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
 
@@ -164,7 +158,7 @@ class MainActivity : AppCompatActivity(),
         val extras = intent.extras
         if (extras != null) {
             val teamLogo = extras.getString(FAVOURITE_TEAM_LOGO)
-            val teamId = extras.getInt(FAVOURITE_TEAM_ID)
+            val teamId = extras.getInt(TEAM_ID)
             setSharedPreferencesTeamId(teamId)
             if (!teamLogo.isNullOrEmpty()) {
                 val menu: Menu = binding.bottomNavigation.menu
@@ -193,11 +187,13 @@ class MainActivity : AppCompatActivity(),
             "SplashActivity",
             MODE_PRIVATE
         )
-        val team = sPref?.getString(BaseFragment.FAVOURITE_TEAM_ID, "")
+        val team = sPref?.getString(BaseFragment.TEAM_ID, "")
 
         return R.style.Theme_FantasyDraft
     }
 
+
+    //TODO DELETE THIS. NOT NECCESERY
     override fun highlightItem(itemId: Int) {
         val menu: Menu = binding.bottomNavigation.menu
         when (itemId) {
@@ -218,27 +214,31 @@ class MainActivity : AppCompatActivity(),
     }
 
     private suspend fun navToLastFragmentDataStore(navController: NavController) {
-        val dataStoreKey = preferencesKey<Int>(LAST_FRAGMENT)
-        val preferences = dataStore.data.first()
-        val result = preferences[dataStoreKey]
+        try {
+            val dataStoreKey = preferencesKey<Int>(LAST_FRAGMENT)
+            val preferences = dataStore.data.first()
+            val result = preferences[dataStoreKey]
 
-        if (result != null) {
-            if (result >= 0 && result < fragments.size) {
-                when (result) {
-                    1 -> navController.navigate(R.id.action_draft_navigation)
-                    2 -> navController.navigate(R.id.action_match_navigation) //TODO Fix crash
-                    3 -> {
-                        navController.navigate(R.id.action_draft_navigation)
-                        navController.navigate(R.id.action_registration_navigation)
+            if (result != null) {
+                if (result >= 0 && result < fragments.size) {
+                    when (result) {
+                        1 -> navController.navigate(R.id.action_draft_navigation)
+                        2 -> navController.navigate(R.id.action_match_navigation) //TODO Fix crash
+                        3 -> {
+                            navController.navigate(R.id.action_draft_navigation)
+                            navController.navigate(R.id.action_registration_navigation)
+                        }
+                        4 -> {
+                            navController.navigate(R.id.action_draft_navigation)
+                            navController.navigate(R.id.action_login_navigation)
+                        }
+                        5 -> navController.navigate(R.id.action_club_navigation)
+                        6 -> navController.navigate(R.id.action_statistics_navigation)
                     }
-                    4 -> {
-                        navController.navigate(R.id.action_draft_navigation)
-                        navController.navigate(R.id.action_login_navigation)
-                    }
-                    5 -> navController.navigate(R.id.action_club_navigation)
-                    6 -> navController.navigate(R.id.action_statistics_navigation)
                 }
             }
+        } catch (e: Exception) {
+            Log.d(TAG, "fdsfsdf")
         }
     }
 
@@ -322,7 +322,15 @@ class MainActivity : AppCompatActivity(),
     private fun setSharedPreferencesTeamId(teamId: Int) {
         val sPref = this.getPreferences(MODE_PRIVATE)
         val ed = sPref?.edit()
-        ed?.putInt(FAVOURITE_TEAM_ID, teamId)
+        ed?.putInt(TEAM_ID, teamId)
         ed?.apply()
+    }
+
+    override fun actionBarHide() {
+        binding.appbar.visibility = View.GONE
+    }
+
+    override fun actionBarShow() {
+        binding.appbar.visibility = View.VISIBLE
     }
 }

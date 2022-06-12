@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/leagueStatFragment"
         android:name="com.midina.stat_ui.LeagueStatFragment"
-        android:label="LeagueStatFragment"
+        android:label="@string/stat_title"
         tools:layout="@layout/fragment_league_stat"/>
 
 </navigation>

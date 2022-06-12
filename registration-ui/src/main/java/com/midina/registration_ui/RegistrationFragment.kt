@@ -61,8 +61,6 @@ class RegistrationFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        (activity as AppCompatActivity).supportActionBar?.title = getString(R.string.title)
-
         binding = DataBindingUtil.inflate(
             inflater,
             layoutId,

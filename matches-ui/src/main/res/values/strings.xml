@@ -1,18 +1,5 @@
 <resources>
-    <string name="text_label_1">Матчи</string>
-    <string name="text_label_2">Драфт</string>
-    <string name="text_label_3">Стат</string>
-    <string name="title_home">Домой</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Уведомления</string>
-    <string name="fixtures">Матчи</string>
-    <string name="show_all">Показать все</string>
-    <string name="first_tour">Первый тур</string>
-    <string name="current_tour">Текущий тур</string>
-    <string name="connection_error">Ошибка соединения</string>
-    <string name="loading">Загрузка..</string>
-    <string name="schedule">Рассписание</string>
-    <string name="gameweek">Тур %1$d</string>
-    <string name="empty_state">Что-то не так. Повторите позже!</string>
-    <string name="emptyScore">\? : ?</string>
+    <string name="fixtures">Fixtures</string>
+    <string name="loading">Loading..</string>
+    <string name="gameweek">Tour %1$d</string>
 </resources>

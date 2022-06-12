@@ -1,11 +1,8 @@
 <resources>
-    <string name="app_name">Драфт</string>
+    <string name="app_name">Draft</string>
     <string name="fixtures_label">Матчи</string>
-    <string name="text_label_1">Матчи</string>
-    <string name="text_label_2">Драфт</string>
-    <string name="text_label_3">Клуб</string>
-    <string name="text_label_4">Стат</string>
-    <string name="title_home">Домой</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Уведомления</string>
+    <string name="text_label_1">Fixtures</string>
+    <string name="text_label_2">Draft</string>
+    <string name="text_label_3">Club</string>
+    <string name="text_label_4">Stat</string>
 </resources>

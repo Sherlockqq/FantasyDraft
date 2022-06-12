@@ -13,4 +13,5 @@
     <string name="email_error_message">The email is not registered or signed by another way</string>
     <string name="example_email">example@gmail.com</string>
     <string name="email_is_sent">Email is sent</string>
+    <string name="login_title">Login</string>
 </resources>
