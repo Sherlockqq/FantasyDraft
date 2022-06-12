@@ -100,7 +100,7 @@ class FavouriteFragment : BaseFragment() {
 
         val sPref = this.activity?.getPreferences(AppCompatActivity.MODE_PRIVATE)
         val ed = sPref?.edit()
-        ed?.putInt(FAVOURITE_TEAM_ID, team.id)
+        ed?.putInt(TEAM_ID, team.id)
         ed?.putString(FAVOURITE_TEAM_LOGO, team.logo)
         ed?.apply()
         navigateToMainActivity(team.id, team.logo)

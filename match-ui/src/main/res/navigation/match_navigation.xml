@@ -8,6 +8,6 @@
     <fragment
         android:id="@+id/matchFragment"
         android:name="com.midina.match_ui.MatchFragment"
-        android:label="MatchFragment"
+        android:label="@string/match_title"
         tools:layout="@layout/fragment_match"/>
 </navigation>

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.midina.team_ui.ClubViewModel" />
+            type="com.midina.team_ui.club.ClubViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,6 +39,7 @@
             android:layout_width="72dp"
             android:layout_height="70dp"
             android:visibility="@{viewModel.events}"
+            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/iv_stadium"
             app:layout_constraintStart_toStartOf="@+id/vw_team_background" />
 
@@ -50,6 +51,7 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:visibility="@{viewModel.events}"
+            tools:text="Everton"
             app:layout_constraintBottom_toBottomOf="@id/vw_team_background"
             app:layout_constraintStart_toEndOf="@id/iv_team_logo"
             app:layout_constraintTop_toTopOf="@id/iv_team_logo" />
@@ -63,7 +65,7 @@
             app:layout_constraintTop_toBottomOf="@id/tv_team_name"
             app:layout_constraintStart_toEndOf="@id/iv_team_logo"
             app:layout_constraintBottom_toBottomOf="@id/vw_team_background"
-            tools:text="Олимпийский" />
+            tools:text="Udison Park" />
 
         <View
             android:id="@+id/vw_background_notification"

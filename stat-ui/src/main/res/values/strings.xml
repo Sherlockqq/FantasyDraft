@@ -9,4 +9,5 @@
     <string name="all_time_stats">All-time Stats</string>
     <string name="records">Records</string>
     <string name="player_comparison">Player Comparison</string>
+    <string name="stat_title">Statistics</string>
 </resources>

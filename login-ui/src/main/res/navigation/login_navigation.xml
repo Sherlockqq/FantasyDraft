@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.midina.login_ui.LoginFragment"
-        android:label="LoginFragment"
+        android:label="@string/login_title"
         tools:layout="@layout/fragment_login"/>
 
 </navigation>

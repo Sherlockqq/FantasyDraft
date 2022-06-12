@@ -19,8 +19,8 @@ abstract class BaseFragment : Fragment() {
     }
 
     companion object {
-        const val SAVED_SEASON = "SEASON"
-        const val FAVOURITE_TEAM_ID = "FAVOURITE_TEAM_ID"
+        const val SEASON = "SEASON"
+        const val TEAM_ID = "FAVOURITE_TEAM_ID"
         const val FAVOURITE_TEAM_LOGO = "FAVOURITE_TEAM_LOGO"
     }
 }

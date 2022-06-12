@@ -8,6 +8,6 @@
     <fragment
         android:id="@+id/fixturesFragment"
         android:name="com.midina.matches_ui.fixtures.FixturesFragment"
-        android:label="@string/fixtures_label"
+        android:label="@string/fixtures"
         tools:layout="@layout/fragment_fixtures" />
 </navigation>

@@ -17,7 +17,6 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FantasyDraft"
         android:usesCleartextTraffic="true">
 
         <service
@@ -41,10 +40,10 @@
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:theme="@style/Theme.Dynamo"/>
+            android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"/>
 
         <receiver
-            android:name="com.midina.team_ui.AlarmReceiver"
+            android:name="com.midina.team_ui.club.AlarmReceiver"
             android:exported="false" />
 
         <meta-data

@@ -5,14 +5,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import com.midina.core_ui.ui.BaseFragment
 import com.midina.core_ui.ui.OnStartActivityListener
 import com.midina.splash_ui.databinding.FragmentSplashBinding
@@ -85,15 +83,15 @@ class SplashFragment : BaseFragment() {
 
     private fun checkSeason(season: Int) {
         val sPref = this.activity?.getPreferences(AppCompatActivity.MODE_PRIVATE)
-        val sPrefSeason = sPref?.getInt(SAVED_SEASON, 0)
-        val teamId = sPref?.getInt(FAVOURITE_TEAM_ID, 0)
+        val sPrefSeason = sPref?.getInt(SEASON, 0)
+        val teamId = sPref?.getInt(TEAM_ID, 0)
         val teamLogo = sPref?.getString(FAVOURITE_TEAM_LOGO, "")
 
         if (sPrefSeason == 0 || season != sPrefSeason
             || teamId == 0 || teamLogo.isNullOrEmpty()
         ) {
             val ed = sPref?.edit()
-            ed?.putInt(SAVED_SEASON, season)
+            ed?.putInt(SEASON, season)
             ed?.apply()
 
             navigateToFavourite(season)
@@ -106,7 +104,7 @@ class SplashFragment : BaseFragment() {
 
     private fun navigateToFavourite(season: Int) {
         val bundle = Bundle()
-        bundle.putInt(SAVED_SEASON, season)
+        bundle.putInt(SEASON, season)
         findNavController().navigate(R.id.action_favourite_navigation, bundle)
     }
 

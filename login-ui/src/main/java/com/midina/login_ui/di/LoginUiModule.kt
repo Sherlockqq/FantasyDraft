@@ -37,6 +37,6 @@ class LoginDispatchersModule {
 abstract class LoginViewModelModule {
     @Binds
     @IntoMap
-    @ViewModelKey(com.midina.login_ui.LoginViewModel::class)
-    abstract fun bindRegistrationViewModel(viewModel: LoginViewModel): ViewModel
+    @ViewModelKey(LoginViewModel::class)
+    abstract fun bindLoginViewModel(viewModel: LoginViewModel): ViewModel
 }

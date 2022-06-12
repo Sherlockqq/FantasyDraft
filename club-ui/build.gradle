@@ -42,10 +42,15 @@ dependencies {
 
     //Constraint
     implementation "androidx.constraintlayout:constraintlayout:$version_constaint"
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     //Dagger
     kapt "com.google.dagger:dagger-compiler:$version_dagger"
     kapt "com.google.dagger:dagger-android-processor:$version_dagger"
+
+    //Recycler
+    implementation "androidx.recyclerview:recyclerview:1.2.1"
+
 
     //Glide
     implementation "com.github.bumptech.glide:glide:$version_glide"

@@ -8,6 +8,6 @@
     <fragment
         android:id="@+id/draftFragment"
         android:name="com.midina.draft_ui.DraftFragment"
-        android:label="DraftFragment"
+        android:label="@string/draft_title"
         tools:layout="@layout/fragment_draft" />
 </navigation>

@@ -1,4 +1,4 @@
-package com.midina.team_ui
+package com.midina.team_ui.club
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -9,9 +9,10 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.midina.team_ui.ClubFragment.Companion.AWAY
-import com.midina.team_ui.ClubFragment.Companion.HOME
-import com.midina.team_ui.ClubFragment.Companion.TOUR
+import com.midina.team_ui.R
+import com.midina.team_ui.club.ClubFragment.Companion.AWAY
+import com.midina.team_ui.club.ClubFragment.Companion.HOME
+import com.midina.team_ui.club.ClubFragment.Companion.TOUR
 import javax.inject.Inject
 
 class AlarmReceiver @Inject constructor() : BroadcastReceiver() {

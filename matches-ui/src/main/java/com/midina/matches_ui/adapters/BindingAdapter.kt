@@ -11,10 +11,10 @@ import com.midina.matches_ui.fixtures.UiEvent
 @BindingAdapter("android:text")
 fun TextView.setText(event: UiEvent?) {
     when (event) {
-        UiEvent.EmptyState -> this.setText(R.string.empty_state)
-        UiEvent.Error -> this.setText(R.string.connection_error)
+        UiEvent.EmptyState -> this.setText(R.string.something_went_wrong)
+        UiEvent.Error -> this.setText(R.string.no_network_connection)
         UiEvent.Loading -> this.setText(R.string.loading)
-        null -> this.setText(R.string.connection_error)
+        null -> this.setText(R.string.no_network_connection)
         else -> {}
     }
 }

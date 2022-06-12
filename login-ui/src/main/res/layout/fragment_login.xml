@@ -12,8 +12,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/ic_login_background"
-        tools:context="com.midina.login_ui.com.midina.login_ui.LoginFragment">
+        android:background="@color/white"
+        tools:context="com.midina.login_ui.LoginFragment">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/ic_login_background" />
+
 
         <TextView
             android:id="@+id/tv_login"

@@ -99,24 +99,6 @@ class FixturesFragment : BaseFragment() {
         Log.d(TAG, "FixturesFragment OnEmptyState")
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.options_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.show_first_tour -> binding?.pager?.setCurrentItem(1, false)
-
-            R.id.show_current_tour -> binding?.pager?.setCurrentItem(
-                viewModel.currentTour.value,
-                false
-            )
-            else -> binding?.pager?.setCurrentItem(0, false)
-        }
-        return true
-    }
-
     fun nextPage() {
         binding?.pager?.
         setCurrentItem(binding?.pager?.currentItem?.plus(1) ?: 1, true)

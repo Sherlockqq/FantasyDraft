@@ -2,8 +2,10 @@ package com.midina.club_data.di
 
 import com.midina.club_data.api.ClubApiInterface
 import com.midina.club_data.usecaseimpl.GetFixturesUsecaseImpl
+import com.midina.club_data.usecaseimpl.GetPlayersUsecaseImpl
 import com.midina.club_data.usecaseimpl.GetTeamInfoUsecaseImpl
 import com.midina.club_domain.usecases.GetFixturesUsecase
+import com.midina.club_domain.usecases.GetPlayersUsecase
 import com.midina.club_domain.usecases.GetTeamInfoUsecase
 import com.midina.core_data.di.FOOTBALL_URL
 import dagger.Binds
@@ -71,4 +73,7 @@ interface ClubDataUseCaseModule {
 
     @Binds
     fun bindGetFixturesUseCase(getFixturesUsecaseImpl: GetFixturesUsecaseImpl): GetFixturesUsecase
+
+    @Binds
+    fun bindGetPlayersUseCase(getPlayersUsecaseImpl: GetPlayersUsecaseImpl): GetPlayersUsecase
 }
