@@ -41,6 +41,7 @@ class TourFragment : BaseFragment() {
         }
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -106,5 +107,16 @@ class TourFragment : BaseFragment() {
                 binding.nextArrow.isVisible = true
             }
         }
+    }
+
+    companion object {
+        @JvmStatic
+        fun newInstance(list: ArrayList<MatchSchedule>?, tour: Int) =
+            TourFragment().apply {
+                arguments = Bundle().apply {
+                    putParcelableArrayList(KEY_MATCHES, list)
+                    putInt(KEY_TOURS, tour)
+                }
+            }
     }
 }

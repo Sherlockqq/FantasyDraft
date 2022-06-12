@@ -1,15 +1,16 @@
-package com.midina.team_ui
+package com.midina.team_ui.club
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.midina.club_domain.model.ResultEvent
 import com.midina.club_domain.model.fixtures.FixturesInfo
+import com.midina.club_domain.model.player.Player
 import com.midina.club_domain.model.team.TeamInfo
 import com.midina.club_domain.usecases.GetFixturesUsecase
 import com.midina.core_domain.usecases.GetSeasonUsecase
 import com.midina.club_domain.usecases.GetTeamInfoUsecase
-import com.midina.core_ui.ui.BaseFragment.Companion.FAVOURITE_TEAM_ID
+import com.midina.core_ui.ui.BaseFragment.Companion.TEAM_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,6 +44,10 @@ class ClubViewModel @Inject constructor(
     val teamId: StateFlow<Int>
         get() = _teamId.asStateFlow()
 
+    private val _teamName = MutableStateFlow("")
+    val teamName: StateFlow<String>
+        get() = _teamName.asStateFlow()
+
     private val _isAlarm = MutableStateFlow(false)
     val isAlarm: StateFlow<Boolean>
         get() = _isAlarm.asStateFlow()
@@ -53,7 +58,7 @@ class ClubViewModel @Inject constructor(
 
     init {
         if (bundle?.isEmpty == false) {
-            _teamId.value = bundle.getInt(FAVOURITE_TEAM_ID)
+            _teamId.value = bundle.getInt(TEAM_ID)
         }
     }
 
@@ -81,55 +86,59 @@ class ClubViewModel @Inject constructor(
         }
     }
 
-    private suspend fun seasonRequest() {
-        val result = getSeasonUsecase.execute()
+        private suspend fun seasonRequest() {
+            val result = getSeasonUsecase.execute()
 
-        when (result) {
-            com.midina.core_domain.model.ResultEvent.EmptyState -> _alarmEvents.value =
-                AlarmEvent.EmptyState
-            com.midina.core_domain.model.ResultEvent.Error -> _alarmEvents.value = AlarmEvent.Error
-            is com.midina.core_domain.model.ResultEvent.Success -> {
-                _season.value = result.value
-                fixturesRequest()
+            when (result) {
+                com.midina.core_domain.model.ResultEvent.EmptyState -> _alarmEvents.value =
+                    AlarmEvent.EmptyState
+                com.midina.core_domain.model.ResultEvent.Error -> _alarmEvents.value =
+                    AlarmEvent.Error
+                is com.midina.core_domain.model.ResultEvent.Success -> {
+                    _season.value = result.value
+                    fixturesRequest()
+                }
             }
         }
-    }
 
-    private suspend fun fixturesRequest() {
-        val result = getFixturesUsecase.execute(teamId.value, season.value)
+        private suspend fun fixturesRequest() {
+            val result = getFixturesUsecase.execute(teamId.value, season.value)
 
-        when (result) {
-            ResultEvent.EmptyState -> _alarmEvents.value = AlarmEvent.EmptyState
-            ResultEvent.Error -> _alarmEvents.value = AlarmEvent.Error
-            is ResultEvent.Success -> _alarmEvents.value = AlarmEvent.Success(result.value)
+            when (result) {
+                ResultEvent.EmptyState -> _alarmEvents.value = AlarmEvent.EmptyState
+                ResultEvent.Error -> _alarmEvents.value = AlarmEvent.Error
+                is ResultEvent.Success -> _alarmEvents.value = AlarmEvent.Success(result.value)
+            }
+        }
+
+        private suspend fun teamDataRequest() {
+            val result = getTeamInfoUsecase.execute(teamId.value)
+
+            when (result) {
+                ResultEvent.EmptyState -> _events.value = UiEvent.EmptyState
+                ResultEvent.Error -> _events.value = UiEvent.Error
+                is ResultEvent.Success -> {
+                    _teamName.value = result.value.team.name
+                    _events.value = UiEvent.Success(result.value)
+                }
+            }
+        }
+
+        fun getTimeInMillis(matchTime: String): Long {
+            return sdf.parse(matchTime).time
         }
     }
 
-    private suspend fun teamDataRequest() {
-        val result = getTeamInfoUsecase.execute(teamId.value)
-
-        when (result) {
-            ResultEvent.EmptyState -> _events.value = UiEvent.EmptyState
-            ResultEvent.Error -> _events.value = UiEvent.Error
-            is ResultEvent.Success -> _events.value = UiEvent.Success(result.value)
-        }
+    sealed class UiEvent {
+        class Success(val teamInfo: TeamInfo) : UiEvent()
+        object Error : UiEvent()
+        object Loading : UiEvent()
+        object EmptyState : UiEvent()
     }
 
-    fun getTimeInMillis(matchTime: String): Long {
-        return sdf.parse(matchTime).time
+    sealed class AlarmEvent {
+        class Success(val list: ArrayList<FixturesInfo>) : AlarmEvent()
+        object Error : AlarmEvent()
+        object Default : AlarmEvent()
+        object EmptyState : AlarmEvent()
     }
-}
-
-sealed class UiEvent {
-    class Success(val teamInfo: TeamInfo) : UiEvent()
-    object Error : UiEvent()
-    object Loading : UiEvent()
-    object EmptyState : UiEvent()
-}
-
-sealed class AlarmEvent {
-    class Success(val list: ArrayList<FixturesInfo>) : AlarmEvent()
-    object Error : AlarmEvent()
-    object Default : AlarmEvent()
-    object EmptyState : AlarmEvent()
-}

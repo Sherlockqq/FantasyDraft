@@ -6,6 +6,8 @@ import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.midina.team_ui.club.UiEvent
+import com.midina.team_ui.player.PlayerUiEvent
 
 @BindingAdapter("android:visibility")
 fun ProgressBar.setVisibility(event: UiEvent?) {
@@ -14,6 +16,17 @@ fun ProgressBar.setVisibility(event: UiEvent?) {
         UiEvent.Loading -> true
         UiEvent.EmptyState -> false
         is UiEvent.Success -> false
+        null -> true
+    }
+}
+
+@BindingAdapter("android:visibility")
+fun ProgressBar.setVisibility(event: PlayerUiEvent?) {
+    isVisible = when (event) {
+        PlayerUiEvent.Error -> false
+        PlayerUiEvent.Loading -> true
+        PlayerUiEvent.EmptyState -> false
+        is PlayerUiEvent.Success -> false
         null -> true
     }
 }
