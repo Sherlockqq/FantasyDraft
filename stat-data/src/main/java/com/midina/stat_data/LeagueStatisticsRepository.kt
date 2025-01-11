@@ -14,9 +14,11 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import javax.inject.Inject
 
-private const val TAG = "LeagueStatRepository"
-
 class LeagueStatisticsRepository @Inject constructor(private val statApi: StatisticsApiInterface) {
+
+    private companion object {
+        private const val TAG = "LeagueStatRepository"
+    }
 
     private var season = 0
 
